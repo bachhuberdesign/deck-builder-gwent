@@ -11,7 +11,7 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.bachhuberdesign.gwentcardviewer.features.shared.MainActivity">
+        <activity android:name="com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

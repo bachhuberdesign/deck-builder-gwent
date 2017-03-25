@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong
  * @version 1.0.0
  * @since 1.0.0
  */
-class MainActivity : AppCompatActivity() {
+open class BaseActivity : AppCompatActivity() {
 
     companion object {
         @JvmStatic val TAG: String = this::class.java.name
@@ -43,9 +43,18 @@ class MainActivity : AppCompatActivity() {
 
         activitySubcomponent = persistedComponent.activitySubcomponent(ActivityModule(this))
         activitySubcomponent.inject(this)
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putLong(TAG, activityId)
+        super.onSaveInstanceState(outState)
+    }
 
-        setContentView(R.layout.activity_main)
+    override fun onDestroy() {
+        when {
+            !isChangingConfigurations -> components.remove(activityId)
+        }
+        super.onDestroy()
     }
 
 }
