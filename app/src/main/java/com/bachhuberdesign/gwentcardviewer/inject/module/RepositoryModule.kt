@@ -2,6 +2,7 @@ package com.bachhuberdesign.gwentcardviewer.inject.module
 
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.google.gson.Gson
+import com.squareup.sqlbrite.BriteDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -16,8 +17,8 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideDeckRepository(gson: Gson): DeckRepository {
-        return DeckRepository(gson)
+    fun provideDeckRepository(gson: Gson, database: BriteDatabase): DeckRepository {
+        return DeckRepository(gson, database)
     }
 
 }

@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer
 import android.app.Application
 import com.bachhuberdesign.gwentcardviewer.inject.ApplicationComponent
 import com.bachhuberdesign.gwentcardviewer.inject.DaggerApplicationComponent
+import com.bachhuberdesign.gwentcardviewer.inject.module.DatabaseModule
 import com.bachhuberdesign.gwentcardviewer.inject.module.NetworkModule
 import com.bachhuberdesign.gwentcardviewer.inject.module.RepositoryModule
 
@@ -24,6 +25,7 @@ class App : Application() {
         applicationComponent = DaggerApplicationComponent.builder()
                 .networkModule(NetworkModule())
                 .repositoryModule(RepositoryModule())
+                .databaseModule(DatabaseModule(this))
                 .build()
         applicationComponent.inject(this)
     }

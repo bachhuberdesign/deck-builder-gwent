@@ -1,8 +1,8 @@
 package com.bachhuberdesign.gwentcardviewer.inject.module
 
+import android.app.Application
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.bachhuberdesign.gwentcardviewer.App
 import com.bachhuberdesign.gwentcardviewer.database.DatabaseOpenHelper
 import com.squareup.sqlbrite.BriteDatabase
 import com.squareup.sqlbrite.SqlBrite
@@ -18,12 +18,12 @@ import javax.inject.Singleton
  * @since 1.0.0
  */
 @Module
-class DatabaseModule {
+class DatabaseModule(val application: Application) {
 
     @Provides
     @Singleton
-    fun provideOpenHelper(app: App): SQLiteOpenHelper {
-        return DatabaseOpenHelper(app)
+    fun provideOpenHelper(): SQLiteOpenHelper {
+        return DatabaseOpenHelper(application)
     }
 
     @Provides

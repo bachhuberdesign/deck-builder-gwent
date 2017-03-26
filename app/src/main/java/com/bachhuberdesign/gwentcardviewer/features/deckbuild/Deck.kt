@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
  */
 data class Deck(var id: Int = 0,
                 var name: String = "",
-                var faction: Faction,
+                var faction: Faction? = null,
                 var cards: MutableList<Card> = ArrayList(),
                 var isFavorited: Boolean = false,
                 var createdDate: Date = Date(),
