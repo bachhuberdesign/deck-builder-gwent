@@ -1,24 +1,28 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
-import com.bachhuberdesign.gwentcardviewer.features.shared.Presenter
+import com.bachhuberdesign.gwentcardviewer.features.shared.BasePresenter
+import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistingScope
 
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
-class DeckbuildPresenter : Presenter<DeckbuildMvpContract> {
-    
+@PersistingScope
+class DeckbuildPresenter : BasePresenter<DeckbuildMvpContract>() {
+
     override fun attach(view: DeckbuildMvpContract) {
-        TODO("Not yet implemented.")
+        super.attach(view)
     }
 
     override fun detach() {
-        TODO("Not yet implemented.")
+        super.detach()
     }
 
-    override fun isViewAttached(): Boolean {
-        TODO("Not yet implemented.")
+    fun loadDecks() {
+        if (isViewAttached()) {
+            view!!.onDecksLoaded()
+        }
     }
 
 }

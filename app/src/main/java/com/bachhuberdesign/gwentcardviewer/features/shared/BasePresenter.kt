@@ -5,9 +5,9 @@ package com.bachhuberdesign.gwentcardviewer.features.shared
  * @version 1.0.0
  * @since 1.0.0
  */
-class BasePresenter<in T : MvpContract> : Presenter<T> {
+open class BasePresenter<T : MvpContract> : Presenter<T> {
 
-    var view: MvpContract? = null
+    var view: T? = null
 
     override fun attach(view: T) {
         this.view = view

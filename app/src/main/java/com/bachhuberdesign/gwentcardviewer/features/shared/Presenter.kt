@@ -5,7 +5,7 @@ package com.bachhuberdesign.gwentcardviewer.features.shared
  * @version 1.0.0
  * @since 1.0.0
  */
-interface Presenter<in T> {
+interface Presenter<in T: MvpContract> {
 
     fun attach(view: T)
 
