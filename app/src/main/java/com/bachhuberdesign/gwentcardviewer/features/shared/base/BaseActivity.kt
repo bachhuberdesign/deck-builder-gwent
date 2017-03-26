@@ -3,7 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.features.shared.base
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.bachhuberdesign.gwentcardviewer.App
-import com.bachhuberdesign.gwentcardviewer.inject.ActivitySubcomponent
+import com.bachhuberdesign.gwentcardviewer.inject.ActivityComponent
 import com.bachhuberdesign.gwentcardviewer.inject.DaggerPersistedComponent
 import com.bachhuberdesign.gwentcardviewer.inject.PersistedComponent
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
@@ -23,7 +23,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     var activityId: Long = 0
-    lateinit var activitySubcomponent: ActivitySubcomponent
+    lateinit var activityComponent: ActivityComponent
     lateinit var persistedComponent: PersistedComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +40,8 @@ open class BaseActivity : AppCompatActivity() {
             persistedComponent = components[activityId] as PersistedComponent
         }
 
-        activitySubcomponent = persistedComponent.activitySubcomponent(ActivityModule(this))
-        activitySubcomponent.inject(this)
+        activityComponent = persistedComponent.activitySubcomponent(ActivityModule(this))
+        activityComponent.inject(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

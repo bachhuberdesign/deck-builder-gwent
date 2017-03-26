@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
+import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import javax.inject.Inject
 
 /**
  * @author Eric Bachhuber
@@ -18,12 +21,28 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
         @JvmStatic val TAG: String = this::class.java.name
     }
 
-    // TODO: Inject dependencies
+    @Inject
+    lateinit var presenter: DeckbuildPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        val view: View = inflater.inflate(R.layout.controller_deckbuild, container, false)
+        val view = container.inflate(R.layout.controller_deckbuild)
+
+        val persistedComponent = (activity as DeckbuildActivity)
+                .persistedComponent.activitySubcomponent(ActivityModule(activity as DeckbuildActivity))
+        persistedComponent.inject(this)
 
         return view
+    }
+
+    override fun onAttach(view: View) {
+        super.onAttach(view)
+        presenter.attach(this)
+        presenter.loadUserDecks()
+    }
+
+    override fun onDetach(view: View) {
+        super.onDetach(view)
+        presenter.detach()
     }
 
     override fun onDeckCreated() {

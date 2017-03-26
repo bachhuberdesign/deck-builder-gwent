@@ -1,7 +1,7 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
-import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistingScope
+import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import javax.inject.Inject
 
 /**
@@ -9,7 +9,7 @@ import javax.inject.Inject
  * @version 1.0.0
  * @since 1.0.0
  */
-@PersistingScope
+@PersistedScope
 class DeckbuildPresenter
 @Inject constructor(private val repository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
 
