@@ -14,4 +14,14 @@ data class Deck(var id: Int = 0,
                 var cards: MutableList<Card> = ArrayList(),
                 var isFavorited: Boolean = false,
                 var createdDate: Date = Date(),
-                var lastUpdate: Date? = Date())
+                var lastUpdate: Date? = Date()) {
+
+    companion object {
+        const val ID = "id"
+        const val NAME = "name"
+        const val FAVORITED = "favorited"
+        const val CREATED_DATE = "created_date"
+        const val LAST_UPDATE = "last_update"
+    }
+
+}
