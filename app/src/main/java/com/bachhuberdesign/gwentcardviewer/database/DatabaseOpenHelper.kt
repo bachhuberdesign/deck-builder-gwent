@@ -54,8 +54,8 @@ class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                         ")"
         const val CREATE_TABLE_USER_DECKS_CARDS: String =
                 "CREATE TABLE user_decks_cards (" +
-                        "id INTEGER NOT NULL PRIMARY KEY " +
-                        "deck_id INTEGER NOT NULL " +
+                        "id INTEGER NOT NULL PRIMARY KEY, " +
+                        "deck_id INTEGER NOT NULL, " +
                         "card_id INTEGER NOT NULL" +
                         ")"
     }
