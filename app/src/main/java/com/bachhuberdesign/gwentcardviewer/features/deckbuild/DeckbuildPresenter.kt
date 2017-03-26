@@ -10,8 +10,8 @@ import javax.inject.Inject
  * @since 1.0.0
  */
 @PersistingScope
-class DeckbuildPresenter(
-        @Inject private val repository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
+class DeckbuildPresenter
+@Inject constructor(private val repository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     override fun attach(view: DeckbuildMvpContract) {
         super.attach(view)

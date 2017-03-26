@@ -3,7 +3,6 @@ package com.bachhuberdesign.gwentcardviewer.features.shared.base
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.bachhuberdesign.gwentcardviewer.App
-import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.inject.ActivitySubcomponent
 import com.bachhuberdesign.gwentcardviewer.inject.DaggerPersistedComponent
 import com.bachhuberdesign.gwentcardviewer.inject.PersistedComponent
