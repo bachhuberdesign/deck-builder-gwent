@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 
 /**
@@ -12,11 +13,13 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
  */
 class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(CREATE_TABLE_CARDS)
+    override fun onCreate(database: SQLiteDatabase) {
+        database.execSQL(CREATE_TABLE_CARDS)
+        database.execSQL(CREATE_TABLE_USER_DECKS)
+        database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // TODO:
     }
 
@@ -26,22 +29,34 @@ class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, 
         const val DB_VERSION: Int = 1
         const val CREATE_TABLE_CARDS: String =
                 "CREATE TABLE cards (" +
-                        "${Card.ID} INTEGER NOT NULL PRIMARY KEY " +
-                        "${Card.NAME} TEXT NOT NULL " +
-                        "${Card.DESCRIPTION} TEXT NOT NULL " +
-                        "${Card.FLAVOR_TEXT} TEXT NOT NULL " +
-                        "${Card.ICON_URL} TEXT NOT NULL " +
-                        "${Card.MILL} INTEGER NOT NULL DEFAULT 0 " +
-                        "${Card.MILL_PREMIUM} INTEGER NOT NULL DEFAULT 0 " +
-                        "${Card.SCRAP} INTEGER NOT NULL DEFAULT 0 " +
-                        "${Card.SCRAP_PREMIUM} INTEGER NOT NULL DEFAULT 0 " +
-                        "${Card.FACTION} INTEGER NOT NULL " +
-                        "${Card.LANE} INTEGER NOT NULL " +
-                        "${Card.RARITY} INTEGER NOT NULL " +
+                        "${Card.ID} INTEGER NOT NULL PRIMARY KEY, " +
+                        "${Card.NAME} TEXT NOT NULL, " +
+                        "${Card.DESCRIPTION} TEXT NOT NULL, " +
+                        "${Card.FLAVOR_TEXT} TEXT NOT NULL, " +
+                        "${Card.ICON_URL} TEXT NOT NULL, " +
+                        "${Card.MILL} INTEGER NOT NULL DEFAULT 0, " +
+                        "${Card.MILL_PREMIUM} INTEGER NOT NULL DEFAULT 0, " +
+                        "${Card.SCRAP} INTEGER NOT NULL DEFAULT 0, " +
+                        "${Card.SCRAP_PREMIUM} INTEGER NOT NULL DEFAULT 0, " +
+                        "${Card.FACTION} INTEGER NOT NULL, " +
+                        "${Card.LANE} INTEGER NOT NULL, " +
+                        "${Card.RARITY} INTEGER NOT NULL, " +
                         "${Card.TYPE} INTEGER NOT NULL" +
                         ")"
-        const val CREATE_TABLE_DECK: String =
-                "CREATE TABLE decks (" +
+        const val CREATE_TABLE_USER_DECKS: String =
+                "CREATE TABLE user_decks (" +
+                        "${Deck.ID} INTEGER NOT NULL PRIMARY KEY, " +
+                        "${Deck.NAME} TEXT NOT NULL, " +
+                        "${Deck.FACTION} INTEGER NOT NULL, " +
+                        "${Deck.FAVORITED} INTEGER NOT NULL DEFAULT 0, " +
+                        "${Deck.CREATED_DATE} INTEGER NOT NULL DEFAULT (strftime('%s','now'), " +
+                        "${Deck.LAST_UPDATE} INTEGER NOT NULL DEFAULT (strftime('%s','now')" +
+                        ")"
+        const val CREATE_TABLE_USER_DECKS_CARDS: String =
+                "CREATE TABLE user_decks_cards (" +
+                        "id INTEGER NOT NULL PRIMARY KEY " +
+                        "deck_id INTEGER NOT NULL " +
+                        "card_id INTEGER NOT NULL" +
                         ")"
     }
 
