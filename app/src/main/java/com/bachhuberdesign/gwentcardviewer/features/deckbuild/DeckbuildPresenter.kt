@@ -2,6 +2,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistingScope
+import javax.inject.Inject
 
 /**
  * @author Eric Bachhuber
@@ -9,7 +10,8 @@ import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistingScope
  * @since 1.0.0
  */
 @PersistingScope
-class DeckbuildPresenter : BasePresenter<DeckbuildMvpContract>() {
+class DeckbuildPresenter(
+        @Inject private val repository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     override fun attach(view: DeckbuildMvpContract) {
         super.attach(view)
@@ -20,10 +22,10 @@ class DeckbuildPresenter : BasePresenter<DeckbuildMvpContract>() {
     }
 
     fun loadUserDecks() {
-        // TODO:
+        val decks = repository.getUserCreatedDecks()
 
-        if (isViewAttached()) {
-            view!!.onDecksLoaded()
+        if (decks.isNotEmpty() && isViewAttached()) {
+            view!!.onDecksLoaded(decks)
         }
     }
 

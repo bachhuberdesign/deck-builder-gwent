@@ -1,1 +1,1 @@
-# gwent-card-viewer
+# Deck Builder for Gwent

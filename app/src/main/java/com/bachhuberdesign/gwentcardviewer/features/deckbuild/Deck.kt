@@ -9,7 +9,8 @@ import kotlin.collections.ArrayList
  * @version 1.0.0
  * @since 1.0.0
  */
-data class Deck(var name: String = "",
+data class Deck(var id: Int = 0,
+                var name: String = "",
                 var cards: MutableList<Card> = ArrayList(),
                 var isFavorited: Boolean = false,
                 var createdDate: Date = Date(),
