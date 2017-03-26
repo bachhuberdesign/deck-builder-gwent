@@ -1,4 +1,7 @@
-package com.bachhuberdesign.gwentcardviewer.features.shared
+package com.bachhuberdesign.gwentcardviewer.features.shared.base
+
+import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
+import com.bachhuberdesign.gwentcardviewer.features.shared.base.Presenter
 
 /**
  * @author Eric Bachhuber

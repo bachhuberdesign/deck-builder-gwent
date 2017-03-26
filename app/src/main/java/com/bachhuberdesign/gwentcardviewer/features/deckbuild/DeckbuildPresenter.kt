@@ -1,6 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
-import com.bachhuberdesign.gwentcardviewer.features.shared.BasePresenter
+import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistingScope
 
 /**
@@ -19,7 +19,9 @@ class DeckbuildPresenter : BasePresenter<DeckbuildMvpContract>() {
         super.detach()
     }
 
-    fun loadDecks() {
+    fun loadUserDecks() {
+        // TODO:
+
         if (isViewAttached()) {
             view!!.onDecksLoaded()
         }

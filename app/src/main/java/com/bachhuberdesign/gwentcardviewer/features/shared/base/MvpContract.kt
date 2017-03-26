@@ -1,4 +1,4 @@
-package com.bachhuberdesign.gwentcardviewer.features.shared
+package com.bachhuberdesign.gwentcardviewer.features.shared.base
 
 /**
  * @author Eric Bachhuber

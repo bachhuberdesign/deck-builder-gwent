@@ -2,7 +2,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.os.Bundle
 import com.bachhuberdesign.gwentcardviewer.R
-import com.bachhuberdesign.gwentcardviewer.features.shared.BaseActivity
+import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
 
 /**
  * @author Eric Bachhuber

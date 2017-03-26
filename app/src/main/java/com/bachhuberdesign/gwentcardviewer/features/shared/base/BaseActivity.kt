@@ -1,4 +1,4 @@
-package com.bachhuberdesign.gwentcardviewer.features.shared
+package com.bachhuberdesign.gwentcardviewer.features.shared.base
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
