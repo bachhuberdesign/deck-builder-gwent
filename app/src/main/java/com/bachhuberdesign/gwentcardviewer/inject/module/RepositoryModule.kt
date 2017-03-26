@@ -11,7 +11,7 @@ import javax.inject.Singleton
  * @version 1.0.0
  * @since 1.0.0
  */
-@Module
+@Module(includes = arrayOf(DatabaseModule::class))
 class RepositoryModule {
 
     @Provides
