@@ -3,7 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.inject.module
 import android.app.Application
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.bachhuberdesign.gwentcardviewer.database.DatabaseOpenHelper
+import com.bachhuberdesign.gwentcardviewer.database.DatabaseHelper
 import com.squareup.sqlbrite.BriteDatabase
 import com.squareup.sqlbrite.SqlBrite
 import dagger.Module
@@ -23,7 +23,7 @@ class DatabaseModule(val application: Application) {
     @Provides
     @Singleton
     fun provideOpenHelper(): SQLiteOpenHelper {
-        return DatabaseOpenHelper(application)
+        return DatabaseHelper(application)
     }
 
     @Provides

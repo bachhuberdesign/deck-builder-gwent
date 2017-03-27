@@ -12,7 +12,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
  * @version 1.0.0
  * @since 1.0.0
  */
-class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     override fun onCreate(database: SQLiteDatabase) {
         Log.d(TAG, "onCreate()")
@@ -31,7 +31,7 @@ class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, 
         const val DB_NAME = "deck_builder.db"
         const val DB_VERSION: Int = 1
         const val CREATE_TABLE_CARDS: String =
-                "CREATE TABLE cards (" +
+                "CREATE TABLE ${Card.TABLE} (" +
                         "${Card.ID} INTEGER NOT NULL PRIMARY KEY, " +
                         "${Card.NAME} TEXT NOT NULL, " +
                         "${Card.DESCRIPTION} TEXT NOT NULL, " +
@@ -47,16 +47,16 @@ class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                         "${Card.TYPE} INTEGER NOT NULL" +
                         ")"
         const val CREATE_TABLE_USER_DECKS: String =
-                "CREATE TABLE user_decks (" +
+                "CREATE TABLE ${Deck.TABLE} (" +
                         "${Deck.ID} INTEGER NOT NULL PRIMARY KEY, " +
                         "${Deck.NAME} TEXT NOT NULL, " +
                         "${Deck.FACTION} INTEGER NOT NULL, " +
                         "${Deck.FAVORITED} INTEGER NOT NULL DEFAULT 0, " +
-                        "${Deck.CREATED_DATE} INTEGER NOT NULL DEFAULT (strftime('%s','now'), " +
-                        "${Deck.LAST_UPDATE} INTEGER NOT NULL DEFAULT (strftime('%s','now')" +
+                        "${Deck.CREATED_DATE} INTEGER NOT NULL, " +
+                        "${Deck.LAST_UPDATE} INTEGER NOT NULL" +
                         ")"
         const val CREATE_TABLE_USER_DECKS_CARDS: String =
-                "CREATE TABLE user_decks_cards (" +
+                "CREATE TABLE ${Deck.JOIN_CARD_TABLE} (" +
                         "id INTEGER NOT NULL PRIMARY KEY, " +
                         "deck_id INTEGER NOT NULL, " +
                         "card_id INTEGER NOT NULL" +
