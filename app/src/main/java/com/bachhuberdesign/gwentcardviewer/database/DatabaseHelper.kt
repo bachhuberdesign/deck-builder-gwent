@@ -31,7 +31,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         const val DB_NAME = "deck_builder.db"
         const val DB_VERSION: Int = 1
         const val CREATE_TABLE_CARDS: String =
-                "CREATE TABLE cards (" +
+                "CREATE TABLE ${Card.TABLE} (" +
                         "${Card.ID} INTEGER NOT NULL PRIMARY KEY, " +
                         "${Card.NAME} TEXT NOT NULL, " +
                         "${Card.DESCRIPTION} TEXT NOT NULL, " +
@@ -47,7 +47,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                         "${Card.TYPE} INTEGER NOT NULL" +
                         ")"
         const val CREATE_TABLE_USER_DECKS: String =
-                "CREATE TABLE user_decks (" +
+                "CREATE TABLE ${Deck.TABLE} (" +
                         "${Deck.ID} INTEGER NOT NULL PRIMARY KEY, " +
                         "${Deck.NAME} TEXT NOT NULL, " +
                         "${Deck.FACTION} INTEGER NOT NULL, " +
@@ -56,7 +56,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                         "${Deck.LAST_UPDATE} INTEGER NOT NULL" +
                         ")"
         const val CREATE_TABLE_USER_DECKS_CARDS: String =
-                "CREATE TABLE user_decks_cards (" +
+                "CREATE TABLE ${Deck.JOIN_CARD_TABLE} (" +
                         "id INTEGER NOT NULL PRIMARY KEY, " +
                         "deck_id INTEGER NOT NULL, " +
                         "card_id INTEGER NOT NULL" +

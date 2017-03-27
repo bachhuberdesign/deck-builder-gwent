@@ -22,19 +22,27 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
 
     fun saveDeck(deck: Deck) {
         val currentTime = Date().time
-        val values = ContentValues()
+        val deckValues = ContentValues()
 
-        values.put(Deck.NAME, deck.name)
-        values.put(Deck.FACTION, deck.faction)
-        values.put(Deck.FAVORITED, deck.isFavorited)
-        values.put(Deck.LAST_UPDATE, currentTime)
+        deckValues.put(Deck.NAME, deck.name)
+        deckValues.put(Deck.FACTION, deck.faction)
+        deckValues.put(Deck.FAVORITED, deck.isFavorited)
+        deckValues.put(Deck.LAST_UPDATE, currentTime)
 
         if (deck.id == 0) {
-            values.put(Deck.CREATED_DATE, currentTime)
+            deckValues.put(Deck.CREATED_DATE, currentTime)
 
-            database.insert(Deck.TABLE, values)
+            deck.id = database.insert(Deck.TABLE, deckValues).toInt()
         } else {
-            database.update(Deck.TABLE, values, "${Deck.ID} = ${deck.id}")
+            database.update(Deck.TABLE, deckValues, "${Deck.ID} = ${deck.id}")
+        }
+
+        database.delete(Deck.JOIN_CARD_TABLE, "deck_id = ${deck.id}")
+        deck.cards.forEach { card ->
+            val cardValues = ContentValues()
+            cardValues.put("card_id", card.cardId)
+            cardValues.put("deck_id", deck.id)
+            database.insert(Deck.JOIN_CARD_TABLE, cardValues)
         }
     }
 
