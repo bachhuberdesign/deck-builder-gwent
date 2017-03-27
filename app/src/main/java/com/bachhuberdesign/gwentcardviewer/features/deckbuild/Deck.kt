@@ -1,8 +1,9 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
+import android.database.Cursor
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
-import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
-import java.util.*
+import io.reactivex.functions.Function
+import java.util.Date
 import kotlin.collections.ArrayList
 
 /**
@@ -12,19 +13,30 @@ import kotlin.collections.ArrayList
  */
 data class Deck(var id: Int = 0,
                 var name: String = "",
-                var faction: Faction? = null,
+                var faction: Int = 0,
                 var cards: MutableList<Card> = ArrayList(),
                 var isFavorited: Boolean = false,
                 var createdDate: Date = Date(),
                 var lastUpdate: Date? = Date()) {
 
     companion object {
+        const val TABLE = "user_decks"
         const val ID = "id"
         const val NAME = "name"
         const val FACTION = "faction"
         const val FAVORITED = "favorited"
         const val CREATED_DATE = "created_date"
         const val LAST_UPDATE = "last_update"
+
+        val MAPPER = Function<Cursor, Deck> { cursor ->
+            val deck = Deck()
+            deck.id = cursor.getInt(cursor.getColumnIndex(Deck.ID))
+            deck.name = cursor.getString(cursor.getColumnIndex(Deck.NAME))
+            deck.faction = cursor.getInt(cursor.getColumnIndex(Deck.FACTION))
+            deck.createdDate = Date(cursor.getLong(cursor.getColumnIndex(Deck.CREATED_DATE)))
+            deck.lastUpdate = Date(cursor.getLong(cursor.getColumnIndex(Deck.LAST_UPDATE)))
+            deck
+        }
     }
 
 }

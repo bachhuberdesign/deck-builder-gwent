@@ -22,11 +22,23 @@ class DeckbuildPresenter
     }
 
     fun loadUserDecks() {
-        val decks = repository.getUserCreatedDecks()
+        val decks: MutableList<Deck> = ArrayList()
+        val query = repository.queryUserCreatedDecks()
 
-        if (decks.isNotEmpty() && isViewAttached()) {
-            view!!.onDecksLoaded(decks)
-        }
+        query.subscribe({ query ->
+            val cursor = query.run()
+
+            query.run().use {
+                while (cursor!!.moveToNext()) {
+                    decks.add(Deck.MAPPER.apply(cursor))
+                }
+            }
+
+            if (decks.isNotEmpty() && isViewAttached()) {
+                view!!.onDecksLoaded(decks)
+            }
+        })
+
     }
 
 }

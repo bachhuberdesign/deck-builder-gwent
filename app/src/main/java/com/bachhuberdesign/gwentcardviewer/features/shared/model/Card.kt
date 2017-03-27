@@ -18,6 +18,7 @@ data class Card(val cardId: Int = 0,
                 val cardType: CardType? = null) {
 
     companion object {
+        const val TABLE = "cards"
         const val ID = "id"
         const val NAME = "name"
         const val DESCRIPTION = "description"

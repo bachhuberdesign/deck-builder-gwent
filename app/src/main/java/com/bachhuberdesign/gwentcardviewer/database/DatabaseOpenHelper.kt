@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 
@@ -14,12 +15,14 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     override fun onCreate(database: SQLiteDatabase) {
+        Log.d(TAG, "onCreate()")
         database.execSQL(CREATE_TABLE_CARDS)
         database.execSQL(CREATE_TABLE_USER_DECKS)
         database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
     }
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        Log.d(TAG, "onUpgrade()")
         // TODO:
     }
 
