@@ -20,6 +20,10 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         @JvmStatic val TAG: String = this::class.java.name
     }
 
+    fun queryUserCreatedDecks(): QueryObservable {
+        return database.createQuery(Deck.TABLE, "SELECT * FROM ${Deck.TABLE}")
+    }
+
     fun saveDeck(deck: Deck) {
         val currentTime = Date().time
         val deckValues = ContentValues()
@@ -38,6 +42,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         }
 
         database.delete(Deck.JOIN_CARD_TABLE, "deck_id = ${deck.id}")
+
         deck.cards.forEach { card ->
             val cardValues = ContentValues()
             cardValues.put("card_id", card.cardId)
@@ -46,12 +51,9 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         }
     }
 
-    fun queryUserCreatedDecks(): QueryObservable {
-        return database.createQuery(Deck.TABLE, "SELECT * FROM ${Deck.TABLE}")
-    }
-
-    fun removeDeck(deckId: Int) {
-        TODO("Not yet implemented.")
+    fun deleteDeck(deckId: Int) {
+        database.delete(Deck.TABLE, "id = $deckId")
+        database.delete(Deck.JOIN_CARD_TABLE, "deck_id = $deckId")
     }
 
 }

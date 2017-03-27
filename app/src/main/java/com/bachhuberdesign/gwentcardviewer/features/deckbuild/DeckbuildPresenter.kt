@@ -26,6 +26,14 @@ class DeckbuildPresenter
         super.detach()
     }
 
+    fun addCard(cardId: Int) {
+        // TODO:
+    }
+
+    fun removeCard(cardId: Int) {
+        // TODO:
+    }
+
     /**
      *
      */
@@ -56,6 +64,17 @@ class DeckbuildPresenter
      */
     fun saveDeck(deck: Deck) {
         repository.saveDeck(deck)
+    }
+
+    /**
+     *
+     */
+    fun deleteDeck(deckId: Int) {
+        repository.deleteDeck(deckId)
+
+        if (isViewAttached()) {
+            view!!.onDeckDeleted(deckId)
+        }
     }
 
 }
