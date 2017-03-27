@@ -12,7 +12,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
  * @version 1.0.0
  * @since 1.0.0
  */
-class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     override fun onCreate(database: SQLiteDatabase) {
         Log.d(TAG, "onCreate()")
@@ -52,8 +52,8 @@ class DatabaseOpenHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                         "${Deck.NAME} TEXT NOT NULL, " +
                         "${Deck.FACTION} INTEGER NOT NULL, " +
                         "${Deck.FAVORITED} INTEGER NOT NULL DEFAULT 0, " +
-                        "${Deck.CREATED_DATE} INTEGER NOT NULL DEFAULT (strftime('%s','now'), " +
-                        "${Deck.LAST_UPDATE} INTEGER NOT NULL DEFAULT (strftime('%s','now')" +
+                        "${Deck.CREATED_DATE} INTEGER NOT NULL, " +
+                        "${Deck.LAST_UPDATE} INTEGER NOT NULL" +
                         ")"
         const val CREATE_TABLE_USER_DECKS_CARDS: String =
                 "CREATE TABLE user_decks_cards (" +

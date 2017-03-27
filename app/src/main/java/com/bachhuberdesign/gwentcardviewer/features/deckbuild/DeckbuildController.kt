@@ -67,6 +67,11 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
 
     override fun onDecksLoaded(decks: List<Deck>) {
         Log.d(TAG, "Deck list loaded.")
+
+        decks.forEach { deck ->
+            Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
+                    "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
+        }
     }
 
 }
