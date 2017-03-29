@@ -1,5 +1,8 @@
 package com.bachhuberdesign.gwentcardviewer.features.shared.model
 
+import android.database.Cursor
+import io.reactivex.functions.Function
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -32,6 +35,14 @@ data class Card(val cardId: Int = 0,
         const val LANE = "lane"
         const val RARITY = "rarity"
         const val TYPE = "type"
+
+        val MAPPER = Function<Cursor, Card> { cursor ->
+            val card = Card()
+
+            // TODO:
+
+            card
+        }
     }
 
 }

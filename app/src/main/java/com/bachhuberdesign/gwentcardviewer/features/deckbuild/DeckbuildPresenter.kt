@@ -40,7 +40,7 @@ class DeckbuildPresenter
     fun loadUserDecks() {
         Log.d(TAG, "Loading user decks.")
         val decks: MutableList<Deck> = ArrayList()
-        val query = repository.queryUserCreatedDecks()
+        val query = repository.getUserCreatedDecks()
 
         query.subscribe({ query ->
             val cursor = query.run()
