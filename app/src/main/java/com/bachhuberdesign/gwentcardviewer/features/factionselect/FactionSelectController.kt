@@ -2,12 +2,14 @@ package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
@@ -66,15 +68,27 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         presenter.detach()
     }
 
-    override fun onFactionsLoaded() {
+    override fun onFactionsLoaded(factions: List<Faction>) {
+        factions.forEach { faction ->
+            Log.d(TAG, "Faction ${faction.name} loaded")
+            val item: FactionSelectItem = FactionSelectItem()
+            item.factionName = faction.name
+            item.factionDescription = faction.power
+            item.backgroundUrl = faction.iconUrl
+
+            adapter?.add(item)
+        }
+
+        adapter?.notifyDataSetChanged()
+    }
+
+    override fun onFactionSelected(factionId: Int) {
+        Log.d(TAG, "onFactionSelected() id: $factionId")
         TODO("Not yet implemented.")
     }
 
-    override fun onFactionSelected() {
-        TODO("Not yet implemented.")
-    }
-
-    override fun onLeaderSelected() {
+    override fun onLeaderSelected(cardId: Int) {
+        Log.d(TAG, "onLeaderSelected() id: $cardId")
         TODO("Not yet implemented.")
     }
 

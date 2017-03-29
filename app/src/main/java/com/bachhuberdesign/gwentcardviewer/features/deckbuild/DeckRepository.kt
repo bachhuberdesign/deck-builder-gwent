@@ -1,6 +1,9 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.content.ContentValues
+import android.database.Cursor
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import com.google.gson.Gson
 import com.squareup.sqlbrite.BriteDatabase
@@ -20,8 +23,16 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         @JvmStatic val TAG: String = this::class.java.name
     }
 
-    fun queryUserCreatedDecks(): QueryObservable {
+    fun getUserCreatedDecks(): QueryObservable {
         return database.createQuery(Deck.TABLE, "SELECT * FROM ${Deck.TABLE}")
+    }
+
+    fun getFactions(): Cursor {
+        return database.query(Faction.TABLE, "SELECT * FROM ${Faction.TABLE}")
+    }
+
+    fun getLeaders(): Cursor {
+        return database.query(Card.TABLE, "SELECT * FROM ${Card.TABLE} WHERE ${Card.TYPE} = 'leader'")
     }
 
     fun saveDeck(deck: Deck) {

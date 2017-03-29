@@ -1,21 +1,26 @@
 package com.bachhuberdesign.gwentcardviewer.features.shared.model
 
+import android.database.Cursor
+import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
+import com.bachhuberdesign.gwentcardviewer.util.getStringFromColumn
+import io.reactivex.functions.Function
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
-data class Card(val cardId: Int = 0,
-                val name: String = "",
-                val description: String = "",
-                val flavorText: String = "",
-                val iconUrl: String = "",
-                val millCost: Pair<Int, Int> = Pair(0, 0),
-                val scrapCost: Pair<Int, Int> = Pair(0, 0),
-                val faction: Int? = null,
-                val lane: Lane? = null,
-                val rarity: Rarity? = null,
-                val cardType: CardType? = null) {
+data class Card(var cardId: Int = 0,
+                var name: String = "",
+                var description: String = "",
+                var flavorText: String = "",
+                var iconUrl: String = "",
+                var millCost: Pair<Int, Int> = Pair(0, 0),
+                var scrapCost: Pair<Int, Int> = Pair(0, 0),
+                var faction: Int = 0,
+                var lane: Int = 0,
+                var rarity: Int = 0,
+                var cardType: Int = 0) {
 
     companion object {
         const val TABLE = "cards"
@@ -32,6 +37,22 @@ data class Card(val cardId: Int = 0,
         const val LANE = "lane"
         const val RARITY = "rarity"
         const val TYPE = "type"
+
+        val MAPPER = Function<Cursor, Card> { cursor ->
+            val card = Card()
+            card.cardId = cursor.getIntFromColumn(Card.ID)
+            card.name = cursor.getStringFromColumn(Card.NAME)
+            card.description = cursor.getStringFromColumn(Card.DESCRIPTION)
+            card.flavorText = cursor.getStringFromColumn(Card.FLAVOR_TEXT)
+            card.iconUrl = cursor.getStringFromColumn(Card.ICON_URL)
+            card.millCost = Pair(cursor.getIntFromColumn(Card.MILL), cursor.getIntFromColumn(Card.MILL_PREMIUM))
+            card.scrapCost = Pair(cursor.getIntFromColumn(Card.SCRAP), cursor.getIntFromColumn(Card.SCRAP_PREMIUM))
+            card.faction = cursor.getIntFromColumn(Card.FACTION)
+            card.lane = cursor.getIntFromColumn(Card.LANE)
+            card.rarity = cursor.getIntFromColumn(Card.RARITY)
+            card.cardType = cursor.getIntFromColumn(Card.TYPE)
+            card
+        }
     }
 
 }

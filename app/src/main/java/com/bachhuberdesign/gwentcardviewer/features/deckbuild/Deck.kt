@@ -2,6 +2,10 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.database.Cursor
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.util.getBooleanFromColumn
+import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
+import com.bachhuberdesign.gwentcardviewer.util.getLongFromColumn
+import com.bachhuberdesign.gwentcardviewer.util.getStringFromColumn
 import io.reactivex.functions.Function
 import java.util.Date
 import kotlin.collections.ArrayList
@@ -31,11 +35,12 @@ data class Deck(var id: Int = 0,
 
         val MAPPER = Function<Cursor, Deck> { cursor ->
             val deck = Deck()
-            deck.id = cursor.getInt(cursor.getColumnIndex(Deck.ID))
-            deck.name = cursor.getString(cursor.getColumnIndex(Deck.NAME))
-            deck.faction = cursor.getInt(cursor.getColumnIndex(Deck.FACTION))
-            deck.createdDate = Date(cursor.getLong(cursor.getColumnIndex(Deck.CREATED_DATE)))
-            deck.lastUpdate = Date(cursor.getLong(cursor.getColumnIndex(Deck.LAST_UPDATE)))
+            deck.id = cursor.getIntFromColumn(Deck.ID)
+            deck.name = cursor.getStringFromColumn(Deck.NAME)
+            deck.faction = cursor.getIntFromColumn(Deck.FACTION)
+            deck.isFavorited = cursor.getBooleanFromColumn(Deck.FAVORITED)
+            deck.createdDate = Date(cursor.getLongFromColumn(Deck.CREATED_DATE))
+            deck.lastUpdate = Date(cursor.getLongFromColumn(Deck.LAST_UPDATE))
             deck
         }
     }
