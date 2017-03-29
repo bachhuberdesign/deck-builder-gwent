@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 
 /**
  * @author Eric Bachhuber
@@ -15,10 +16,12 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     override fun onCreate(database: SQLiteDatabase) {
-        Log.d(TAG, "onCreate()")
         database.execSQL(CREATE_TABLE_CARDS)
         database.execSQL(CREATE_TABLE_USER_DECKS)
         database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
+        database.execSQL(CREATE_TABLE_FACTIONS)
+
+        // TODO: Insert static data
     }
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -60,6 +63,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                         "id INTEGER NOT NULL PRIMARY KEY, " +
                         "deck_id INTEGER NOT NULL, " +
                         "card_id INTEGER NOT NULL" +
+                        ")"
+        const val CREATE_TABLE_FACTIONS: String =
+                "CREATE TABLE ${Faction.TABLE} (" +
+                        "${Faction.ID} INTEGER NOT NULL PRIMARY KEY, " +
+                        "${Faction.NAME} TEXT NOT NULL, " +
+                        "${Faction.POWER} TEXT NOT NULL," +
+                        "${Faction.ICON_URL} TEXT NOT NULL" +
                         ")"
     }
 

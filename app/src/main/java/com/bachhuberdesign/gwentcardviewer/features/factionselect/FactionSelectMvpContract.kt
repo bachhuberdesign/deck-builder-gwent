@@ -8,4 +8,13 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
  * @since 1.0.0
  */
 interface FactionSelectMvpContract : MvpContract {
+
+    fun onFactionsLoaded()
+
+    fun onFactionSelected()
+
+    fun onLeaderSelected()
+
+    fun onLeaderConfirmed()
+
 }

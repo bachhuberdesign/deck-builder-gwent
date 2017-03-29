@@ -15,5 +15,17 @@ class FactionSelectPresenter : BasePresenter<FactionSelectMvpContract>() {
         @JvmStatic val TAG: String = this::class.java.name
     }
 
+    override fun attach(view: FactionSelectMvpContract) {
+        super.attach(view)
+    }
+
+    override fun detach() {
+        super.detach()
+    }
+
+    fun loadFactions(){
+
+    }
+
 
 }
