@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 import android.content.ContentValues
 import android.database.Cursor
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import com.google.gson.Gson
@@ -32,7 +33,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun getLeaders(): Cursor {
-        return database.query(Card.TABLE, "SELECT * FROM ${Card.TABLE} WHERE ${Card.TYPE} = 'leader'")
+        return database.query(Card.TABLE, "SELECT * FROM ${Card.TABLE} WHERE ${Card.TYPE} = ${CardType.LEADER}")
     }
 
     fun saveDeck(deck: Deck) {

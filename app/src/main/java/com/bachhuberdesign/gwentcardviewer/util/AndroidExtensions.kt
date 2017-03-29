@@ -5,13 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-/**
+/*
+ * A collection of helpful functions that extend base Android framework classes such as View.
  *
+ * Non-Android extension functions should be in a separate file.
  *
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
+
 fun View.visible() {
     visibility = View.VISIBLE
 }

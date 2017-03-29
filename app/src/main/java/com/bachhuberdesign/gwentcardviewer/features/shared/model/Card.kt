@@ -17,8 +17,10 @@ data class Card(var cardId: Int = 0,
                 var iconUrl: String = "",
                 var millCost: Pair<Int, Int> = Pair(0, 0),
                 var scrapCost: Pair<Int, Int> = Pair(0, 0),
+                var power: Int = 0,
                 var faction: Int = 0,
                 var lane: Int = 0,
+                var loyalty: Int = 0,
                 var rarity: Int = 0,
                 var cardType: Int = 0) {
 
@@ -33,8 +35,10 @@ data class Card(var cardId: Int = 0,
         const val MILL_PREMIUM = "mill_premium"
         const val SCRAP = "scrap"
         const val SCRAP_PREMIUM = "scrap_premium"
+        const val POWER = "power"
         const val FACTION = "faction"
         const val LANE = "lane"
+        const val LOYALTY = "loyalty"
         const val RARITY = "rarity"
         const val TYPE = "type"
 

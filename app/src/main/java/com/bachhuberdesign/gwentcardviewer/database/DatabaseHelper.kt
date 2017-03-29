@@ -21,7 +21,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
         database.execSQL(CREATE_TABLE_FACTIONS)
 
-        // TODO: Insert static data
+        // TODO: Insert static data and show progress bar
     }
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -44,8 +44,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                         "${Card.MILL_PREMIUM} INTEGER NOT NULL DEFAULT 0, " +
                         "${Card.SCRAP} INTEGER NOT NULL DEFAULT 0, " +
                         "${Card.SCRAP_PREMIUM} INTEGER NOT NULL DEFAULT 0, " +
+                        "${Card.POWER} INTEGER NOT NULL DEFAULT 0, " +
                         "${Card.FACTION} INTEGER NOT NULL, " +
                         "${Card.LANE} INTEGER NOT NULL, " +
+                        "${Card.LOYALTY} INTEGER NOT NULL DEFAULT 0, " +
                         "${Card.RARITY} INTEGER NOT NULL, " +
                         "${Card.TYPE} INTEGER NOT NULL" +
                         ")"
@@ -68,7 +70,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                 "CREATE TABLE ${Faction.TABLE} (" +
                         "${Faction.ID} INTEGER NOT NULL PRIMARY KEY, " +
                         "${Faction.NAME} TEXT NOT NULL, " +
-                        "${Faction.POWER} TEXT NOT NULL," +
+                        "${Faction.EFFECT} TEXT NOT NULL," +
                         "${Faction.ICON_URL} TEXT NOT NULL" +
                         ")"
     }
