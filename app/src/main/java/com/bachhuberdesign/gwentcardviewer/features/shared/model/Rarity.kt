@@ -5,9 +5,13 @@ package com.bachhuberdesign.gwentcardviewer.features.shared.model
  * @version 1.0.0
  * @since 1.0.0
  */
-enum class Rarity(val index: Int) {
-    COMMON(1),
-    RARE(2),
-    EPIC(3),
-    LEGENDARY(4)
+class Rarity {
+
+    companion object {
+        const val COMMON: Int = 1
+        const val RARE: Int = 2
+        const val EPIC: Int = 3
+        const val LEGENDARY: Int = 4
+    }
+
 }

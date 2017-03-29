@@ -1,6 +1,8 @@
 package com.bachhuberdesign.gwentcardviewer.features.shared.model
 
 import android.database.Cursor
+import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
+import com.bachhuberdesign.gwentcardviewer.util.getStringFromColumn
 import io.reactivex.functions.Function
 
 /**
@@ -16,11 +18,11 @@ data class Faction(
         var iconUrl: String = "") {
 
     companion object {
-        const val FACTION_NORTHERN_REALMS = 1
-        const val FACTION_SCOIATAEL = 2
-        const val FACTION_MONSTERS = 3
-        const val FACTION_SKELLIGE = 4
-        const val FACTION_NILFGAARD = 5
+        const val NORTHERN_REALMS = 1
+        const val SCOIATAEL = 2
+        const val MONSTERS = 3
+        const val SKELLIGE = 4
+        const val NILFGAARD = 5
         const val TABLE = "factions"
         const val ID = "id"
         const val NAME = "name"
@@ -29,10 +31,10 @@ data class Faction(
 
         val MAPPER = Function<Cursor, Faction> { cursor ->
             val faction = Faction()
-            faction.id = cursor.getInt(cursor.getColumnIndex(Faction.ID))
-            faction.name = cursor.getString(cursor.getColumnIndex(Faction.NAME))
-            faction.power = cursor.getString(cursor.getColumnIndex(Faction.POWER))
-            faction.iconUrl = cursor.getString(cursor.getColumnIndex(Faction.ICON_URL))
+            faction.id = cursor.getIntFromColumn(Faction.ID)
+            faction.name = cursor.getStringFromColumn(Faction.NAME)
+            faction.power = cursor.getStringFromColumn(Faction.POWER)
+            faction.iconUrl = cursor.getStringFromColumn(Faction.ICON_URL)
             faction
         }
     }

@@ -24,6 +24,16 @@ fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
 
+fun Cursor.getBooleanFromColumn(columnName: String): Boolean {
+    val columnValue = getInt(getColumnIndex(columnName))
+
+    when (columnValue) {
+        0 -> return false
+        1 -> return true
+        else -> throw IndexOutOfBoundsException("$columnName value was $columnValue, expected 0 or 1.")
+    }
+}
+
 fun Cursor.getIntFromColumn(columnName: String): Int {
     return getInt(getColumnIndex(columnName))
 }
