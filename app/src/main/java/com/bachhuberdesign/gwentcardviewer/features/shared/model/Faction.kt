@@ -13,7 +13,7 @@ import io.reactivex.functions.Function
 data class Faction(
         var id: Int = 0,
         var name: String = "",
-        var power: String = "",
+        var effect: String = "",
         var leaders: MutableList<Card> = ArrayList(),
         var iconUrl: String = "") {
 
@@ -26,14 +26,14 @@ data class Faction(
         const val TABLE = "factions"
         const val ID = "id"
         const val NAME = "name"
-        const val POWER = "power"
+        const val EFFECT = "effect"
         const val ICON_URL = "icon_url"
 
         val MAPPER = Function<Cursor, Faction> { cursor ->
             val faction = Faction()
             faction.id = cursor.getIntFromColumn(Faction.ID)
             faction.name = cursor.getStringFromColumn(Faction.NAME)
-            faction.power = cursor.getStringFromColumn(Faction.POWER)
+            faction.effect = cursor.getStringFromColumn(Faction.EFFECT)
             faction.iconUrl = cursor.getStringFromColumn(Faction.ICON_URL)
             faction
         }
