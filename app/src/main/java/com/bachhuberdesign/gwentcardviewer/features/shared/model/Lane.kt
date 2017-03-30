@@ -15,6 +15,7 @@ class Lane {
         const val MELEE_RANGED = 5
         const val MELEE_SIEGE = 6
         const val RANGED_SIEGE = 7
+        const val MELEE_RANGED_SIEGE = 8
         const val ALL: Int = 99
     }
 

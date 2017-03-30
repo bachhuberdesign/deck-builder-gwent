@@ -46,7 +46,6 @@ class DeckbuildPresenter
             val cursor = query.run()
 
             cursor.use {
-                Log.d(TAG, "Iterating through cursor.")
                 while (cursor!!.moveToNext()) {
                     decks.add(Deck.MAPPER.apply(cursor))
                 }
