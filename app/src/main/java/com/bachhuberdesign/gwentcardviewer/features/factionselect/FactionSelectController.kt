@@ -73,7 +73,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             Log.d(TAG, "Faction ${faction.name} loaded")
             val item: FactionSelectItem = FactionSelectItem()
             item.factionName = faction.name
-            item.factionDescription = faction.power
+            item.factionDescription = faction.effect
             item.backgroundUrl = faction.iconUrl
 
             adapter?.add(item)

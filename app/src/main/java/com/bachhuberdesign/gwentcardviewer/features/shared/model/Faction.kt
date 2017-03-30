@@ -18,6 +18,7 @@ data class Faction(
         var iconUrl: String = "") {
 
     companion object {
+        const val NEUTRAL = 0
         const val NORTHERN_REALMS = 1
         const val SCOIATAEL = 2
         const val MONSTERS = 3
@@ -38,6 +39,5 @@ data class Faction(
             faction
         }
     }
-
 
 }

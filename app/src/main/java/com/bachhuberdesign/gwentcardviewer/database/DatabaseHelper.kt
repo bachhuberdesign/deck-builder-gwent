@@ -1,33 +1,22 @@
 package com.bachhuberdesign.gwentcardviewer.database
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
+import com.google.gson.Gson
 
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-
-    override fun onCreate(database: SQLiteDatabase) {
-        database.execSQL(CREATE_TABLE_CARDS)
-        database.execSQL(CREATE_TABLE_USER_DECKS)
-        database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
-        database.execSQL(CREATE_TABLE_FACTIONS)
-
-        // TODO: Insert static data and show progress bar
-    }
-
-    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        Log.d(TAG, "onUpgrade()")
-        // TODO:
-    }
+class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     companion object {
         @JvmStatic val TAG: String = this::class.java.name
@@ -73,6 +62,50 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                         "${Faction.EFFECT} TEXT NOT NULL," +
                         "${Faction.ICON_URL} TEXT NOT NULL" +
                         ")"
+    }
+
+    override fun onCreate(database: SQLiteDatabase) {
+        database.execSQL(CREATE_TABLE_CARDS)
+        database.execSQL(CREATE_TABLE_USER_DECKS)
+        database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
+        database.execSQL(CREATE_TABLE_FACTIONS)
+
+        val cards = Gson().fromJson(loadCardListJson(), Array<Card>::class.java)
+
+        cards.forEach { (name, description, flavorText, iconUrl, mill, millPremium, scrap,
+                                scrapPremium, power, faction, lane, loyalty, rarity, cardType) ->
+            val cv = ContentValues()
+            cv.put(Card.NAME, name)
+            cv.put(Card.DESCRIPTION, description)
+            cv.put(Card.FLAVOR_TEXT, flavorText)
+            cv.put(Card.ICON_URL, iconUrl)
+            cv.put(Card.MILL, mill)
+            cv.put(Card.MILL_PREMIUM, millPremium)
+            cv.put(Card.SCRAP, scrap)
+            cv.put(Card.SCRAP_PREMIUM, scrapPremium)
+            cv.put(Card.POWER, power)
+            cv.put(Card.FACTION, faction)
+            cv.put(Card.LANE, lane)
+            cv.put(Card.LOYALTY, loyalty)
+            cv.put(Card.RARITY, rarity)
+            cv.put(Card.TYPE, cardType)
+            database.insertWithOnConflict(Card.TABLE, null, cv, CONFLICT_REPLACE)
+        }
+    }
+
+    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        Log.d(TAG, "onUpgrade()")
+        // TODO:
+    }
+
+    private fun loadCardListJson(): String {
+        val stream = context.assets.open("card_list.json")
+        val buffer = ByteArray(stream.available())
+        stream.use { stream ->
+            stream.read(buffer)
+        }
+
+        return String(buffer).format("UTF-8")
     }
 
 }
