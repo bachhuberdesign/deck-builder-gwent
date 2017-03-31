@@ -29,11 +29,11 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun getFactions(): Cursor {
-        return database.query(Faction.TABLE, "SELECT * FROM ${Faction.TABLE}")
+        return database.query("SELECT * FROM ${Faction.TABLE}")
     }
 
     fun getLeaders(): Cursor {
-        return database.query(Card.TABLE, "SELECT * FROM ${Card.TABLE} WHERE ${Card.TYPE} = ${CardType.LEADER}")
+        return database.query("SELECT * FROM ${Card.TABLE} WHERE ${Card.TYPE} = ${CardType.LEADER}")
     }
 
     fun saveDeck(deck: Deck) {
