@@ -71,12 +71,11 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
     override fun onFactionsLoaded(factions: List<Faction>) {
         factions.forEach { faction ->
-            Log.d(TAG, "Faction ${faction.name} loaded")
             val item: FactionSelectItem = FactionSelectItem()
             item.factionName = faction.name
             item.factionDescription = faction.effect
             item.backgroundUrl = faction.iconUrl
-
+            item.leaders = faction.leaders
             adapter?.add(item)
         }
 

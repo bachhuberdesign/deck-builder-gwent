@@ -1,10 +1,12 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
@@ -22,6 +24,7 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
     var backgroundUrl = ""
     var factionName = ""
     var factionDescription = ""
+    var leaders: List<Card>? = null
 
     override fun getLayoutRes(): Int {
         return R.layout.faction_select_item
@@ -42,6 +45,21 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
         Glide.with(viewHolder.itemView.context)
                 .load(backgroundUrl)
                 .into(viewHolder.image)
+
+        Glide.with(viewHolder.itemView.context)
+                .load(Uri.parse("file:///android_asset/leader.png"))
+                .fitCenter()
+                .into(viewHolder.leader1)
+
+        Glide.with(viewHolder.itemView.context)
+                .load(Uri.parse("file:///android_asset/leader.png"))
+                .fitCenter()
+                .into(viewHolder.leader2)
+
+        Glide.with(viewHolder.itemView.context)
+                .load(Uri.parse("file:///android_asset/leader.png"))
+                .fitCenter()
+                .into(viewHolder.leader3)
     }
 
     override fun unbindView(viewHolder: ViewHolder) {
@@ -68,6 +86,10 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
         var name: TextView = view.faction_name_text
         var description: TextView = view.faction_description_text
         var image: ImageView = view.faction_image
+
+        var leader1: ImageView = view.leader1_image
+        var leader2: ImageView = view.leader2_image
+        var leader3: ImageView = view.leader3_image
     }
 
 }
