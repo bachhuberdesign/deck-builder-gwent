@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 import android.os.Bundle
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
@@ -31,7 +32,8 @@ class DeckbuildActivity : BaseActivity() {
 
         if (!router.hasRootController()) {
             Log.d(TAG, "Setting root controller")
-            router.setRoot(RouterTransaction.with(DeckbuildController()))
+
+            router.setRoot(RouterTransaction.with(FactionSelectController()))
         }
     }
 

@@ -70,9 +70,10 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
         database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
         database.execSQL(CREATE_TABLE_FACTIONS)
 
-        val cards = Gson().fromJson(loadCardListJson(), Array<Card>::class.java)
+        val cards = Gson().fromJson(loadJsonFromAssets("card_list.json"), Array<Card>::class.java)
+        val factions = Gson().fromJson(loadJsonFromAssets("faction_list.json"), Array<Faction>::class.java)
 
-        cards.forEach { (name, description, flavorText, iconUrl, mill, millPremium, scrap,
+        cards.forEach { (id, name, description, flavorText, iconUrl, mill, millPremium, scrap,
                                 scrapPremium, power, faction, lane, loyalty, rarity, cardType) ->
             val cv = ContentValues()
             cv.put(Card.NAME, name)
@@ -91,6 +92,15 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
             cv.put(Card.TYPE, cardType)
             database.insertWithOnConflict(Card.TABLE, null, cv, CONFLICT_REPLACE)
         }
+
+        factions.forEach { (id, name, effect, iconUrl) ->
+            val cv = ContentValues()
+            cv.put(Faction.ID, id)
+            cv.put(Faction.NAME, name)
+            cv.put(Faction.EFFECT, effect)
+            cv.put(Faction.ICON_URL, iconUrl)
+            database.insertWithOnConflict(Faction.TABLE, null, cv, CONFLICT_REPLACE)
+        }
     }
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -98,8 +108,8 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
         // TODO:
     }
 
-    private fun loadCardListJson(): String {
-        val stream = context.assets.open("card_list.json")
+    private fun loadJsonFromAssets(fileName: String): String {
+        val stream = context.assets.open(fileName)
         val buffer = ByteArray(stream.available())
         stream.use { stream ->
             stream.read(buffer)

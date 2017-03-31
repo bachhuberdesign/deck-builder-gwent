@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Northern Realms",
+    "effect": "Add 2 strength to each Gold unit when it appears on your side.",
+    "iconUrl": "northern_realms.png"
+  },
+  {
+    "id": 2,
+    "name": "Scoia'tael",
+    "effect": "Chose who begins one round per game.",
+    "iconUrl": "scoiatael.png"
+  },
+  {
+    "id": 3,
+    "name": "Monsters",
+    "effect": "At the end of each round, keep the last loyal non-Gold, non-Fleeting Neutral or Monsters unit played on your side of the battlefield.",
+    "iconUrl": "monsters.png"
+  },
+  {
+    "id": 4,
+    "name": "Skellige",
+    "effect": "At the start of Rounds 2 and 3, add 1 to the base strength of every non-Gold unit in your hand, deck, and graveyard.",
+    "iconUrl": "skellige.png"
+  },
+  {
+    "id": 5,
+    "name": "Nilfgaard",
+    "effect": "After drawing cards at the start of rounds 2 and 3, redraw up to 1 card in your hand.",
+    "iconUrl": "nilfgaard.png"
+  }
+]

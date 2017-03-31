@@ -14,8 +14,9 @@ data class Faction(
         var id: Int = 0,
         var name: String = "",
         var effect: String = "",
-        var leaders: MutableList<Card> = ArrayList(),
-        var iconUrl: String = "") {
+        var iconUrl: String = "",
+        var leaders: MutableList<Card> = ArrayList()
+) {
 
     companion object {
         const val NEUTRAL = 0
