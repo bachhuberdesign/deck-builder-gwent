@@ -37,4 +37,10 @@ class DeckbuildActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (!router.handleBack()) {
+            super.onBackPressed()
+        }
+    }
+
 }
