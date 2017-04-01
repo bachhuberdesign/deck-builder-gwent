@@ -11,8 +11,11 @@ import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
+import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler
+import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler.FlipDirection
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import kotlinx.android.synthetic.main.controller_faction_select.view.*
 import javax.inject.Inject
@@ -45,6 +48,11 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         adapter = FastItemAdapter()
         adapter?.withOnClickListener { view, adapter, item, position ->
             Toast.makeText(activity, "Item clicked at position $position", Toast.LENGTH_SHORT).show()
+
+            router.pushController(RouterTransaction.with(LeaderConfirmController(item.leaders!![0]))
+                    .pushChangeHandler(FlipChangeHandler(FlipDirection.RIGHT))
+                    .popChangeHandler(FlipChangeHandler(FlipDirection.LEFT)))
+
             true
         }
 
