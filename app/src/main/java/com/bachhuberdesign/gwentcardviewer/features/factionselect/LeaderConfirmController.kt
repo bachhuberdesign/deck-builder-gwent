@@ -46,6 +46,10 @@ class LeaderConfirmController : Controller {
 
         view.leader_power_text.text = card?.description
 
+        view.confirm_leader_button.setOnClickListener { v ->
+            (parentController as FactionSelectController).onLeaderConfirmed(card)
+        }
+
         return view
     }
 
