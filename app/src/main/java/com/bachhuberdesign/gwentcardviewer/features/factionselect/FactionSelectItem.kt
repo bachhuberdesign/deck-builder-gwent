@@ -40,11 +40,14 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
         viewHolder.name.text = factionName
         viewHolder.description.text = factionDescription
 
-        Glide.clear(viewHolder.image)
+        Glide.clear(viewHolder.factionImage)
+        Glide.clear(viewHolder.leader1)
+        Glide.clear(viewHolder.leader2)
+        Glide.clear(viewHolder.leader3)
 
         Glide.with(viewHolder.itemView.context)
                 .load(backgroundUrl)
-                .into(viewHolder.image)
+                .into(viewHolder.factionImage)
 
         Glide.with(viewHolder.itemView.context)
                 .load(Uri.parse("file:///android_asset/leader.png"))
@@ -68,8 +71,8 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
         viewHolder.name.text = null
         viewHolder.description.text = null
 
-        Glide.clear(viewHolder.image)
-        viewHolder.image.setImageDrawable(null)
+        Glide.clear(viewHolder.factionImage)
+        viewHolder.factionImage.setImageDrawable(null)
     }
 
     private class ItemFactory : ViewHolderFactory<ViewHolder> {
@@ -85,7 +88,7 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.faction_name_text
         var description: TextView = view.faction_description_text
-        var image: ImageView = view.faction_image
+        var factionImage: ImageView = view.faction_image
 
         var leader1: ImageView = view.leader1_image
         var leader2: ImageView = view.leader2_image
