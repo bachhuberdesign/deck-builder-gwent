@@ -6,6 +6,7 @@ import com.bachhuberdesign.gwentcardviewer.inject.DaggerApplicationComponent
 import com.bachhuberdesign.gwentcardviewer.inject.module.DatabaseModule
 import com.bachhuberdesign.gwentcardviewer.inject.module.NetworkModule
 import com.bachhuberdesign.gwentcardviewer.inject.module.RepositoryModule
+import com.bumptech.glide.request.target.ViewTarget
 
 /**
  * @author Eric Bachhuber
@@ -21,6 +22,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // Workaround for Glide setTag issue: See http://stackoverflow.com/questions/34833627
+        ViewTarget.setTagId(R.id.glide_tag)
 
         applicationComponent = DaggerApplicationComponent.builder()
                 .networkModule(NetworkModule())

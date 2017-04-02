@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
@@ -16,7 +15,10 @@ import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler.FlipDirection
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper
+import com.mikepenz.fastadapter.listeners.ClickEventHook
 import kotlinx.android.synthetic.main.controller_faction_select.view.*
 import javax.inject.Inject
 
@@ -46,15 +48,22 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         persistedComponent.inject(this)
 
         adapter = FastItemAdapter()
-        adapter?.withOnClickListener { view, adapter, item, position ->
-            Toast.makeText(activity, "Item clicked at position $position", Toast.LENGTH_SHORT).show()
+        adapter!!.withItemEvent(object : ClickEventHook<FactionSelectItem>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder): MutableList<View>? {
+                if (viewHolder is FactionSelectItem.ViewHolder) {
+                    return ClickListenerHelper.toList(viewHolder.leader1, viewHolder.leader2, viewHolder.leader3)
+                } else {
+                    return super.onBindMany(viewHolder)
+                }
+            }
 
-            router.pushController(RouterTransaction.with(LeaderConfirmController(item.leaders!![0]))
-                    .pushChangeHandler(FlipChangeHandler(FlipDirection.RIGHT))
-                    .popChangeHandler(FlipChangeHandler(FlipDirection.LEFT)))
-
-            true
-        }
+            override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionSelectItem>, item: FactionSelectItem) {
+                val tag = Integer.valueOf(view.tag as String)
+                router.pushController(RouterTransaction.with(LeaderConfirmController(item.leaders!![tag]))
+                        .pushChangeHandler(FlipChangeHandler(FlipDirection.RIGHT))
+                        .popChangeHandler(FlipChangeHandler(FlipDirection.LEFT)))
+            }
+        })
 
         layoutManager = LinearLayoutManager(activity)
 
