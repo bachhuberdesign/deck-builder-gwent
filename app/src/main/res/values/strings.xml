@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Card Viewer for Gwent</string>
+    <string name="neutral">Neutral</string>
+    <string name="northern_realms">Northern Realms</string>
+    <string name="scoiatael">Scoia\'tael</string>
+    <string name="skellige">Skellige</string>
+    <string name="monsters">Monsters</string>
+    <string name="nilfgaard">Nilfgaard</string>
 </resources>

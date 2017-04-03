@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
+import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bumptech.glide.Glide
@@ -38,7 +40,7 @@ class LeaderConfirmController : Controller {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_leader_confirm)
 
-        if (card == null){
+        if (card == null) {
             card = Gson().fromJson(args.getString("card"), Card::class.java)
         }
 
@@ -48,6 +50,7 @@ class LeaderConfirmController : Controller {
 
         view.leader_name_text.text = card?.name
         view.leader_power_text.text = card?.description
+        view.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(card?.faction))
 
         Log.d(TAG, "Power: ${card?.description}")
 
