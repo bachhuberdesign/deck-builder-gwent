@@ -6,4 +6,6 @@
     <string name="skellige">Skellige</string>
     <string name="monsters">Monsters</string>
     <string name="nilfgaard">Nilfgaard</string>
+    <string name="create_deck">Create Deck</string>
+    <string name="create_deck_hint">Enter a name for your new deck</string>
 </resources>

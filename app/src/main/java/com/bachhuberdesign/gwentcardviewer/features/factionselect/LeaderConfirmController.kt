@@ -2,11 +2,13 @@ package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
@@ -54,8 +56,19 @@ class LeaderConfirmController : Controller {
 
         Log.d(TAG, "Power: ${card?.description}")
 
-        view.confirm_leader_button.setOnClickListener { v ->
-            Toast.makeText(activity, "Show dialog with deck name EditText here", Toast.LENGTH_LONG).show()
+        view.confirm_leader_button.setOnClickListener {
+
+            MaterialDialog.Builder(activity!!)
+                    .title("Confirm Deck Creation")
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input("Enter a name for your new deck", "New Deck 1", { dialog, input ->
+                    })
+                    .negativeText(android.R.string.cancel)
+                    .positiveText(R.string.create_deck)
+                    .onPositive { dialog, which ->
+                        Toast.makeText(activity, "Persist new deck and pass id to DeckbuildController here", Toast.LENGTH_LONG).show()
+                    }
+                    .show()
         }
 
         return view
