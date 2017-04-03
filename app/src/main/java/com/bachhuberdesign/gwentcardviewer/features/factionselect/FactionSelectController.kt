@@ -2,6 +2,7 @@ package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -104,7 +105,8 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
     }
 
     override fun onLeaderConfirmed(leader: Card) {
-        // TODO: push deckbuild Controller
+        Log.d(TAG, "onLeaderConfirmed: ${leader.cardId}")
+        // TODO: Push deckbuild Controller
     }
 
 }

@@ -2,9 +2,11 @@ package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.util.inflate
@@ -18,6 +20,7 @@ import kotlinx.android.synthetic.main.controller_leader_confirm.view.*
  * @version 1.0.0
  * @since 1.0.0
  */
+// TODO: Inject presenter and Gson
 class LeaderConfirmController : Controller {
 
     var card: Card? = null
@@ -35,19 +38,21 @@ class LeaderConfirmController : Controller {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_leader_confirm)
 
-        if (card == null) {
+        if (card == null){
             card = Gson().fromJson(args.getString("card"), Card::class.java)
         }
 
         Glide.with(activity)
                 .load(Uri.parse("file:///android_asset/leader.png"))
-                .fitCenter()
                 .into(view.leader_image)
 
+        view.leader_name_text.text = card?.name
         view.leader_power_text.text = card?.description
 
+        Log.d(TAG, "Power: ${card?.description}")
+
         view.confirm_leader_button.setOnClickListener { v ->
-            (parentController as FactionSelectController).onLeaderConfirmed(card)
+            Toast.makeText(activity, "Show dialog with deck name EditText here", Toast.LENGTH_LONG).show()
         }
 
         return view
