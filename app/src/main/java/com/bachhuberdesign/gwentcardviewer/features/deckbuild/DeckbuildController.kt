@@ -45,10 +45,6 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
         presenter.detach()
     }
 
-    override fun onDeckCreated() {
-        Log.d(TAG, "onDeckCreated()")
-    }
-
     override fun onCardAdded() {
         Log.d(TAG, "onCardAdded()")
     }
@@ -57,17 +53,11 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
         Log.d(TAG, "onCardRemoved()")
     }
 
-    override fun onExportDecklist() {
-        Log.d(TAG, "onExportDecklist()")
-    }
-
     override fun onDeckDeleted(deckId: Int) {
         Log.d(TAG, "onDeckDeleted()")
     }
 
     override fun onDecksLoaded(decks: List<Deck>) {
-        Log.d(TAG, "Deck list loaded.")
-
         decks.forEach { deck ->
             Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
                     "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")

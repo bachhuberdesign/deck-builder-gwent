@@ -105,7 +105,6 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         Log.d(TAG, "onUpgrade()")
-        // TODO:
     }
 
     private fun loadJsonFromAssets(fileName: String): String {

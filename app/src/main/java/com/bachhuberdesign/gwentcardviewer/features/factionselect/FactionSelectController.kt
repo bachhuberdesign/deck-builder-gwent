@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler
@@ -58,10 +59,8 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             }
 
             override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionSelectItem>, item: FactionSelectItem) {
-                val tag = Integer.valueOf(view.tag as String)
-                router.pushController(RouterTransaction.with(LeaderConfirmController(item.leaders!![tag]))
-                        .pushChangeHandler(FlipChangeHandler(FlipDirection.RIGHT))
-                        .popChangeHandler(FlipChangeHandler(FlipDirection.LEFT)))
+                val index = Integer.valueOf(view.tag as String)
+                onLeaderSelected(item.leaders!![index])
             }
         })
 
@@ -99,18 +98,15 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         adapter?.notifyDataSetChanged()
     }
 
-    override fun onFactionSelected(factionId: Int) {
-        Log.d(TAG, "onFactionSelected() id: $factionId")
-        TODO("Not yet implemented.")
+    override fun onLeaderSelected(leader: Card) {
+        router.pushController(RouterTransaction.with(LeaderConfirmController(leader))
+                .pushChangeHandler(FlipChangeHandler(FlipDirection.RIGHT))
+                .popChangeHandler(FlipChangeHandler(FlipDirection.LEFT)))
     }
 
-    override fun onLeaderSelected(cardId: Int) {
-        Log.d(TAG, "onLeaderSelected() id: $cardId")
-        TODO("Not yet implemented.")
-    }
-
-    override fun onLeaderConfirmed() {
-        TODO("Not yet implemented.")
+    override fun onLeaderConfirmed(leader: Card) {
+        Log.d(TAG, "onLeaderConfirmed: ${leader.cardId}")
+        // TODO: Push deckbuild Controller
     }
 
 }

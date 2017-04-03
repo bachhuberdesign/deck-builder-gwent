@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.util
 
+import android.content.Context
 import android.database.Cursor
 import android.view.LayoutInflater
 import android.view.View
@@ -59,4 +60,9 @@ fun Cursor.getFloatFromColumn(columnName: String): Float {
 
 fun Cursor.getBlobFromColumn(columnName: String): ByteArray {
     return getBlob(getColumnIndex(columnName))
+}
+
+fun Context.getStringResourceByName(key: String): String {
+    val resourceId = this.resources.getIdentifier(key, "string", this.packageName)
+    return this.getString(resourceId)
 }

@@ -1,6 +1,7 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 
 /**
@@ -12,10 +13,8 @@ interface FactionSelectMvpContract : MvpContract {
 
     fun onFactionsLoaded(factions: List<Faction>)
 
-    fun onFactionSelected(factionId: Int)
+    fun onLeaderSelected(leader: Card)
 
-    fun onLeaderSelected(cardId: Int)
-
-    fun onLeaderConfirmed()
+    fun onLeaderConfirmed(leader: Card)
 
 }

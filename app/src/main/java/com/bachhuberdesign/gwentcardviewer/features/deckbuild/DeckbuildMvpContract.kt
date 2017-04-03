@@ -9,13 +9,9 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
  */
 interface DeckbuildMvpContract : MvpContract {
 
-    fun onDeckCreated()
-
     fun onCardAdded()
 
     fun onCardRemoved()
-
-    fun onExportDecklist()
 
     fun onDecksLoaded(decks: List<Deck>)
 

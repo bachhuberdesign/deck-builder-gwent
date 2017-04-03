@@ -5,6 +5,7 @@ import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
 import com.bachhuberdesign.gwentcardviewer.util.getStringFromColumn
 import io.reactivex.functions.Function
 
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -38,6 +39,18 @@ data class Faction(
             faction.effect = cursor.getStringFromColumn(Faction.EFFECT)
             faction.iconUrl = cursor.getStringFromColumn(Faction.ICON_URL)
             faction
+        }
+
+        val ID_TO_KEY = Function<Int, String> { factionId ->
+            when (factionId) {
+                NEUTRAL -> "neutral"
+                NORTHERN_REALMS -> "northern_realms"
+                SCOIATAEL -> "scoiatael"
+                MONSTERS -> "monsters"
+                SKELLIGE -> "skellige"
+                NILFGAARD -> "nilfgaard"
+                else -> throw IndexOutOfBoundsException("factionId value was $factionId, expected 0-5.")
+            }
         }
     }
 

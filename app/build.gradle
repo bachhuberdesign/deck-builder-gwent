@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-    def support_version = "25.3.1"
+    def support_version = "25.3.0"
     def conductor_version = "2.1.1"
     def dagger_version = "2.10"
     def retrofit_version = "2.2.0"
@@ -104,6 +104,9 @@ dependencies {
     compile('com.mikepenz:fastadapter:2.1.7@aar') { transitive = true }
     compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
     compile "com.mikepenz:materialize:1.0.1@aar"
+
+    // Dialog
+    compile 'com.afollestad.material-dialogs:core:0.9.4.2'
 }
 
 repositories {
