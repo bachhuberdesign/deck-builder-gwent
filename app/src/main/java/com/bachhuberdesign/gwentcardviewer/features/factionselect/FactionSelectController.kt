@@ -34,19 +34,19 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         @JvmStatic val TAG: String = this::class.java.name
     }
 
+    @Inject
+    lateinit var presenter: FactionSelectPresenter
+
     var recyclerView: RecyclerView? = null
     var adapter: FastItemAdapter<FactionSelectItem>? = null
     var layoutManager: LinearLayoutManager? = null
 
-    @Inject
-    lateinit var presenter: FactionSelectPresenter
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_faction_select)
 
-        val persistedComponent = (activity as DeckbuildActivity)
-                .persistedComponent.activitySubcomponent(ActivityModule(activity as DeckbuildActivity))
-        persistedComponent.inject(this)
+        (activity as DeckbuildActivity).persistedComponent
+                .activitySubcomponent(ActivityModule(activity!!))
+                .inject(this)
 
         adapter = FastItemAdapter()
         adapter!!.withItemEvent(object : ClickEventHook<FactionSelectItem>() {

@@ -10,24 +10,27 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
+import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
+import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.controller_leader_confirm.view.*
+import javax.inject.Inject
 
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
-// TODO: Inject presenter and Gson
-class LeaderConfirmController : Controller {
-
-    var card: Card? = null
+class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
 
     constructor(card: Card) : super() {
         this.card = card
@@ -39,14 +42,26 @@ class LeaderConfirmController : Controller {
         val TAG: String = this::class.java.name
     }
 
+    @Inject
+    lateinit var gson: Gson
+
+    @Inject
+    lateinit var presenter: LeaderConfirmPresenter
+
+    var card: Card? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_leader_confirm)
 
+        (activity as DeckbuildActivity).persistedComponent
+                .activitySubcomponent(ActivityModule(activity!!))
+                .inject(this)
+
         if (card == null) {
-            card = Gson().fromJson(args.getString("card"), Card::class.java)
+            card = gson.fromJson(args.getString("card"), Card::class.java)
         }
 
-        Glide.with(activity)
+        Glide.with(activity!!)
                 .load(Uri.parse("file:///android_asset/leader.png"))
                 .into(view.leader_image)
 
@@ -54,10 +69,7 @@ class LeaderConfirmController : Controller {
         view.leader_power_text.text = card?.description
         view.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(card?.faction))
 
-        Log.d(TAG, "Power: ${card?.description}")
-
         view.confirm_leader_button.setOnClickListener {
-
             MaterialDialog.Builder(activity!!)
                     .title("Confirm Deck Creation")
                     .inputType(InputType.TYPE_CLASS_TEXT)
@@ -66,7 +78,12 @@ class LeaderConfirmController : Controller {
                     .negativeText(android.R.string.cancel)
                     .positiveText(R.string.create_deck)
                     .onPositive { dialog, which ->
-                        Toast.makeText(activity, "Persist new deck and pass id to DeckbuildController here", Toast.LENGTH_LONG).show()
+                        val deckName = dialog.inputEditText?.text.toString()
+                        if (deckName.isNullOrEmpty()) {
+                            Toast.makeText(activity, "Please enter a name for your deck.", Toast.LENGTH_LONG).show()
+                        } else {
+                            presenter.saveNewDeck(deckName, card!!)
+                        }
                     }
                     .show()
         }
@@ -74,9 +91,27 @@ class LeaderConfirmController : Controller {
         return view
     }
 
+    override fun onAttach(view: View) {
+        super.onAttach(view)
+        presenter.attach(this)
+    }
+
+    override fun onDetach(view: View) {
+        super.onDetach(view)
+        presenter.detach()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("card", Gson().toJson(card))
+        outState.putString("card", gson.toJson(card))
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onDeckSaved() {
+        Log.d(TAG, "onDeckSaved()")
+        router.setRoot(RouterTransaction.with(DeckbuildController())
+                .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
+                .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
+        router.popToRoot()
     }
 
 }
