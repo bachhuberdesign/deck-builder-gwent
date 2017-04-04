@@ -27,9 +27,9 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
 
-        val persistedComponent = (activity as DeckbuildActivity)
-                .persistedComponent.activitySubcomponent(ActivityModule(activity as DeckbuildActivity))
-        persistedComponent.inject(this)
+        (activity as DeckbuildActivity).persistedComponent
+                .activitySubcomponent(ActivityModule(activity!!))
+                .inject(this)
 
         return view
     }

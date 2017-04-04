@@ -36,7 +36,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return database.query("SELECT * FROM ${Card.TABLE} WHERE ${Card.TYPE} = ${CardType.LEADER}")
     }
 
-    fun saveDeck(deck: Deck) {
+    fun saveDeck(deck: Deck): Int {
         val currentTime = Date().time
         val deckValues = ContentValues()
 
@@ -61,6 +61,8 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
             cardValues.put("deck_id", deck.id)
             database.insert(Deck.JOIN_CARD_TABLE, cardValues)
         }
+
+        return deck.id
     }
 
     fun deleteDeck(deckId: Int) {
