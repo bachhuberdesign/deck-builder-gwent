@@ -12,6 +12,7 @@ import com.squareup.sqlbrite.QueryObservable
 import java.util.*
 import javax.inject.Inject
 
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -24,7 +25,17 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         @JvmStatic val TAG: String = this::class.java.name
     }
 
-    fun getUserCreatedDecks(): QueryObservable {
+    fun deckNameExists(deckName: String): Boolean {
+        val count = database.readableDatabase.compileStatement("SELECT COUNT(*) FROM ${Deck.TABLE} WHERE ${Deck.NAME} = '$deckName';")
+
+        return count.simpleQueryForLong() > 0
+    }
+
+    fun getDeckById(deckId: Int): Cursor {
+        return database.query("SELECT * FROM ${Deck.TABLE} WHERE ${Deck.ID} = $deckId")
+    }
+
+    fun getAllUserCreatedDecks(): QueryObservable {
         return database.createQuery(Deck.TABLE, "SELECT * FROM ${Deck.TABLE}")
     }
 

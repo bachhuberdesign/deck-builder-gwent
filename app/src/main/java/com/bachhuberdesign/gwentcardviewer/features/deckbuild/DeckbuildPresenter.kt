@@ -26,21 +26,29 @@ class DeckbuildPresenter
         super.detach()
     }
 
-    fun addCard(cardId: Int) {
-        // TODO:
-    }
+    fun loadUserDeck(deckId: Int) {
+        Log.d(TAG, "Loading deck $deckId")
+        val cursor = repository.getDeckById(deckId)
+        var deck: Deck? = null
 
-    fun removeCard(cardId: Int) {
-        // TODO:
+        cursor.use {
+            while (cursor.moveToNext()) {
+                deck = Deck.MAPPER.apply(cursor)
+            }
+        }
+
+        if (isViewAttached()) {
+            view!!.onDeckLoaded(deck)
+        }
     }
 
     /**
      *
      */
-    fun loadUserDecks() {
+    fun loadAllUserDecks() {
         Log.d(TAG, "Loading user decks.")
         val decks: MutableList<Deck> = ArrayList()
-        val query = repository.getUserCreatedDecks()
+        val query = repository.getAllUserCreatedDecks()
 
         query.subscribe({ query ->
             val cursor = query.run()
@@ -56,6 +64,14 @@ class DeckbuildPresenter
                 view!!.onDecksLoaded(decks)
             }
         })
+    }
+
+    fun addCard(cardId: Int) {
+        // TODO:
+    }
+
+    fun removeCard(cardId: Int) {
+        // TODO:
     }
 
     /**

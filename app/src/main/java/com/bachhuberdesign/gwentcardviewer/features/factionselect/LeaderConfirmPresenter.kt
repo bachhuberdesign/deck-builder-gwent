@@ -1,12 +1,10 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
-import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
-import java.lang.UnsupportedOperationException
 import java.util.*
 import javax.inject.Inject
 
@@ -24,31 +22,23 @@ class LeaderConfirmPresenter
     }
 
     fun saveNewDeck(deckName: String, leader: Card) {
-        Log.d(TAG, "saveNewDeck()")
-
         if (deckName.isNullOrEmpty()) {
-            throw UnsupportedOperationException()
+            view!!.displayError("Please enter a name for your deck.")
+        } else if (repository.deckNameExists(deckName) && isViewAttached()) {
+            view!!.displayError("A deck with that name already exists, please try again.")
+        } else {
+            val deck: Deck = Deck(
+                    name = deckName,
+                    faction = leader.faction,
+                    createdDate = Calendar.getInstance().time)
+            deck.cards.add(leader)
+
+            val deckId = repository.saveDeck(deck)
+
+            if (isViewAttached()) {
+                view!!.onDeckSaved(deckId)
+            }
         }
-
-        val deck: Deck = Deck(
-                name = deckName,
-                faction = leader.faction,
-                createdDate = Calendar.getInstance().time)
-        deck.cards.add(leader)
-
-        repository.saveDeck(deck)
-
-        if (isViewAttached()) {
-            view!!.onDeckSaved()
-        }
-    }
-
-    override fun attach(view: LeaderConfirmMvpContract) {
-        super.attach(view)
-    }
-
-    override fun detach() {
-        super.detach()
     }
 
 }

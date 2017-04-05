@@ -9,6 +9,8 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
  */
 interface LeaderConfirmMvpContract : MvpContract {
 
-    fun onDeckSaved()
+    fun onDeckSaved(deckId: Int)
+
+    fun displayError(messageToDisplay: String)
 
 }

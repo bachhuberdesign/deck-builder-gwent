@@ -3,7 +3,6 @@ package com.bachhuberdesign.gwentcardviewer.features.factionselect
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,12 +77,8 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
                     .negativeText(android.R.string.cancel)
                     .positiveText(R.string.create_deck)
                     .onPositive { dialog, which ->
-                        val deckName = dialog.inputEditText?.text.toString()
-                        if (deckName.isNullOrEmpty()) {
-                            Toast.makeText(activity, "Please enter a name for your deck.", Toast.LENGTH_LONG).show()
-                        } else {
-                            presenter.saveNewDeck(deckName, card!!)
-                        }
+                        val deckName = dialog.inputEditText?.text.toString().trim()
+                        presenter.saveNewDeck(deckName, card!!)
                     }
                     .show()
         }
@@ -106,12 +101,15 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onDeckSaved() {
-        Log.d(TAG, "onDeckSaved()")
-        router.setRoot(RouterTransaction.with(DeckbuildController())
+    override fun onDeckSaved(deckId: Int) {
+        router.setRoot(RouterTransaction.with(DeckbuildController(deckId))
                 .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
                 .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
         router.popToRoot()
+    }
+
+    override fun displayError(messageToDisplay: String) {
+        Toast.makeText(activity, messageToDisplay, Toast.LENGTH_LONG).show()
     }
 
 }

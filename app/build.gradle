@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-    def support_version = "25.3.0"
+    def support_version = "25.3.1"
     def conductor_version = "2.1.1"
     def dagger_version = "2.10"
     def retrofit_version = "2.2.0"
@@ -101,8 +101,8 @@ dependencies {
     compile 'com.squareup.sqlbrite:sqlbrite:1.1.1'
 
     // FastAdapter
-    compile('com.mikepenz:fastadapter:2.1.7@aar') { transitive = true }
-    compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
+    compile('com.mikepenz:fastadapter:2.2.0@aar') { transitive = true }
+    compile 'com.mikepenz:fastadapter-commons:2.2.0@aar'
     compile "com.mikepenz:materialize:1.0.1@aar"
 
     // Dialog
@@ -111,4 +111,19 @@ dependencies {
 
 repositories {
     jcenter()
+    maven {
+        url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1/'
+    }
+}
+
+// Remove once MaterialDialogs has been updated to use latest support library
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.1'
+            }
+        }
+    }
 }
