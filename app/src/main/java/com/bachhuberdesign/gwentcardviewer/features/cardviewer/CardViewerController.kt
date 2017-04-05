@@ -1,6 +1,7 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,12 +52,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
+        presenter.getUsableCards(factionId)
     }
 
     override fun onDetach(view: View) {
         super.onDetach(view)
         presenter.detach()
-        presenter.getUsableCards(factionId)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -65,7 +66,15 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun onCardsLoaded(cards: List<Card>) {
-        TODO("Not yet implemented.")
+        cards.forEach { card ->
+            Log.d(TAG, "Card loaded: ${card.name}")
+        }
+
+        // TODO: Display cards in layout
+    }
+
+    override fun onListFiltered(filteredCards: List<Card>) {
+        TODO("Method not yet implemented")
     }
 
 }

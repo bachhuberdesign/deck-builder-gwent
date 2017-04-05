@@ -12,4 +12,5 @@ interface CardViewerMvpContract : MvpContract {
 
     fun onCardsLoaded(cards: List<Card>)
 
+    fun onListFiltered(filteredCards: List<Card>)
 }

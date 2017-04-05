@@ -12,7 +12,7 @@ import javax.inject.Inject
  * @since 1.0.0
  */
 @PersistedScope
-class DeckRepository @Inject constructor(val database: BriteDatabase) {
+class CardRepository @Inject constructor(val database: BriteDatabase) {
 
     companion object {
         @JvmStatic val TAG: String = this::class.java.name
