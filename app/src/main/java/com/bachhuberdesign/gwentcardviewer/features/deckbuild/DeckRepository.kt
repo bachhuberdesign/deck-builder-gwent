@@ -35,6 +35,13 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return database.query("SELECT * FROM ${Deck.TABLE} WHERE ${Deck.ID} = $deckId")
     }
 
+    fun getCardsForDeck(deckId: Int): Cursor {
+        return database.query("SELECT * FROM ${Card.TABLE} AS t1 " +
+                "JOIN user_decks_cards as t2 " +
+                "ON t1.id = t2.card_id " +
+                "WHERE t2.deck_id = $deckId")
+    }
+
     fun getAllUserCreatedDecks(): QueryObservable {
         return database.createQuery(Deck.TABLE, "SELECT * FROM ${Deck.TABLE}")
     }
