@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.gwentcardviewer.R
-import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity
+import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
@@ -44,7 +44,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_faction_select)
 
-        (activity as DeckbuildActivity).persistedComponent
+        (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 

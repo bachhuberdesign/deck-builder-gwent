@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
@@ -43,7 +44,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             deckId = args.getInt("deckId")
         }
 
-        (activity as DeckbuildActivity).persistedComponent
+        (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
