@@ -77,12 +77,8 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
                     .negativeText(android.R.string.cancel)
                     .positiveText(R.string.create_deck)
                     .onPositive { dialog, which ->
-                        val deckName = dialog.inputEditText?.text.toString()
-                        if (deckName.isNullOrEmpty()) {
-                            Toast.makeText(activity, "Please enter a name for your deck.", Toast.LENGTH_LONG).show()
-                        } else {
-                            presenter.saveNewDeck(deckName, card!!)
-                        }
+                        val deckName = dialog.inputEditText?.text.toString().trim()
+                        presenter.saveNewDeck(deckName, card!!)
                     }
                     .show()
         }
@@ -110,6 +106,10 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
                 .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
                 .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
         router.popToRoot()
+    }
+
+    override fun displayError(messageToDisplay: String) {
+        Toast.makeText(activity, messageToDisplay, Toast.LENGTH_LONG).show()
     }
 
 }
