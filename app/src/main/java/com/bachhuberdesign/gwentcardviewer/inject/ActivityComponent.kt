@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.inject
 
+import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.factionselect.LeaderConfirmController
@@ -24,5 +25,7 @@ interface ActivityComponent {
     fun inject(factionSelectController: FactionSelectController)
 
     fun inject(leaderConfirmController: LeaderConfirmController)
+
+    fun inject(cardViewerController: CardViewerController)
 
 }

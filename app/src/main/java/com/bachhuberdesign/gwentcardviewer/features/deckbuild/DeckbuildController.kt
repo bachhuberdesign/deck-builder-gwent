@@ -40,13 +40,17 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
 
+        (activity as MainActivity).persistedComponent
+                .activitySubcomponent(ActivityModule(activity!!))
+                .inject(this)
+
         if (deckId == 0) {
             deckId = args.getInt("deckId")
         }
 
-        (activity as MainActivity).persistedComponent
-                .activitySubcomponent(ActivityModule(activity!!))
-                .inject(this)
+        view.add_to_deck_button.setOnClickListener { v ->
+            // TODO: Transition to CardViewerController with ViewDragHelper
+        }
 
         return view
     }
