@@ -22,11 +22,7 @@ class LeaderConfirmPresenter
     }
 
     fun saveNewDeck(deckName: String, leader: Card) {
-        if (deckName.isNullOrEmpty()) {
-            view!!.displayError("Please enter a name for your deck.")
-        } else if (repository.deckNameExists(deckName) && isViewAttached()) {
-            view!!.displayError("A deck with that name already exists, please try again.")
-        } else {
+        if (isDeckNameValid(deckName)) {
             val deck: Deck = Deck(
                     name = deckName,
                     faction = leader.faction,
@@ -41,4 +37,14 @@ class LeaderConfirmPresenter
         }
     }
 
+    private fun isDeckNameValid(deckName: String): Boolean {
+        if (deckName.isNullOrEmpty()) {
+            view!!.displayError("Please enter a name for your deck.")
+            return false
+        } else if (repository.deckNameExists(deckName) && isViewAttached()) {
+            view!!.displayError("A deck with that name already exists, please try again.")
+            return false
+        }
+        return true
+    }
 }

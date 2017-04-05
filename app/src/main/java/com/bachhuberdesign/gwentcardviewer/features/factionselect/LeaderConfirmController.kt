@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.gwentcardviewer.R
-import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildActivity
+import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
@@ -52,7 +52,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_leader_confirm)
 
-        (activity as DeckbuildActivity).persistedComponent
+        (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 

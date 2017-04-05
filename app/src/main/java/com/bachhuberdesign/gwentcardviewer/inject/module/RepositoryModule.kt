@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.inject.module
 
+import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardRepository
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.google.gson.Gson
 import com.squareup.sqlbrite.BriteDatabase
@@ -19,6 +20,12 @@ class RepositoryModule {
     @Singleton
     fun provideDeckRepository(gson: Gson, database: BriteDatabase): DeckRepository {
         return DeckRepository(gson, database)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCardRepository(database: BriteDatabase): CardRepository {
+        return CardRepository(database)
     }
 
 }

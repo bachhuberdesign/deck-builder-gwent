@@ -5,10 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
+import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import javax.inject.Inject
 
 /**
@@ -36,13 +40,17 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
 
+        (activity as MainActivity).persistedComponent
+                .activitySubcomponent(ActivityModule(activity!!))
+                .inject(this)
+
         if (deckId == 0) {
             deckId = args.getInt("deckId")
         }
 
-        (activity as DeckbuildActivity).persistedComponent
-                .activitySubcomponent(ActivityModule(activity!!))
-                .inject(this)
+        view.add_to_deck_button.setOnClickListener { v ->
+            // TODO: Transition to CardViewerController with ViewDragHelper
+        }
 
         return view
     }
@@ -78,6 +86,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onDeckLoaded(deck: Deck?) {
         Log.d(TAG, "Deck: ${deck?.name}, id: ${deck?.id}, favorited: ${deck?.isFavorited}, " +
                 "created on: ${deck?.createdDate}, last updated: ${deck?.lastUpdate}")
+
+        deck?.cards?.forEach { card ->
+            Log.d(TAG, "Card: ${card.name}")
+        }
+
+        view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck?.faction))
+        view!!.leader_name_text.text = deck?.cards?.get(0)?.name
     }
 
     override fun onDecksLoaded(decks: List<Deck>) {
