@@ -24,7 +24,11 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         @JvmStatic val TAG: String = this::class.java.name
     }
 
-    fun getUserCreatedDecks(): QueryObservable {
+    fun getDeckById(deckId: Int): Cursor {
+        return database.query("SELECT * FROM ${Deck.TABLE} WHERE ${Deck.ID} = $deckId")
+    }
+
+    fun getAllUserCreatedDecks(): QueryObservable {
         return database.createQuery(Deck.TABLE, "SELECT * FROM ${Deck.TABLE}")
     }
 

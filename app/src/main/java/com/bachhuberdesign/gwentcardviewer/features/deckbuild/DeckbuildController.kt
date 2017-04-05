@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,13 @@ import javax.inject.Inject
  * @version 1.0.0
  * @since 1.0.0
  */
-class DeckbuildController : Controller(), DeckbuildMvpContract {
+class DeckbuildController : Controller, DeckbuildMvpContract {
+
+    constructor(deckId: Int) : super() {
+        this.deckId = deckId
+    }
+
+    constructor(args: Bundle) : super()
 
     companion object {
         @JvmStatic val TAG: String = this::class.java.name
@@ -24,8 +31,14 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
     @Inject
     lateinit var presenter: DeckbuildPresenter
 
+    var deckId: Int = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
+
+        if (deckId == 0) {
+            deckId = args.getInt("deckId")
+        }
 
         (activity as DeckbuildActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
@@ -37,12 +50,17 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.loadUserDecks()
+        presenter.loadUserDeck(deckId)
     }
 
     override fun onDetach(view: View) {
         super.onDetach(view)
         presenter.detach()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("deckId", deckId)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCardAdded() {
@@ -55,6 +73,11 @@ class DeckbuildController : Controller(), DeckbuildMvpContract {
 
     override fun onDeckDeleted(deckId: Int) {
         Log.d(TAG, "onDeckDeleted()")
+    }
+
+    override fun onDeckLoaded(deck: Deck?) {
+        Log.d(TAG, "Deck: ${deck?.name}, id: ${deck?.id}, favorited: ${deck?.isFavorited}, " +
+                "created on: ${deck?.createdDate}, last updated: ${deck?.lastUpdate}")
     }
 
     override fun onDecksLoaded(decks: List<Deck>) {
