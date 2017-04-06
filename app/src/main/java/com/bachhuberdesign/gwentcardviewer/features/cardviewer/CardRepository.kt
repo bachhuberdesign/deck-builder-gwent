@@ -2,6 +2,7 @@ package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
 import android.database.Cursor
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import com.squareup.sqlbrite.BriteDatabase
 import javax.inject.Inject
@@ -23,7 +24,9 @@ class CardRepository @Inject constructor(val database: BriteDatabase) {
     }
 
     fun getAllFactionAndNeutralCards(factionId: Int): Cursor {
-        return database.query("SELECT * FROM ${Card.TABLE} WHERE ${Card.FACTION} = $factionId")
+        return database.query("SELECT * FROM ${Card.TABLE} " +
+                "WHERE ${Card.FACTION} = $factionId " +
+                "OR ${Card.FACTION} = ${Faction.NEUTRAL}")
     }
 
 }
