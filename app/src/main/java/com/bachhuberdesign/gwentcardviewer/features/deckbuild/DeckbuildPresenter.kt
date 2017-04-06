@@ -41,7 +41,7 @@ class DeckbuildPresenter
         }
 
         if (isViewAttached()) {
-            view!!.onDeckLoaded(deck)
+            view!!.onDeckLoaded(deck!!)
         }
 
 //        repository.getCardsForDeck(deckId)

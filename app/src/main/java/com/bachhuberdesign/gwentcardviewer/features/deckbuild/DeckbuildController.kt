@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
+import com.bachhuberdesign.gwentcardviewer.util.SlideInChangeHandler
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import javax.inject.Inject
 
@@ -36,6 +39,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     lateinit var presenter: DeckbuildPresenter
 
     var deckId: Int = 0
+    var factionId: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
@@ -49,7 +53,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         }
 
         view.add_to_deck_button.setOnClickListener { v ->
-            // TODO: Transition to CardViewerController with ViewDragHelper
+            showCardViewer()
         }
 
         return view
@@ -71,6 +75,12 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         super.onSaveInstanceState(outState)
     }
 
+    private fun showCardViewer() {
+        router.pushController(RouterTransaction.with(CardViewerController(deckId))
+                .pushChangeHandler(SlideInChangeHandler(500, true))
+                .popChangeHandler(SlideInChangeHandler(500, false)))
+    }
+
     override fun onCardAdded() {
         Log.d(TAG, "onCardAdded()")
     }
@@ -83,16 +93,17 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         Log.d(TAG, "onDeckDeleted()")
     }
 
-    override fun onDeckLoaded(deck: Deck?) {
-        Log.d(TAG, "Deck: ${deck?.name}, id: ${deck?.id}, favorited: ${deck?.isFavorited}, " +
-                "created on: ${deck?.createdDate}, last updated: ${deck?.lastUpdate}")
+    override fun onDeckLoaded(deck: Deck) {
+        factionId = deck.faction
+        Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
+                "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
 
-        deck?.cards?.forEach { card ->
+        deck.cards.forEach { card ->
             Log.d(TAG, "Card: ${card.name}")
         }
 
-        view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck?.faction))
-        view!!.leader_name_text.text = deck?.cards?.get(0)?.name
+        view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
+        view!!.leader_name_text.text = deck.cards[0].name
     }
 
     override fun onDecksLoaded(decks: List<Deck>) {
