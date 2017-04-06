@@ -11,6 +11,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.google.gson.Gson
 import javax.inject.Inject
 
 /**
@@ -20,8 +21,8 @@ import javax.inject.Inject
  */
 class CardViewerController : Controller, CardViewerMvpContract {
 
-    constructor(factionId: Int) : super() {
-        this.factionId = factionId
+    constructor(filters: CardFilters) : super() {
+        this.filters = filters
     }
 
     constructor(args: Bundle) : super()
@@ -33,7 +34,10 @@ class CardViewerController : Controller, CardViewerMvpContract {
     @Inject
     lateinit var presenter: CardViewerPresenter
 
-    var factionId: Int = 0
+    @Inject
+    lateinit var gson: Gson
+
+    var filters: CardFilters? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_cardviewer)
@@ -42,8 +46,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        if (factionId == 0) {
-            factionId = args.getInt("factionId")
+        if (filters == null) {
+            filters = gson.fromJson(args.getString("filters"), CardFilters::class.java)
         }
 
         return view
@@ -52,7 +56,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.getUsableCards(factionId)
+        presenter.getCardsFiltered(filters!!)
     }
 
     override fun onDetach(view: View) {
@@ -61,8 +65,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("factionId", factionId)
+        outState.putString("filters", gson.toJson(filters))
         super.onSaveInstanceState(outState)
+    }
+
+    private fun refreshFilters(filters: CardFilters) {
+        presenter.getCardsFiltered(filters)
     }
 
     override fun onCardsLoaded(cards: List<Card>) {
@@ -70,7 +78,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
             Log.d(TAG, "Card loaded: ${card.name}")
         }
 
-        // TODO: Display cards in layout
+        // TODO: Display cards in RecyclerView
     }
 
     override fun onListFiltered(filteredCards: List<Card>) {
