@@ -1,27 +1,34 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bachhuberdesign.gwentcardviewer.R
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import com.bachhuberdesign.gwentcardviewer.MainActivity
+import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler
-import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler.FlipDirection
 import com.bachhuberdesign.gwentcardviewer.util.inflate
+import com.bachhuberdesign.gwentcardviewer.util.invisible
+import com.bachhuberdesign.gwentcardviewer.util.visible
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import kotlinx.android.synthetic.main.controller_faction_select.view.*
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -60,7 +67,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
             override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionSelectItem>, item: FactionSelectItem) {
                 val index = Integer.valueOf(view.tag as String)
-                onLeaderSelected(item.leaders!![index])
+                beginCardExpandAnimation(view as ImageView, item.leaders!![index])
             }
         })
 
@@ -85,6 +92,44 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         presenter.detach()
     }
 
+    private fun beginCardExpandAnimation(view: ImageView, leader: Card) {
+        val flip1 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_1)
+        val flip2 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_2)
+        val expand = AnimationUtils.loadAnimation(activity, R.anim.card_expand)
+
+        val cardBack = Drawable.createFromStream(activity?.assets?.open("leader.png"), null)
+
+        flip1.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                view.scaleType = ImageView.ScaleType.FIT_CENTER
+                view.setImageDrawable(cardBack)
+                view.animation = flip2
+                view.startAnimation(flip2)
+            }
+        })
+
+        flip2.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                view.invisible()
+            }
+        })
+
+        view.animation = flip1
+        view.startAnimation(flip1)
+    }
+
     override fun onFactionsLoaded(factions: List<Faction>) {
         factions.forEach { faction ->
             val item: FactionSelectItem = FactionSelectItem()
@@ -100,13 +145,10 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
     override fun onLeaderSelected(leader: Card) {
         router.pushController(RouterTransaction.with(LeaderConfirmController(leader))
-                .pushChangeHandler(FlipChangeHandler(FlipDirection.RIGHT))
-                .popChangeHandler(FlipChangeHandler(FlipDirection.LEFT)))
+                .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
+                .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
     }
 
-    override fun onLeaderConfirmed(leader: Card) {
-        Log.d(TAG, "onLeaderConfirmed: ${leader.cardId}")
-        // TODO: Push deckbuild Controller
-    }
+
 
 }

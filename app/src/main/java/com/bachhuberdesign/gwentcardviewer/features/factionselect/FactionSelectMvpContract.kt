@@ -15,6 +15,4 @@ interface FactionSelectMvpContract : MvpContract {
 
     fun onLeaderSelected(leader: Card)
 
-    fun onLeaderConfirmed(leader: Card)
-
 }

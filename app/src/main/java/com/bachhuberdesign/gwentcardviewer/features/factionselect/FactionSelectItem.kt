@@ -1,7 +1,7 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -41,6 +41,7 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
 
     override fun bindView(viewHolder: ViewHolder, payloads: List<Any>?) {
         super.bindView(viewHolder, payloads)
+        viewHolder.cardView.clipToOutline = false
 
         viewHolder.name.text = factionName
         viewHolder.description.text = factionDescription
@@ -76,6 +77,7 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var cardView: CardView = view.card_view
         var name: TextView = view.faction_name_text
         var description: TextView = view.faction_description_text
 
