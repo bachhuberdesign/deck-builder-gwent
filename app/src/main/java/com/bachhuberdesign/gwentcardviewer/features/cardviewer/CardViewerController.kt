@@ -14,6 +14,9 @@ import com.bluelinelabs.conductor.Controller
 import com.google.gson.Gson
 import javax.inject.Inject
 
+// TODO: Add RecyclerView and FastAdapterItme
+
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0

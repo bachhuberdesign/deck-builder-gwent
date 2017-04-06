@@ -9,7 +9,6 @@ import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.items.AbstractItem
-import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import kotlinx.android.synthetic.main.faction_select_item.view.*
 
 /**
@@ -18,8 +17,6 @@ import kotlinx.android.synthetic.main.faction_select_item.view.*
  * @since 1.0.0
  */
 class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.ViewHolder>() {
-
-    private val FACTORY = ItemFactory()
 
     var backgroundUrl = ""
     var factionName = ""
@@ -34,9 +31,12 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
         return 777
     }
 
+    override fun getViewHolder(v: View): ViewHolder {
+        return ViewHolder(v)
+    }
+
     override fun bindView(viewHolder: ViewHolder, payloads: List<Any>?) {
         super.bindView(viewHolder, payloads)
-
         viewHolder.name.text = factionName
         viewHolder.description.text = factionDescription
 
@@ -65,25 +65,15 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
                 .into(viewHolder.leader3)
     }
 
-    override fun unbindView(viewHolder: ViewHolder) {
-        super.unbindView(viewHolder)
-
-        viewHolder.name.text = null
-        viewHolder.description.text = null
-
-        Glide.clear(viewHolder.factionImage)
-        viewHolder.factionImage.setImageDrawable(null)
-    }
-
-    private class ItemFactory : ViewHolderFactory<ViewHolder> {
-        override fun create(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-    }
-
-    override fun getFactory(): ViewHolderFactory<out ViewHolder> {
-        return FACTORY
-    }
+//    override fun unbindView(viewHolder: ViewHolder) {
+//        super.unbindView(viewHolder)
+//
+//        viewHolder.name.text = null
+//        viewHolder.description.text = null
+//
+//        Glide.clear(viewHolder.factionImage)
+//        viewHolder.factionImage.setImageDrawable(null)
+//    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.faction_name_text
