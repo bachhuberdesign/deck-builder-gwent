@@ -76,7 +76,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     private fun showCardViewer() {
-        router.pushController(RouterTransaction.with(CardViewerController(deckId))
+        router.pushController(RouterTransaction.with(CardViewerController(factionId))
                 .pushChangeHandler(SlideInChangeHandler(500, true))
                 .popChangeHandler(SlideInChangeHandler(500, false)))
     }
