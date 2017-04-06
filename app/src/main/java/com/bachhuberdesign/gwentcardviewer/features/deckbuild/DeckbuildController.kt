@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardFilters
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
@@ -53,7 +54,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         }
 
         view.add_to_deck_button.setOnClickListener { v ->
-            showCardViewer()
+            showCardPicker()
         }
 
         return view
@@ -75,8 +76,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         super.onSaveInstanceState(outState)
     }
 
-    private fun showCardViewer() {
-        router.pushController(RouterTransaction.with(CardViewerController(factionId))
+    private fun showCardPicker() {
+        val filters = CardFilters(filterByFactions = Pair(true, factionId))
+
+        router.pushController(RouterTransaction.with(CardViewerController(filters))
                 .pushChangeHandler(SlideInChangeHandler(500, true))
                 .popChangeHandler(SlideInChangeHandler(500, false)))
     }

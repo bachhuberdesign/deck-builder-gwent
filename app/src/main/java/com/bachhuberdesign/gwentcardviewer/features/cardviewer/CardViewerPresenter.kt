@@ -1,6 +1,5 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
-import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
@@ -19,21 +18,30 @@ class CardViewerPresenter
         @JvmStatic val TAG: String = this::class.java.name
     }
 
-    fun getUsableCards(factionId: Int) {
-        Log.d(TAG, "Getting usable cards for faction $factionId")
-        val cursor = repository.getAllFactionAndNeutralCards(factionId)
-        val cards: MutableList<Card> = ArrayList()
+    fun getAllCards() {
+        TODO("Method not yet implemented")
+    }
 
-        cursor.use {
-            Log.d(TAG, "getUsableCards(): Cursor has ${cursor.count} rows.")
-            while (cursor.moveToNext()) {
-                cards.add(Card.MAPPER.apply(cursor))
+    fun getCardsFiltered(filters: CardFilters) {
+        // TODO: Refactor to query full card list and then filter rather
+
+        if (filters.filterByDeck.first) {
+            // TODO: Get cards for deck only
+        } else if (filters.filterByFactions.first) {
+            val cursor = repository.getAllFactionAndNeutralCards(filters.filterByFactions.second)
+            val cards: MutableList<Card> = ArrayList()
+
+            cursor.use {
+                while (cursor.moveToNext()) {
+                    cards.add(Card.MAPPER.apply(cursor))
+                }
+            }
+
+            if (isViewAttached()) {
+                view!!.onCardsLoaded(cards)
             }
         }
 
-        if (isViewAttached()) {
-            view!!.onCardsLoaded(cards)
-        }
     }
 
 }
