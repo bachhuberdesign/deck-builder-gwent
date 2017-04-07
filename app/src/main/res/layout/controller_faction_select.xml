@@ -8,11 +8,23 @@
               android:paddingEnd="8dp"
               android:paddingStart="8dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"/>
+
+        <ImageView
+            android:id="@+id/animation_imageview"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </FrameLayout>
 </LinearLayout>

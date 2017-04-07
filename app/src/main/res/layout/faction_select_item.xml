@@ -8,11 +8,13 @@
     android:layout_margin="4dp"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:elevation="4dp"
     card_view:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:translationZ="100dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:padding="8dp">
@@ -47,6 +49,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:translationZ="100dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:layout_below="@+id/faction_description_text"
             android:layout_centerHorizontal="true"
             android:orientation="horizontal">
@@ -56,8 +61,9 @@
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                android:elevation="1000dp"
+                android:translationZ="100dp"
                 android:layout_marginStart="12dp"
+                android:elevation="10dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:tag="0"/>
@@ -68,6 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
+                android:elevation="10dp"
+                android:translationZ="100dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:tag="1"/>
@@ -78,6 +86,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
+                android:translationZ="100dp"
+                android:elevation="10dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:tag="2"/>

@@ -1,9 +1,12 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,10 +95,9 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         presenter.detach()
     }
 
-    private fun beginCardExpandAnimation(view: ImageView, leader: Card) {
+    private fun beginCardExpandAnimation(imageView: ImageView, leader: Card) {
         val flip1 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_1)
         val flip2 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_2)
-        val expand = AnimationUtils.loadAnimation(activity, R.anim.card_expand)
 
         val cardBack = Drawable.createFromStream(activity?.assets?.open("leader.png"), null)
 
@@ -107,10 +109,9 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                view.scaleType = ImageView.ScaleType.FIT_CENTER
-                view.setImageDrawable(cardBack)
-                view.animation = flip2
-                view.startAnimation(flip2)
+                Glide.with(activity).load(Uri.parse("file:///android_asset/leader.png")).fitCenter().dontAnimate().into(imageView)
+                imageView.animation = flip2
+                imageView.startAnimation(flip2)
             }
         })
 
@@ -122,12 +123,36 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                view.invisible()
+                val array = IntArray(2)
+                imageView.getLocationInWindow(array)
+
+                val myViewRect = Rect()
+                view?.getGlobalVisibleRect(myViewRect)
+                val x = myViewRect.exactCenterX()
+                val y = myViewRect.exactCenterY()
+
+                val newImageView = view!!.animation_imageview
+                newImageView.translationX = x.toFloat()
+                newImageView.translationY = y.toFloat()
+                Glide.with(activity).load(Uri.parse("file:///android_asset/leader.png")).fitCenter().dontAnimate().into(newImageView)
+//                newImageView.visible()
+                imageView.animate().translationX(2000f).translationY(2000f).setDuration(2000).start()
+
+//                val scaleX = ObjectAnimator.ofFloat(newImageView, "scaleX", 1.5f)
+//                val scaleY = ObjectAnimator.ofFloat(newImageView, "scaleY", 1.5f)
+//
+//                scaleX.duration = 1000
+//                scaleY.duration = 1000
+//
+//                val animationSet = AnimatorSet()
+//
+//                animationSet.play(scaleX).with(scaleY)
+//                animationSet.start()
             }
         })
 
-        view.animation = flip1
-        view.startAnimation(flip1)
+        imageView.animation = flip1
+        imageView.startAnimation(flip1)
     }
 
     override fun onFactionsLoaded(factions: List<Faction>) {
@@ -148,7 +173,6 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
                 .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
                 .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
     }
-
 
 
 }
