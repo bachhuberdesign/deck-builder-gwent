@@ -2,6 +2,8 @@ package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
@@ -55,11 +57,11 @@ class CardItem : AbstractItem<CardItem, CardItem.ViewHolder>() {
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var name = view.card_name_text
-        var faction = view.faction_name_text
-        var description = view.card_description_text
-        var power = view.card_power_text
-        var cardImage = view.card_image
+        var name: TextView = view.card_name_text
+        var faction: TextView = view.faction_name_text
+        var description: TextView = view.card_description_text
+        var power: TextView = view.card_power_text
+        var cardImage: ImageView = view.card_image
     }
 
 }
