@@ -102,7 +102,7 @@ dependencies {
     compile 'com.squareup.sqlbrite:sqlbrite:1.1.1'
 
     // FastAdapter
-    compile('com.mikepenz:fastadapter:2.5.0@aar') { transitive = true }
+    compile('com.mikepenz:fastadapter:2.5.1@aar') { transitive = true }
     compile 'com.mikepenz:fastadapter-commons:2.5.0@aar'
     compile "com.mikepenz:materialize:1.0.1@aar"
 
