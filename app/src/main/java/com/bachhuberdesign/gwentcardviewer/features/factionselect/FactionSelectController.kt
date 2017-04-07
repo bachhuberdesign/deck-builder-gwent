@@ -1,12 +1,10 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.graphics.Rect
-import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +18,6 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler
 import com.bachhuberdesign.gwentcardviewer.util.inflate
-import com.bachhuberdesign.gwentcardviewer.util.invisible
-import com.bachhuberdesign.gwentcardviewer.util.visible
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
@@ -29,9 +25,9 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper
 import com.mikepenz.fastadapter.listeners.ClickEventHook
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.controller_faction_select.view.*
 import javax.inject.Inject
-
 
 /**
  * @author Eric Bachhuber
@@ -99,8 +95,6 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         val flip1 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_1)
         val flip2 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_2)
 
-        val cardBack = Drawable.createFromStream(activity?.assets?.open("leader.png"), null)
-
         flip1.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
             }
@@ -109,7 +103,11 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                Glide.with(activity).load(Uri.parse("file:///android_asset/leader.png")).fitCenter().dontAnimate().into(imageView)
+                Glide.with(activity)
+                        .load(Uri.parse("file:///android_asset/leader.png"))
+                        .fitCenter()
+                        .dontAnimate()
+                        .into(imageView)
                 imageView.animation = flip2
                 imageView.startAnimation(flip2)
             }
@@ -123,25 +121,14 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                val array = IntArray(2)
-                imageView.getLocationInWindow(array)
+                onLeaderSelected(leader)
+//                imageView.bringToFront()
+//                imageView.invalidate()
+//                imageView.translationZ = 999f
+//                imageView.elevation = 101f
+//                moveViewToScreenCenter(imageView)
 
-                val myViewRect = Rect()
-                view?.getGlobalVisibleRect(myViewRect)
-                val x = myViewRect.exactCenterX()
-                val y = myViewRect.exactCenterY()
-
-                val newImageView = view!!.animation_imageview
-                newImageView.translationX = x.toFloat()
-                newImageView.translationY = y.toFloat()
-                Glide.with(activity).load(Uri.parse("file:///android_asset/leader.png")).fitCenter().dontAnimate().into(newImageView)
-//                newImageView.visible()
-                imageView.bringToFront()
-                // TODO: BRING TO FRONT WORKS !!
-                imageView.invalidate()
-                imageView.translationZ = 1f
-                imageView.elevation = 99f
-                imageView.animate().translationX(50f).translationY(-500f).setDuration(2000).start()
+//                imageView.animate().translationX(50f).translationY(-500f).setDuration(2000).start()
 
 //                val scaleX = ObjectAnimator.ofFloat(newImageView, "scaleX", 1.5f)
 //                val scaleY = ObjectAnimator.ofFloat(newImageView, "scaleY", 1.5f)
@@ -158,6 +145,28 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
         imageView.animation = flip1
         imageView.startAnimation(flip1)
+    }
+
+    private fun moveViewToScreenCenter(iv: View) {
+        val root: ConstraintLayout = activity!!.constraint_layout
+        val displayMetrics = DisplayMetrics()
+        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val statusBarOffset = displayMetrics.heightPixels - root.measuredHeight
+
+        val originalPos = IntArray(2)
+        iv.getLocationOnScreen(originalPos)
+
+        var xDest = displayMetrics.widthPixels / 2
+        xDest -= iv.measuredWidth / 2
+        val yDest = displayMetrics.heightPixels / 2 - iv.measuredHeight / 2 - statusBarOffset
+        iv.pivotX = 0f
+        iv.pivotY = 0f
+        iv.animate()
+                .x((xDest).toFloat())
+                .y((yDest).toFloat())
+                .setDuration(1000)
+                .start()
     }
 
     override fun onFactionsLoaded(factions: List<Faction>) {

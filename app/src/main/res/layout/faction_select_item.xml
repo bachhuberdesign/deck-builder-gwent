@@ -14,10 +14,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:translationZ="100dp"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:translationZ="100dp">
 
         <TextView
             android:id="@+id/faction_name_text"
@@ -46,51 +46,53 @@
             android:textAlignment="center"
             android:textSize="12sp"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:translationZ="100dp"
-            android:clipChildren="false"
-            android:clipToPadding="false"
             android:layout_below="@+id/faction_description_text"
             android:layout_centerHorizontal="true"
-            android:orientation="horizontal">
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:translationZ="100dp">
 
             <ImageView
                 android:id="@+id/leader1_image"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_marginEnd="12dp"
-                android:translationZ="100dp"
                 android:layout_marginStart="12dp"
                 android:elevation="10dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:tag="0"/>
+                android:tag="0"
+                android:translationZ="100dp"/>
 
             <ImageView
                 android:id="@+id/leader2_image"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
                 android:elevation="10dp"
-                android:translationZ="100dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:tag="1"/>
+                android:tag="1"
+                android:translationZ="100dp"/>
 
             <ImageView
                 android:id="@+id/leader3_image"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
-                android:translationZ="100dp"
                 android:elevation="10dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:tag="2"/>
-        </LinearLayout>
+                android:tag="2"
+                android:translationZ="100dp"/>
+        </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
