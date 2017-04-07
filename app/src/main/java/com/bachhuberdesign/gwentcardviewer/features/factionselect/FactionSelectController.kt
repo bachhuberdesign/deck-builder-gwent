@@ -136,7 +136,12 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
                 newImageView.translationY = y.toFloat()
                 Glide.with(activity).load(Uri.parse("file:///android_asset/leader.png")).fitCenter().dontAnimate().into(newImageView)
 //                newImageView.visible()
-                imageView.animate().translationX(2000f).translationY(2000f).setDuration(2000).start()
+                imageView.bringToFront()
+                // TODO: BRING TO FRONT WORKS !!
+                imageView.invalidate()
+                imageView.translationZ = 1f
+                imageView.elevation = 99f
+                imageView.animate().translationX(50f).translationY(-500f).setDuration(2000).start()
 
 //                val scaleX = ObjectAnimator.ofFloat(newImageView, "scaleX", 1.5f)
 //                val scaleY = ObjectAnimator.ofFloat(newImageView, "scaleY", 1.5f)
