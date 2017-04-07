@@ -1,25 +1,31 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
+import android.net.Uri
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bachhuberdesign.gwentcardviewer.R
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import com.bachhuberdesign.gwentcardviewer.MainActivity
+import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler
-import com.bachhuberdesign.gwentcardviewer.util.FlipChangeHandler.FlipDirection
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper
 import com.mikepenz.fastadapter.listeners.ClickEventHook
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.controller_faction_select.view.*
 import javax.inject.Inject
 
@@ -60,7 +66,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
             override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionSelectItem>, item: FactionSelectItem) {
                 val index = Integer.valueOf(view.tag as String)
-                onLeaderSelected(item.leaders!![index])
+                beginCardExpandAnimation(view as ImageView, item.leaders!![index])
             }
         })
 
@@ -85,6 +91,84 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         presenter.detach()
     }
 
+    private fun beginCardExpandAnimation(imageView: ImageView, leader: Card) {
+        val flip1 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_1)
+        val flip2 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_2)
+
+        flip1.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                Glide.with(activity)
+                        .load(Uri.parse("file:///android_asset/leader.png"))
+                        .fitCenter()
+                        .dontAnimate()
+                        .into(imageView)
+                imageView.animation = flip2
+                imageView.startAnimation(flip2)
+            }
+        })
+
+        flip2.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                onLeaderSelected(leader)
+//                imageView.bringToFront()
+//                imageView.invalidate()
+//                imageView.translationZ = 999f
+//                imageView.elevation = 101f
+//                moveViewToScreenCenter(imageView)
+
+//                imageView.animate().translationX(50f).translationY(-500f).setDuration(2000).start()
+
+//                val scaleX = ObjectAnimator.ofFloat(newImageView, "scaleX", 1.5f)
+//                val scaleY = ObjectAnimator.ofFloat(newImageView, "scaleY", 1.5f)
+//
+//                scaleX.duration = 1000
+//                scaleY.duration = 1000
+//
+//                val animationSet = AnimatorSet()
+//
+//                animationSet.play(scaleX).with(scaleY)
+//                animationSet.start()
+            }
+        })
+
+        imageView.animation = flip1
+        imageView.startAnimation(flip1)
+    }
+
+    private fun moveViewToScreenCenter(iv: View) {
+        val root: ConstraintLayout = activity!!.constraint_layout
+        val displayMetrics = DisplayMetrics()
+        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val statusBarOffset = displayMetrics.heightPixels - root.measuredHeight
+
+        val originalPos = IntArray(2)
+        iv.getLocationOnScreen(originalPos)
+
+        var xDest = displayMetrics.widthPixels / 2
+        xDest -= iv.measuredWidth / 2
+        val yDest = displayMetrics.heightPixels / 2 - iv.measuredHeight / 2 - statusBarOffset
+        iv.pivotX = 0f
+        iv.pivotY = 0f
+        iv.animate()
+                .x((xDest).toFloat())
+                .y((yDest).toFloat())
+                .setDuration(1000)
+                .start()
+    }
+
     override fun onFactionsLoaded(factions: List<Faction>) {
         factions.forEach { faction ->
             val item: FactionSelectItem = FactionSelectItem()
@@ -100,13 +184,9 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
     override fun onLeaderSelected(leader: Card) {
         router.pushController(RouterTransaction.with(LeaderConfirmController(leader))
-                .pushChangeHandler(FlipChangeHandler(FlipDirection.RIGHT))
-                .popChangeHandler(FlipChangeHandler(FlipDirection.LEFT)))
+                .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
+                .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
     }
 
-    override fun onLeaderConfirmed(leader: Card) {
-        Log.d(TAG, "onLeaderConfirmed: ${leader.cardId}")
-        // TODO: Push deckbuild Controller
-    }
 
 }

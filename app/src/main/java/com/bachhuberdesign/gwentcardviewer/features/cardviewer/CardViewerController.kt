@@ -1,7 +1,8 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,12 @@ import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.google.gson.Gson
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
+
+// TODO: Add RecyclerView and FastAdapterItme
+
 
 /**
  * @author Eric Bachhuber
@@ -37,6 +43,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
     @Inject
     lateinit var gson: Gson
 
+    lateinit var recyclerView: RecyclerView
+    lateinit var adapter: FastItemAdapter<CardItem>
     var filters: CardFilters? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -49,6 +57,14 @@ class CardViewerController : Controller, CardViewerMvpContract {
         if (filters == null) {
             filters = gson.fromJson(args.getString("filters"), CardFilters::class.java)
         }
+
+        adapter = FastItemAdapter()
+        val layoutManager = LinearLayoutManager(activity)
+
+        recyclerView = view.recycler_view
+        recyclerView.setHasFixedSize(false)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
 
         return view
     }
@@ -75,10 +91,13 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     override fun onCardsLoaded(cards: List<Card>) {
         cards.forEach { card ->
-            Log.d(TAG, "Card loaded: ${card.name}")
+            val item: CardItem = CardItem()
+            item.card = card
+
+            adapter.add(item)
         }
 
-        // TODO: Display cards in RecyclerView
+        adapter.notifyDataSetChanged()
     }
 
     override fun onListFiltered(filteredCards: List<Card>) {
