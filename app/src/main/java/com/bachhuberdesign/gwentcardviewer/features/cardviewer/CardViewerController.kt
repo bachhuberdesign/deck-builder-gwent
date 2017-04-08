@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
@@ -20,9 +19,6 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
-// TODO: Add RecyclerView and FastAdapterItme
-
-
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -30,9 +26,13 @@ import javax.inject.Inject
  */
 class CardViewerController : Controller, CardViewerMvpContract {
 
-    constructor(filters: CardFilters, isDeckbuildMode: Boolean) : super() {
+    constructor(filters: CardFilters) : super() {
         this.filters = filters
-        this.isDeckbuildMode = isDeckbuildMode
+    }
+
+    constructor(filters: CardFilters, deckId: Int) {
+        this.filters = filters
+        this.deckId = deckId
     }
 
     constructor(args: Bundle) : super()
@@ -51,7 +51,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     lateinit var adapter: FastItemAdapter<CardItem>
 
     var filters: CardFilters? = null
-    var isDeckbuildMode: Boolean = false
+    var deckId: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_cardviewer)
@@ -64,8 +64,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
             filters = gson.fromJson(args.getString("filters"), CardFilters::class.java)
         }
 
-        if (!isDeckbuildMode) {
-            isDeckbuildMode = args.getBoolean("isDeckbuildMode", false)
+        if (deckId == 0) {
+            deckId = args.getInt("deckId", 0)
         }
 
         adapter = FastItemAdapter()
@@ -75,8 +75,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
             }
 
             override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
-                // TODO: Add presenter call here
-                Toast.makeText(activity, "Add card button clicked", Toast.LENGTH_LONG).show()
+                presenter.addCardToDeck(item.card, deckId)
             }
         })
 
@@ -103,7 +102,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("filters", gson.toJson(filters))
-        outState.putBoolean("isDeckbuildMode", isDeckbuildMode)
+        outState.putInt("deckId", deckId)
         super.onSaveInstanceState(outState)
     }
 
@@ -113,7 +112,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     override fun onCardsLoaded(cards: List<Card>) {
         cards.forEach { card ->
-            adapter.add(CardItem(card, isDeckbuildMode))
+            adapter.add(CardItem(card, isDeckbuildMode = deckId > 0))
         }
 
         adapter.notifyDataSetChanged()
@@ -121,6 +120,10 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     override fun onListFiltered(filteredCards: List<Card>) {
         TODO("Method not yet implemented")
+    }
+
+    override fun onCardAddedToDeck(card: Card) {
+        TODO("Not yet implemented.")
     }
 
 }

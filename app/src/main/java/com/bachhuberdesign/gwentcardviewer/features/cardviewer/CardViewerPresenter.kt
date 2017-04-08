@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
@@ -12,10 +13,18 @@ import javax.inject.Inject
  */
 @PersistedScope
 class CardViewerPresenter
-@Inject constructor(private val repository: CardRepository) : BasePresenter<CardViewerMvpContract>() {
+@Inject constructor(val cardRepository: CardRepository,
+                    val deckRepository: DeckRepository) : BasePresenter<CardViewerMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = this::class.java.name
+    }
+
+    fun addCardToDeck(card: Card, deckId: Int) {
+
+        if (isViewAttached()) {
+            view!!.onCardAddedToDeck(card)
+        }
     }
 
     fun getAllCards() {
@@ -28,7 +37,7 @@ class CardViewerPresenter
         if (filters.filterByDeck.first) {
             // TODO: Get cards for deck only
         } else if (filters.filterByFactions.first) {
-            val cursor = repository.getAllFactionAndNeutralCards(filters.filterByFactions.second)
+            val cursor = cardRepository.getAllFactionAndNeutralCards(filters.filterByFactions.second)
             val cards: MutableList<Card> = ArrayList()
 
             cursor.use {

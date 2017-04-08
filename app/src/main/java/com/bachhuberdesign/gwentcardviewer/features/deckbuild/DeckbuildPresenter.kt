@@ -44,7 +44,7 @@ class DeckbuildPresenter
             view!!.onDeckLoaded(deck!!)
         }
 
-//        repository.getCardsForDeck(deckId)
+//        cardRepository.getCardsForDeck(deckId)
 //                .subscribeOn(Schedulers.io())
 //                .subscribe({ query ->
 //                    val cards: MutableList<Card> = ArrayList()
