@@ -53,7 +53,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             deckId = args.getInt("deckId")
         }
 
-        view.add_to_deck_button.setOnClickListener { v ->
+        view.show_card_viewer_button.setOnClickListener { v ->
             showCardPicker()
         }
 
@@ -79,7 +79,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     private fun showCardPicker() {
         val filters = CardFilters(filterByFactions = Pair(true, factionId))
 
-        router.pushController(RouterTransaction.with(CardViewerController(filters))
+        router.pushController(RouterTransaction.with(CardViewerController(filters, true))
                 .pushChangeHandler(SlideInChangeHandler(500, true))
                 .popChangeHandler(SlideInChangeHandler(500, false)))
     }

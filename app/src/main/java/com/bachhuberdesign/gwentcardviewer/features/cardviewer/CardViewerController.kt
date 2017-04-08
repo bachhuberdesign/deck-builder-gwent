@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
@@ -13,7 +14,9 @@ import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.google.gson.Gson
+import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.listeners.ClickEventHook
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
@@ -27,8 +30,9 @@ import javax.inject.Inject
  */
 class CardViewerController : Controller, CardViewerMvpContract {
 
-    constructor(filters: CardFilters) : super() {
+    constructor(filters: CardFilters, isDeckbuildMode: Boolean) : super() {
         this.filters = filters
+        this.isDeckbuildMode = isDeckbuildMode
     }
 
     constructor(args: Bundle) : super()
@@ -45,7 +49,9 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FastItemAdapter<CardItem>
+
     var filters: CardFilters? = null
+    var isDeckbuildMode: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_cardviewer)
@@ -58,7 +64,22 @@ class CardViewerController : Controller, CardViewerMvpContract {
             filters = gson.fromJson(args.getString("filters"), CardFilters::class.java)
         }
 
+        if (!isDeckbuildMode) {
+            isDeckbuildMode = args.getBoolean("isDeckbuildMode", false)
+        }
+
         adapter = FastItemAdapter()
+        adapter.withItemEvent(object : ClickEventHook<CardItem>() {
+            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
+                return (viewHolder as CardItem.ViewHolder).addCardButton
+            }
+
+            override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
+                // TODO: Add presenter call here
+                Toast.makeText(activity, "Add card button clicked", Toast.LENGTH_LONG).show()
+            }
+        })
+
         val layoutManager = LinearLayoutManager(activity)
 
         recyclerView = view.recycler_view
@@ -82,6 +103,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("filters", gson.toJson(filters))
+        outState.putBoolean("isDeckbuildMode", isDeckbuildMode)
         super.onSaveInstanceState(outState)
     }
 
@@ -91,10 +113,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     override fun onCardsLoaded(cards: List<Card>) {
         cards.forEach { card ->
-            val item: CardItem = CardItem()
-            item.card = card
-
-            adapter.add(item)
+            adapter.add(CardItem(card, isDeckbuildMode))
         }
 
         adapter.notifyDataSetChanged()
