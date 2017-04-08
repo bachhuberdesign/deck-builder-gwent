@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.inflate
@@ -125,7 +126,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     override fun onCardChecked(card: Card) {
         Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}")
-        // TODO:
+
+        val deckbuildController = router.getControllerWithTag(DeckbuildController.TAG) as DeckbuildController
+        deckbuildController.addCardToCurrentDeck(card.cardId)
+
+        router.handleBack()
+        // TODO: Animate
     }
 
 }

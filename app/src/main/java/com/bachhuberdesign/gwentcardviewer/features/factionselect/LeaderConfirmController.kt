@@ -103,6 +103,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
 
     override fun onDeckSaved(deckId: Int) {
         router.setRoot(RouterTransaction.with(DeckbuildController(deckId))
+                .tag(DeckbuildController.TAG)
                 .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
                 .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
         router.popToRoot()

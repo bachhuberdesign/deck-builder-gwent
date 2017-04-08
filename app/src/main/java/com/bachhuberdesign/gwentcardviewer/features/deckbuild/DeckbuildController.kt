@@ -40,8 +40,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     @Inject
     lateinit var presenter: DeckbuildPresenter
 
-    var deckId: Int = 0
-    var factionId: Int = 0
+    private var deckId: Int = 0
+    private var factionId: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
@@ -83,6 +83,15 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         router.pushController(RouterTransaction.with(CardViewerController(filters, deckId))
                 .pushChangeHandler(SlideInChangeHandler(500, true))
                 .popChangeHandler(SlideInChangeHandler(500, false)))
+    }
+
+    /**
+     * Wrapper function which calls [DeckbuildController]'s presenter.addCard(int).
+     *
+     * Callback function onCardAdded() will be called by the presenter if the card is persisted succesfully.
+     */
+    fun addCardToCurrentDeck(cardId: Int) {
+        presenter.addCard(cardId)
     }
 
     override fun onCardAdded() {
