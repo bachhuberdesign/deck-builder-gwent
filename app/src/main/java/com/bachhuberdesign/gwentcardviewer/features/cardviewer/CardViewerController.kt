@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,7 +76,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
             }
 
             override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
-                presenter.addCardToDeck(item.card, deckId)
+                presenter.checkCardAddable(item.card, deckId)
             }
         })
 
@@ -122,8 +123,9 @@ class CardViewerController : Controller, CardViewerMvpContract {
         TODO("Method not yet implemented")
     }
 
-    override fun onCardAddedToDeck(card: Card) {
-        TODO("Not yet implemented.")
+    override fun onCardChecked(card: Card) {
+        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}")
+        // TODO:
     }
 
 }

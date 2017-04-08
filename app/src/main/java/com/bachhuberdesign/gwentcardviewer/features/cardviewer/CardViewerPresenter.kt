@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
@@ -20,10 +21,16 @@ class CardViewerPresenter
         @JvmStatic val TAG: String = this::class.java.name
     }
 
-    fun addCardToDeck(card: Card, deckId: Int) {
+    /**
+     *
+     */
+    fun checkCardAddable(card: Card, deckId: Int) {
+        val deck = deckRepository.getDeckById(deckId)
 
-        if (isViewAttached()) {
-            view!!.onCardAddedToDeck(card)
+        if (deck != null && Deck.isCardAddableToDeck(deck, card)) {
+            if (isViewAttached()) {
+                view!!.onCardChecked(card)
+            }
         }
     }
 
