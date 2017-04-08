@@ -59,14 +59,23 @@ class DeckbuildPresenter
      *
      */
     fun addCard(cardId: Int) {
-        // TODO:
+        Log.d(TAG, "addCard() called for card $cardId")
+
+        if (isViewAttached()) {
+            view!!.onCardAdded()
+        }
     }
 
     /**
      *
      */
     fun removeCard(cardId: Int) {
+        Log.d(TAG, "removeCard() called for card $cardId")
         // TODO:
+
+        if (isViewAttached()) {
+            view!!.onCardRemoved()
+        }
     }
 
     /**
