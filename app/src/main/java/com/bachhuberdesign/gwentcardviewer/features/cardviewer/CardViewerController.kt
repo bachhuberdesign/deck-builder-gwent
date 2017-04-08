@@ -52,6 +52,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FastItemAdapter<CardItem>
 
+    var isAddCardButtonClickable = true
     var filters: CardFilters? = null
     var deckId: Int = 0
 
@@ -77,7 +78,11 @@ class CardViewerController : Controller, CardViewerMvpContract {
             }
 
             override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
-                presenter.checkCardAddable(item.card, deckId)
+                // Check if clickable to prevent duplicate presenter calls
+                if (isAddCardButtonClickable) {
+                    isAddCardButtonClickable = false
+                    presenter.checkCardAddable(item.card, deckId)
+                }
             }
         })
 
@@ -127,11 +132,9 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onCardChecked(card: Card) {
         Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}")
 
-        val deckbuildController = router.getControllerWithTag(DeckbuildController.TAG) as DeckbuildController
+        val deckbuildController = parentController as DeckbuildController
         deckbuildController.addCardToCurrentDeck(card.cardId)
-
-        router.handleBack()
-        // TODO: Animate
+        isAddCardButtonClickable = true
     }
 
 }
