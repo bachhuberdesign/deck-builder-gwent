@@ -19,4 +19,6 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun onDeckLoaded(deck: Deck)
 
+    fun onErrorLoadingDeck(message: String)
+
 }

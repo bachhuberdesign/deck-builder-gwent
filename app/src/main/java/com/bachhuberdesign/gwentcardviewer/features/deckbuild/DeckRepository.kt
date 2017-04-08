@@ -11,7 +11,7 @@ import com.squareup.sqlbrite.BriteDatabase
 import com.squareup.sqlbrite.QueryObservable
 import java.util.*
 import javax.inject.Inject
-
+import kotlin.collections.ArrayList
 
 /**
  * @author Eric Bachhuber
@@ -31,15 +31,36 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return count.simpleQueryForLong() > 0
     }
 
-    fun getDeckById(deckId: Int): Cursor {
-        return database.query("SELECT * FROM ${Deck.TABLE} WHERE ${Deck.ID} = $deckId")
+    fun getDeckById(deckId: Int): Deck? {
+        val deckCursor = database.query("SELECT * FROM ${Deck.TABLE} WHERE ${Deck.ID} = $deckId")
+        var deck: Deck? = null
+
+        deckCursor.use {
+            while (deckCursor.moveToNext()) {
+                deck = Deck.MAPPER.apply(deckCursor)
+            }
+        }
+
+        deck?.cards = getCardsForDeck(deckId)
+
+        return deck
     }
 
-    fun getCardsForDeck(deckId: Int): Cursor {
-        return database.query("SELECT * FROM ${Card.TABLE} AS t1 " +
+    fun getCardsForDeck(deckId: Int): MutableList<Card> {
+        val cursor = database.query("SELECT * FROM ${Card.TABLE} AS t1 " +
                 "JOIN user_decks_cards as t2 " +
                 "ON t1.id = t2.card_id " +
                 "WHERE t2.deck_id = $deckId")
+
+        val cards: MutableList<Card> = ArrayList()
+
+        cursor.use {
+            while (cursor.moveToNext()) {
+                cards.add(Card.MAPPER.apply(cursor))
+            }
+        }
+
+        return cards
     }
 
     fun getAllUserCreatedDecks(): QueryObservable {

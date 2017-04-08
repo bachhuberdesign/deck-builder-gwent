@@ -2,7 +2,6 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
-import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import javax.inject.Inject
 
@@ -23,41 +22,13 @@ class DeckbuildPresenter
      *
      */
     fun loadUserDeck(deckId: Int) {
-        Log.d(TAG, "Loading deck $deckId")
-        var deck: Deck? = null
-        val deckCursor = repository.getDeckById(deckId)
-        val cardCursor = repository.getCardsForDeck(deckId)
+        val deck: Deck? = repository.getDeckById(deckId)
 
-        deckCursor.use {
-            while (deckCursor.moveToNext()) {
-                deck = Deck.MAPPER.apply(deckCursor)
-            }
-        }
-
-        cardCursor.use {
-            while (cardCursor.moveToNext()) {
-                deck!!.cards.add(Card.MAPPER.apply(cardCursor))
-            }
-        }
-
-        if (isViewAttached()) {
+        if (deck == null && isViewAttached()) {
+            view!!.onErrorLoadingDeck("Error loading deck $deckId")
+        } else if (isViewAttached()) {
             view!!.onDeckLoaded(deck!!)
         }
-
-//        repository.getCardsForDeck(deckId)
-//                .subscribeOn(Schedulers.io())
-//                .subscribe({ query ->
-//                    val cards: MutableList<Card> = ArrayList()
-//                    val cardCursor = query.run()
-//                    while (cardCursor!!.moveToNext()) {
-//                        cards.add(Card.MAPPER.apply(cardCursor))
-//                    }
-//                    if (isViewAttached()) {
-//                        view!!.onDeckLoaded(deck)
-//                    }
-//                }, { error ->
-//                    Log.e(TAG, "Error getting cards for deck $deckId.", error)
-//                }, { Log.d(TAG, "getCardsForDeck(): onComplete() called.") })
     }
 
     /**

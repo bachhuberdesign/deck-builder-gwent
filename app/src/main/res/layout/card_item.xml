@@ -56,5 +56,13 @@
             android:layout_alignParentTop="true"
             android:text="Power"/>
 
+        <Button
+            android:id="@+id/add_card_button"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignBottom="@id/card_description_text"
+            android:layout_alignParentEnd="true"
+            android:text="Add"/>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>

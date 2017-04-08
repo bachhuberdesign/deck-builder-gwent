@@ -43,6 +43,12 @@ data class Deck(var id: Int = 0,
             deck.lastUpdate = Date(cursor.getLongFromColumn(Deck.LAST_UPDATE))
             deck
         }
+
+        fun isCardAddableToDeck(deck: Deck, card: Card): Boolean {
+            // TODO: Add validation checks
+
+            return true
+        }
     }
 
 }

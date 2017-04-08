@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardFilters
@@ -53,7 +54,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             deckId = args.getInt("deckId")
         }
 
-        view.add_to_deck_button.setOnClickListener { v ->
+        view.show_card_viewer_button.setOnClickListener { v ->
             showCardPicker()
         }
 
@@ -79,7 +80,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     private fun showCardPicker() {
         val filters = CardFilters(filterByFactions = Pair(true, factionId))
 
-        router.pushController(RouterTransaction.with(CardViewerController(filters))
+        router.pushController(RouterTransaction.with(CardViewerController(filters, deckId))
                 .pushChangeHandler(SlideInChangeHandler(500, true))
                 .popChangeHandler(SlideInChangeHandler(500, false)))
     }
@@ -114,6 +115,11 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
                     "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
         }
+    }
+
+    override fun onErrorLoadingDeck(message: String) {
+        Log.e(TAG, "onErrorLoadingDeck: $message")
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
 }

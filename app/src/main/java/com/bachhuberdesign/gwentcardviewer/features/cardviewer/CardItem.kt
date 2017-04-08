@@ -2,12 +2,15 @@ package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
+import com.bachhuberdesign.gwentcardviewer.util.invisible
+import com.bachhuberdesign.gwentcardviewer.util.visible
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.card_item.view.*
@@ -17,13 +20,11 @@ import kotlinx.android.synthetic.main.card_item.view.*
  * @version 1.0.0
  * @since 1.0.0
  */
-class CardItem : AbstractItem<CardItem, CardItem.ViewHolder>() {
+class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<CardItem, CardItem.ViewHolder>() {
 
     companion object {
         @JvmStatic val TAG: String = this::class.java.name
     }
-
-    var card: Card? = null
 
     override fun getLayoutRes(): Int {
         return R.layout.card_item
@@ -42,17 +43,24 @@ class CardItem : AbstractItem<CardItem, CardItem.ViewHolder>() {
 
         Glide.clear(holder.cardImage)
         Glide.with(holder.itemView.context)
-                .load(card?.iconUrl)
+                .load(card.iconUrl)
                 .into(holder.cardImage)
 
-        holder.name.text = card?.name
-        holder.faction.text = holder.itemView.context.getStringResourceByName(Faction.ID_TO_KEY.apply(card?.faction))
-        holder.description.text = card?.description
-        holder.power.text = card?.power.toString()
+        holder.name.text = card.name
+        holder.faction.text = holder.itemView.context.getStringResourceByName(Faction.ID_TO_KEY.apply(card.faction))
+        holder.description.text = card.description
+        holder.power.text = card.power.toString()
+
+        if (isDeckbuildMode) {
+            holder.addCardButton.visible()
+        } else {
+            holder.addCardButton.invisible()
+        }
     }
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
+
         Glide.clear(holder.cardImage)
     }
 
@@ -62,6 +70,7 @@ class CardItem : AbstractItem<CardItem, CardItem.ViewHolder>() {
         var description: TextView = view.card_description_text
         var power: TextView = view.card_power_text
         var cardImage: ImageView = view.card_image
+        var addCardButton: Button = view.add_card_button
     }
 
 }
