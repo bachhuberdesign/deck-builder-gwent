@@ -1,7 +1,10 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.util.Log
+import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import javax.inject.Inject
 
@@ -12,7 +15,8 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckbuildPresenter
-@Inject constructor(private val repository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository,
+                    private val cardRepository: CardRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = this::class.java.name
@@ -22,13 +26,24 @@ class DeckbuildPresenter
      *
      */
     fun loadUserDeck(deckId: Int) {
-        val deck: Deck? = repository.getDeckById(deckId)
+        val deck: Deck? = deckRepository.getDeckById(deckId)
 
         if (deck == null && isViewAttached()) {
             view!!.onErrorLoadingDeck("Error loading deck $deckId")
-        } else if (isViewAttached()) {
-            view!!.onDeckLoaded(deck!!)
+        } else if (deck != null && isViewAttached()) {
+            view!!.showSiegeCards(filterCardsByLane(deck, Lane.SIEGE))
+            view!!.onDeckLoaded(deck)
         }
+    }
+
+    private fun filterCardsByLane(deck: Deck, lane: Int): List<Card> {
+        val filteredList: MutableList<Card> = ArrayList()
+        deck.cards.forEach { card ->
+            if (card.lane == lane) {
+                filteredList.add(card)
+            }
+        }
+        return filteredList
     }
 
     /**
@@ -37,7 +52,7 @@ class DeckbuildPresenter
     fun loadAllUserDecks() {
         Log.d(TAG, "Loading user decks.")
         val decks: MutableList<Deck> = ArrayList()
-        val query = repository.getAllUserCreatedDecks()
+        val query = deckRepository.getAllUserCreatedDecks()
 
         query.subscribe({ query ->
             val cursor = query.run()
@@ -58,11 +73,15 @@ class DeckbuildPresenter
     /**
      *
      */
-    fun addCard(cardId: Int) {
-        Log.d(TAG, "addCard() called for card $cardId")
+    fun addCard(deckId: Int, cardId: Int) {
+        val deck: Deck = deckRepository.getDeckById(deckId) ?: throw Exception("Deck $deckId not found.")
 
+        val card = Card(cardId = cardId)
+        deck.cards.add(card)
+
+        deckRepository.saveDeck(deck)
         if (isViewAttached()) {
-            view!!.onCardAdded()
+            view!!.onCardAdded(cardRepository.getCardById(cardId))
         }
     }
 
@@ -82,14 +101,14 @@ class DeckbuildPresenter
      *
      */
     fun saveDeck(deck: Deck) {
-        repository.saveDeck(deck)
+        deckRepository.saveDeck(deck)
     }
 
     /**
      *
      */
     fun deleteDeck(deckId: Int) {
-        repository.deleteDeck(deckId)
+        deckRepository.deleteDeck(deckId)
 
         if (isViewAttached()) {
             view!!.onDeckDeleted(deckId)
