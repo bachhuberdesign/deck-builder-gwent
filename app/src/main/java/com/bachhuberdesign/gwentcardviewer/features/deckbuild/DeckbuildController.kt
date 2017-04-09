@@ -10,12 +10,14 @@ import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardFilters
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.SlideInChangeHandler
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import javax.inject.Inject
@@ -40,11 +42,15 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     @Inject
     lateinit var presenter: DeckbuildPresenter
 
+    lateinit var childRouter: Router
+
     private var deckId: Int = 0
     private var factionId: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
+
+        childRouter = getChildRouter(container).setPopsLastView(true)
 
         (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
@@ -54,7 +60,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             deckId = args.getInt("deckId")
         }
 
-        view.show_card_viewer_button.setOnClickListener { v ->
+        view.show_card_viewer_button.setOnClickListener {
             showCardPicker()
         }
 
@@ -80,9 +86,11 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     private fun showCardPicker() {
         val filters = CardFilters(filterByFactions = Pair(true, factionId))
 
-        router.pushController(RouterTransaction.with(CardViewerController(filters, deckId))
-                .pushChangeHandler(SlideInChangeHandler(500, true))
-                .popChangeHandler(SlideInChangeHandler(500, false)))
+        if (!childRouter.hasRootController()) {
+            childRouter.setRoot(RouterTransaction.with(CardViewerController(filters, deckId))
+                    .pushChangeHandler(SlideInChangeHandler(500, true))
+                    .popChangeHandler(SlideInChangeHandler(500, true)))
+        }
     }
 
     /**
@@ -91,10 +99,16 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
      * Callback function onCardAdded() will be called by the presenter if the card is persisted succesfully.
      */
     fun addCardToCurrentDeck(cardId: Int) {
-        presenter.addCard(cardId)
+        presenter.addCard(deckId, cardId)
+        childRouters.forEach { router ->
+            if (router.backstackSize > 0) {
+                router.popCurrentController()
+            }
+        }
     }
 
-    override fun onCardAdded() {
+    override fun onCardAdded(card: Card) {
+        Toast.makeText(activity, "Card ${card.cardId} added", Toast.LENGTH_LONG).show()
         Log.d(TAG, "onCardAdded()")
     }
 
@@ -129,6 +143,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onErrorLoadingDeck(message: String) {
         Log.e(TAG, "onErrorLoadingDeck: $message")
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showSiegeCards(cards: List<Card>) {
+        Log.d(TAG, "showSiegeCards()")
     }
 
 }

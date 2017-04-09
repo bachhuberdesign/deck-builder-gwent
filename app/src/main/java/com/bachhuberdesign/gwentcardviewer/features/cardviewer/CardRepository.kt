@@ -19,6 +19,17 @@ class CardRepository @Inject constructor(val database: BriteDatabase) {
         @JvmStatic val TAG: String = this::class.java.name
     }
 
+    fun getCardById(cardId: Int): Card {
+        val cursor = database.query("SELECT * FROM ${Card.TABLE} WHERE ${Card.ID} =  $cardId")
+        cursor.use { cursor ->
+            while (cursor.moveToNext()) {
+                return Card.MAPPER.apply(cursor)
+            }
+        }
+
+        throw Exception("Card $cardId not found.")
+    }
+
     fun getAllCards(): Cursor {
         return database.query("SELECT * FROM ${Card.TABLE}")
     }

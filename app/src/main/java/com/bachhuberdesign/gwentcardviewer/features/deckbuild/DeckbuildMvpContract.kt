@@ -1,6 +1,7 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 
 /**
  * @author Eric Bachhuber
@@ -9,7 +10,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
  */
 interface DeckbuildMvpContract : MvpContract {
 
-    fun onCardAdded()
+    fun onCardAdded(cardById: Card)
 
     fun onCardRemoved()
 
@@ -20,5 +21,7 @@ interface DeckbuildMvpContract : MvpContract {
     fun onDeckLoaded(deck: Deck)
 
     fun onErrorLoadingDeck(message: String)
+
+    fun showSiegeCards(cards: List<Card>)
 
 }
