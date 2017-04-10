@@ -43,6 +43,7 @@ class DeckbuildPresenter
         val filteredList: MutableList<Card> = ArrayList()
         deck.cards.forEach { card ->
             if (card.selectedLane == lane) {
+                Log.d(TAG, "Filtering cards: selectedLane: ${card.selectedLane}, lane to filter to: $lane")
                 filteredList.add(card)
             }
         }
@@ -52,15 +53,13 @@ class DeckbuildPresenter
     /**
      *
      */
-    fun addCard(deckId: Int, cardId: Int) {
+    fun addCard(deckId: Int, card: Card) {
         val deck: Deck = deckRepository.getDeckById(deckId) ?: throw Exception("Deck $deckId not found.")
 
-        val card = Card(cardId = cardId)
         deck.cards.add(card)
-
         deckRepository.saveDeck(deck)
         if (isViewAttached()) {
-            view!!.onCardAdded(cardRepository.getCardById(cardId))
+            view!!.onCardAdded(card)
         }
     }
 

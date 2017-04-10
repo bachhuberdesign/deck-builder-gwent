@@ -133,7 +133,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
         Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}")
 
         val deckbuildController = parentController as DeckbuildController
-        deckbuildController.addCardToCurrentDeck(card.cardId)
+        deckbuildController.addCardToCurrentDeck(card)
         isAddCardButtonClickable = true
     }
 

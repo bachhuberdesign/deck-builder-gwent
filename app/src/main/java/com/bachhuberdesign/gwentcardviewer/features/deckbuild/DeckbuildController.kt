@@ -96,10 +96,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     /**
      * Wrapper function which calls [DeckbuildController]'s presenter.addCard(int).
      *
-     * Callback function onCardAdded() will be called by the presenter if the card is persisted succesfully.
+     * Callback function onCardAdded() will be called by the presenter if the card is persisted successfully.
      */
-    fun addCardToCurrentDeck(cardId: Int) {
-        presenter.addCard(deckId, cardId)
+    fun addCardToCurrentDeck(card: Card) {
+        presenter.addCard(deckId, card)
         childRouters.forEach { router ->
             if (router.backstackSize > 0) {
                 router.popCurrentController()
@@ -109,7 +109,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onCardAdded(card: Card) {
         Toast.makeText(activity, "Card ${card.cardId} added", Toast.LENGTH_LONG).show()
-        Log.d(TAG, "onCardAdded()")
+        Log.d(TAG, "onCardAdded() " + card.toString())
     }
 
     override fun onCardRemoved() {

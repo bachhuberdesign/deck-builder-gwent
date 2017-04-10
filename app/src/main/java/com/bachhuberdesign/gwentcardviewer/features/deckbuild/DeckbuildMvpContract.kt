@@ -10,7 +10,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
  */
 interface DeckbuildMvpContract : MvpContract {
 
-    fun onCardAdded(cardById: Card)
+    fun onCardAdded(card: Card)
 
     fun onCardRemoved()
 
