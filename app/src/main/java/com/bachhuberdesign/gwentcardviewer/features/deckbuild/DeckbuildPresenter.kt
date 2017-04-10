@@ -31,43 +31,22 @@ class DeckbuildPresenter
         if (deck == null && isViewAttached()) {
             view!!.onErrorLoadingDeck("Error loading deck $deckId")
         } else if (deck != null && isViewAttached()) {
-            view!!.showSiegeCards(filterCardsByLane(deck, Lane.SIEGE))
             view!!.onDeckLoaded(deck)
+            view!!.showCardsByLane(filterCardsByLane(deck, Lane.MELEE), Lane.MELEE)
+            view!!.showCardsByLane(filterCardsByLane(deck, Lane.RANGED), Lane.RANGED)
+            view!!.showCardsByLane(filterCardsByLane(deck, Lane.SIEGE), Lane.SIEGE)
+            view!!.showCardsByLane(filterCardsByLane(deck, Lane.EVENT), Lane.EVENT)
         }
     }
 
     private fun filterCardsByLane(deck: Deck, lane: Int): List<Card> {
         val filteredList: MutableList<Card> = ArrayList()
         deck.cards.forEach { card ->
-            if (card.lane == lane) {
+            if (card.selectedLane == lane) {
                 filteredList.add(card)
             }
         }
         return filteredList
-    }
-
-    /**
-     *
-     */
-    fun loadAllUserDecks() {
-        Log.d(TAG, "Loading user decks.")
-        val decks: MutableList<Deck> = ArrayList()
-        val query = deckRepository.getAllUserCreatedDecks()
-
-        query.subscribe({ query ->
-            val cursor = query.run()
-
-            cursor.use {
-                while (cursor!!.moveToNext()) {
-                    decks.add(Deck.MAPPER.apply(cursor))
-                }
-            }
-
-            if (decks.isNotEmpty() && isViewAttached()) {
-                Log.d(TAG, "Deck list not empty & view attached")
-                view!!.onDecksLoaded(decks)
-            }
-        })
     }
 
     /**

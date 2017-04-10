@@ -53,7 +53,8 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                 "CREATE TABLE ${Deck.JOIN_CARD_TABLE} (" +
                         "id INTEGER NOT NULL PRIMARY KEY, " +
                         "deck_id INTEGER NOT NULL, " +
-                        "card_id INTEGER NOT NULL" +
+                        "card_id INTEGER NOT NULL, " +
+                        "${Card.SELECTED_LANE} INTEGER NOT NULL" +
                         ")"
         const val CREATE_TABLE_FACTIONS: String =
                 "CREATE TABLE ${Faction.TABLE} (" +

@@ -98,6 +98,13 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
             val cardValues = ContentValues()
             cardValues.put("card_id", card.cardId)
             cardValues.put("deck_id", deck.id)
+
+            if (card.selectedLane > 0) {
+                cardValues.put(Card.SELECTED_LANE, card.selectedLane)
+            } else {
+                cardValues.put(Card.SELECTED_LANE, card.lane)
+            }
+
             database.insert(Deck.JOIN_CARD_TABLE, cardValues)
         }
 
