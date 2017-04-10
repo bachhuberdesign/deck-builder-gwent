@@ -24,7 +24,8 @@ data class Card(var cardId: Int = 0,
                 var lane: Int = 0,
                 var loyalty: Int = 0,
                 var rarity: Int = 0,
-                var cardType: Int = 0) {
+                var cardType: Int = 0,
+                var selectedLane: Int = 0) {
 
     companion object {
         const val TABLE = "cards"
@@ -43,6 +44,7 @@ data class Card(var cardId: Int = 0,
         const val LOYALTY = "loyalty"
         const val RARITY = "rarity"
         const val TYPE = "type"
+        const val SELECTED_LANE = "selected_lane"
 
         val MAPPER = Function<Cursor, Card> { cursor ->
             val card = Card()
@@ -59,6 +61,13 @@ data class Card(var cardId: Int = 0,
             card.lane = cursor.getIntFromColumn(Card.LANE)
             card.rarity = cursor.getIntFromColumn(Card.RARITY)
             card.cardType = cursor.getIntFromColumn(Card.TYPE)
+
+            try {
+                card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
+            } catch (e: Exception) {
+                card.selectedLane = 0
+            }
+
             card
         }
     }

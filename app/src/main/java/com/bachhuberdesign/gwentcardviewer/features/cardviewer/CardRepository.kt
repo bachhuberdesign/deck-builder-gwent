@@ -27,11 +27,24 @@ class CardRepository @Inject constructor(val database: BriteDatabase) {
             }
         }
 
-        throw Exception("Card $cardId not found.")
+        throw CardException("Card $cardId not found.")
     }
 
-    fun getAllCards(): Cursor {
-        return database.query("SELECT * FROM ${Card.TABLE}")
+    fun getAllCards(): List<Card> {
+        val cursor = database.query("SELECT * FROM ${Card.TABLE}")
+        val cards: MutableList<Card> = ArrayList()
+
+        cursor.use { cursor ->
+            while (cursor.moveToNext()) {
+                cards.add(Card.MAPPER.apply(cursor))
+            }
+        }
+
+        if (cards.isEmpty()) {
+            throw CardException("Problem loading cards from database.")
+        } else {
+            return cards
+        }
     }
 
     fun getAllFactionAndNeutralCards(factionId: Int): Cursor {

@@ -22,6 +22,6 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun onErrorLoadingDeck(message: String)
 
-    fun showSiegeCards(cards: List<Card>)
+    fun showCardsByLane(cards: List<Card>, lane: Int)
 
 }

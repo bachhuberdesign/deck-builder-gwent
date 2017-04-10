@@ -126,7 +126,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
 
         deck.cards.forEach { card ->
-            Log.d(TAG, "Card: ${card.name}")
+            Log.d(TAG, "onDeckLoaded() card: ${card.name}")
         }
 
         view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
@@ -145,8 +145,15 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun showSiegeCards(cards: List<Card>) {
-        Log.d(TAG, "showSiegeCards()")
+    override fun showCardsByLane(cards: List<Card>, lane: Int) {
+        if (cards.isEmpty()) {
+            Log.d(TAG, "No cards available for lane $lane.")
+        } else {
+            cards.forEach { card ->
+                Log.d(TAG, "showCardsByLane() card: ${card.name}, lane: ${card.lane}, " +
+                        "selectedLane: ${card.selectedLane}")
+            }
+        }
     }
 
 }
