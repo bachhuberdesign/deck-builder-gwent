@@ -78,7 +78,7 @@ dependencies {
     compile "com.bluelinelabs:conductor-rxlifecycle2:$conductor_version"
 
     // Rx
-    compile "io.reactivex.rxjava2:rxjava:2.0.7"
+    compile "io.reactivex.rxjava2:rxjava:2.0.8"
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
     // Networking
@@ -104,6 +104,9 @@ dependencies {
     // FastAdapter
     compile('com.mikepenz:fastadapter:2.5.1@aar') { transitive = true }
     compile 'com.mikepenz:fastadapter-commons:2.5.0@aar'
+
+    // Material Drawer
+    compile('com.mikepenz:materialdrawer:5.9.0@aar') { transitive = true }
     compile "com.mikepenz:materialize:1.0.1@aar"
 
     // Dialog
