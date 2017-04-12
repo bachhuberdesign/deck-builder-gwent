@@ -133,13 +133,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         view!!.leader_name_text.text = deck.cards[0].name
     }
 
-    override fun onDecksLoaded(decks: List<Deck>) {
-        decks.forEach { deck ->
-            Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
-                    "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
-        }
-    }
-
     override fun onErrorLoadingDeck(message: String) {
         Log.e(TAG, "onErrorLoadingDeck: $message")
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
