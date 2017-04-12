@@ -17,7 +17,7 @@ class FactionSelectPresenter
 @Inject constructor(private val repository: DeckRepository) : BasePresenter<FactionSelectMvpContract>() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = FactionSelectPresenter::class.java.name
     }
 
     override fun attach(view: FactionSelectMvpContract) {

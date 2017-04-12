@@ -36,7 +36,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     constructor(args: Bundle) : super()
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = DeckbuildController::class.java.name
     }
 
     @Inject
@@ -131,13 +131,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
         view!!.leader_name_text.text = deck.cards[0].name
-    }
-
-    override fun onDecksLoaded(decks: List<Deck>) {
-        decks.forEach { deck ->
-            Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
-                    "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
-        }
     }
 
     override fun onErrorLoadingDeck(message: String) {

@@ -19,7 +19,7 @@ import com.google.gson.Gson
 class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = DatabaseHelper::class.java.name
         const val DB_NAME = "deck_builder.db"
         const val DB_VERSION: Int = 1
         const val CREATE_TABLE_CARDS: String =

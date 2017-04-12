@@ -8,7 +8,7 @@ package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 class CardDetailController {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = CardDetailController::class.java.name
     }
 
 }

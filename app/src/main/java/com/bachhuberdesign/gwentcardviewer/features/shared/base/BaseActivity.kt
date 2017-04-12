@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong
 open class BaseActivity : AppCompatActivity() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = BaseActivity::class.java.name
         @JvmStatic private val NEXT_ID: AtomicLong = AtomicLong(0)
         @JvmStatic private val components = HashMap<Long, PersistedComponent>()
     }

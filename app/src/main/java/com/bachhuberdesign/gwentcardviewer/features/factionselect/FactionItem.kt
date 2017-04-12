@@ -9,17 +9,17 @@ import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.items.AbstractItem
-import kotlinx.android.synthetic.main.faction_select_item.view.*
+import kotlinx.android.synthetic.main.item_faction.view.*
 
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
-class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.ViewHolder>() {
+class FactionItem : AbstractItem<FactionItem, FactionItem.ViewHolder>() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = FactionItem::class.java.name
     }
 
     var backgroundUrl = ""
@@ -28,11 +28,11 @@ class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.View
     var leaders: List<Card>? = null
 
     override fun getLayoutRes(): Int {
-        return R.layout.faction_select_item
+        return R.layout.item_faction
     }
 
     override fun getType(): Int {
-        return 777
+        return R.id.faction_item
     }
 
     override fun getViewHolder(v: View): ViewHolder {

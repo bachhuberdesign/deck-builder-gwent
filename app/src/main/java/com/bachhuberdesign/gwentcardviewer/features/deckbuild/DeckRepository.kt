@@ -8,7 +8,6 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import com.google.gson.Gson
 import com.squareup.sqlbrite.BriteDatabase
-import com.squareup.sqlbrite.QueryObservable
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -22,7 +21,7 @@ import kotlin.collections.ArrayList
 class DeckRepository @Inject constructor(var gson: Gson, val database: BriteDatabase) {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = DeckRepository::class.java.name
     }
 
     fun deckNameExists(deckName: String): Boolean {
@@ -63,8 +62,18 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return cards
     }
 
-    fun getAllUserCreatedDecks(): QueryObservable {
-        return database.createQuery(Deck.TABLE, "SELECT * FROM ${Deck.TABLE}")
+    fun getAllUserCreatedDecks(): List<Deck> {
+        val cursor = database.query("SELECT * FROM ${Deck.TABLE}")
+
+        val decks: MutableList<Deck> = ArrayList()
+
+        cursor.use {
+            while (cursor.moveToNext()) {
+                decks.add(Deck.MAPPER.apply(cursor))
+            }
+        }
+
+        return decks
     }
 
     fun getFactions(): Cursor {

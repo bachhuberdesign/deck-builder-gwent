@@ -14,8 +14,6 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun onCardRemoved()
 
-    fun onDecksLoaded(decks: List<Deck>)
-
     fun onDeckDeleted(deckId: Int)
 
     fun onDeckLoaded(deck: Deck)
