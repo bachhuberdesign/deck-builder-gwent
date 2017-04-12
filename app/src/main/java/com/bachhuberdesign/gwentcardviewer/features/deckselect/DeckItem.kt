@@ -23,6 +23,7 @@ class DeckItem : AbstractItem<DeckItem, DeckItem.ViewHolder>() {
     var deckName = ""
     var factionId: Int = 0
     var leaderName = ""
+    var deckId: Int = 0
 
     override fun getLayoutRes(): Int {
         return R.layout.item_deck

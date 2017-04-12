@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardException
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import kotlinx.android.synthetic.main.controller_deck_select.view.*
 import javax.inject.Inject
@@ -42,6 +45,15 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
                 .inject(this)
 
         adapter = FastItemAdapter()
+        adapter!!.withOnClickListener({ view, adapter, item, position ->
+            if (item.deckId == 0) {
+                CardException("Deck ID not set")
+            } else {
+                router.pushController(RouterTransaction.with(DeckbuildController(item.deckId)))
+            }
+            true
+        })
+
         val layoutManager = LinearLayoutManager(activity)
 
         recyclerView = view.recycler_view
@@ -71,6 +83,8 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
             val item: DeckItem = DeckItem()
             item.deckName = deck.name
             item.factionId = deck.faction
+            item.deckId = deck.id
+
             deck.cards.forEach { card ->
                 if (card.cardType == CardType.LEADER) {
                     item.leaderName = card.name
