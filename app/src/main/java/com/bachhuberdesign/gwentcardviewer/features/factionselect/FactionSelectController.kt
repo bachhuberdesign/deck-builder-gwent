@@ -147,28 +147,6 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         imageView.startAnimation(flip1)
     }
 
-    private fun moveViewToScreenCenter(iv: View) {
-        val root: ConstraintLayout = activity!!.constraint_layout
-        val displayMetrics = DisplayMetrics()
-        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        val statusBarOffset = displayMetrics.heightPixels - root.measuredHeight
-
-        val originalPos = IntArray(2)
-        iv.getLocationOnScreen(originalPos)
-
-        var xDest = displayMetrics.widthPixels / 2
-        xDest -= iv.measuredWidth / 2
-        val yDest = displayMetrics.heightPixels / 2 - iv.measuredHeight / 2 - statusBarOffset
-        iv.pivotX = 0f
-        iv.pivotY = 0f
-        iv.animate()
-                .x((xDest).toFloat())
-                .y((yDest).toFloat())
-                .setDuration(1000)
-                .start()
-    }
-
     override fun onFactionsLoaded(factions: List<Faction>) {
         factions.forEach { faction ->
             val item: FactionSelectItem = FactionSelectItem()
