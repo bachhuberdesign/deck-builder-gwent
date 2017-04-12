@@ -12,4 +12,6 @@ interface DeckSelectMvpContract : MvpContract {
 
     fun onDecksLoaded(decks: List<Deck>)
 
+    fun onNoDecksAvailable()
+
 }

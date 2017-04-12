@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer
 import android.os.Bundle
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
+import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectController
 import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
 import com.bluelinelabs.conductor.Conductor
@@ -61,6 +62,7 @@ class MainActivity : BaseActivity() {
         val editDeck = PrimaryDrawerItem().withIdentifier(2).withName("Edit Deck")
         val export = PrimaryDrawerItem().withIdentifier(3).withName("Export")
         val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
+        val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
 
         val result = DrawerBuilder()
                 .withActivity(this)
@@ -68,6 +70,7 @@ class MainActivity : BaseActivity() {
                 .addDrawerItems(
                         newDeck,
                         editDeck,
+                        deckSelect,
                         export,
                         DividerDrawerItem(),
                         settings
@@ -78,6 +81,7 @@ class MainActivity : BaseActivity() {
                         2 -> router.pushController(RouterTransaction.with(DeckbuildController(1)))
                         3 -> Log.d(TAG, "Export item selected but not yet implemented.")
                         4 -> Log.d(TAG, "Settings item selected but not yet implemented.")
+                        5 -> router.pushController(RouterTransaction.with(DeckSelectController()))
                     }
                     false
                 }

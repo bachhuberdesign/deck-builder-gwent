@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="glide_tag" />
+    <item name="glide_tag" type="id"/>
+    <item name="card_item" type="id"/>
+    <item name="deck_item" type="id"/>
+    <item name="faction_item" type="id"/>
 </resources>

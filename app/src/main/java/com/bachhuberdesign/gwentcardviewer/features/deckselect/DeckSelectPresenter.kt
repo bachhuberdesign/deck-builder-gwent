@@ -1,9 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckselect
 
-import android.util.Log
-import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
-import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import javax.inject.Inject
@@ -22,7 +19,13 @@ class DeckSelectPresenter
     }
 
     fun loadDeckList() {
+        val decks = deckRepository.getAllUserCreatedDecks()
 
+        if (decks.isNotEmpty() && isViewAttached()) {
+            view!!.onDecksLoaded(decks)
+        } else if (isViewAttached()) {
+            view!!.onNoDecksAvailable()
+        }
     }
 
 }

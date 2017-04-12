@@ -13,7 +13,7 @@ import com.bachhuberdesign.gwentcardviewer.util.invisible
 import com.bachhuberdesign.gwentcardviewer.util.visible
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.items.AbstractItem
-import kotlinx.android.synthetic.main.card_item.view.*
+import kotlinx.android.synthetic.main.item_card.view.*
 
 /**
  * @author Eric Bachhuber
@@ -27,7 +27,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
     }
 
     override fun getLayoutRes(): Int {
-        return R.layout.card_item
+        return R.layout.item_card
     }
 
     override fun getViewHolder(v: View): ViewHolder {
@@ -35,7 +35,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
     }
 
     override fun getType(): Int {
-        return 888
+        return R.id.card_item
     }
 
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {

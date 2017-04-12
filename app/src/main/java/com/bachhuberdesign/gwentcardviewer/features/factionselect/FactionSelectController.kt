@@ -1,10 +1,8 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
 import android.net.Uri
-import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +23,6 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper
 import com.mikepenz.fastadapter.listeners.ClickEventHook
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.controller_faction_select.view.*
 import javax.inject.Inject
 
@@ -44,8 +41,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
     lateinit var presenter: FactionSelectPresenter
 
     var recyclerView: RecyclerView? = null
-    var adapter: FastItemAdapter<FactionSelectItem>? = null
-    var layoutManager: LinearLayoutManager? = null
+    var adapter: FastItemAdapter<FactionItem>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_faction_select)
@@ -55,22 +51,22 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
                 .inject(this)
 
         adapter = FastItemAdapter()
-        adapter!!.withItemEvent(object : ClickEventHook<FactionSelectItem>() {
+        adapter!!.withItemEvent(object : ClickEventHook<FactionItem>() {
             override fun onBindMany(viewHolder: RecyclerView.ViewHolder): MutableList<View>? {
-                if (viewHolder is FactionSelectItem.ViewHolder) {
+                if (viewHolder is FactionItem.ViewHolder) {
                     return ClickListenerHelper.toList(viewHolder.leader1, viewHolder.leader2, viewHolder.leader3)
                 } else {
                     return super.onBindMany(viewHolder)
                 }
             }
 
-            override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionSelectItem>, item: FactionSelectItem) {
+            override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionItem>, item: FactionItem) {
                 val index = Integer.valueOf(view.tag as String)
                 beginCardExpandAnimation(view as ImageView, item.leaders!![index])
             }
         })
 
-        layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(activity)
 
         recyclerView = view.recycler_view
         recyclerView?.setHasFixedSize(true)
@@ -149,7 +145,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
     override fun onFactionsLoaded(factions: List<Faction>) {
         factions.forEach { faction ->
-            val item: FactionSelectItem = FactionSelectItem()
+            val item: FactionItem = FactionItem()
             item.factionName = faction.name
             item.factionDescription = faction.effect
             item.backgroundUrl = faction.iconUrl
