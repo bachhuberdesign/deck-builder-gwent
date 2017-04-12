@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.faction_select_item.view.*
 class FactionSelectItem : AbstractItem<FactionSelectItem, FactionSelectItem.ViewHolder>() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = FactionSelectItem::class.java.name
     }
 
     var backgroundUrl = ""

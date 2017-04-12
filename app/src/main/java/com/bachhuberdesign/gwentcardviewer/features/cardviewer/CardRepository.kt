@@ -16,7 +16,7 @@ import javax.inject.Inject
 class CardRepository @Inject constructor(val database: BriteDatabase) {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = CardRepository::class.java.name
     }
 
     fun getCardById(cardId: Int): Card {

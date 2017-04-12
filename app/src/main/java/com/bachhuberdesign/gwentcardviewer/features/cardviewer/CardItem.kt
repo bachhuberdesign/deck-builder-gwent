@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.card_item.view.*
 class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<CardItem, CardItem.ViewHolder>() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = CardItem::class.java.name
     }
 
     override fun getLayoutRes(): Int {

@@ -16,7 +16,7 @@ import com.bumptech.glide.request.target.ViewTarget
 class App : Application() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = App::class.java.name
         @JvmStatic lateinit var applicationComponent: ApplicationComponent
     }
 

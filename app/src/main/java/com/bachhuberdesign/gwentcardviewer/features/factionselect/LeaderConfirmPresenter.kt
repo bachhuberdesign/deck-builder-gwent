@@ -18,7 +18,7 @@ class LeaderConfirmPresenter
 @Inject constructor(private val repository: DeckRepository) : BasePresenter<LeaderConfirmMvpContract>() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = LeaderConfirmPresenter::class.java.name
     }
 
     fun saveNewDeck(deckName: String, leader: Card) {

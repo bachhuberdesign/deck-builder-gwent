@@ -37,7 +37,7 @@ import javax.inject.Inject
 class FactionSelectController : Controller(), FactionSelectMvpContract {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = FactionSelectController::class.java.name
     }
 
     @Inject

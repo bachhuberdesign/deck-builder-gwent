@@ -8,7 +8,7 @@ package com.bachhuberdesign.gwentcardviewer.util
 class Constants {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = Constants::class.java.name
     }
 
 }

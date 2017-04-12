@@ -40,7 +40,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     constructor(args: Bundle) : super()
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = CardViewerController::class.java.name
     }
 
     @Inject

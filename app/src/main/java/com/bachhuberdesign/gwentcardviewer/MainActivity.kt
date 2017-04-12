@@ -6,7 +6,6 @@ import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildControlle
 import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
 import com.bluelinelabs.conductor.Conductor
-import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = MainActivity::class.java.name
     }
 
     lateinit var router: Router
@@ -75,18 +74,14 @@ class MainActivity : BaseActivity() {
                 )
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
-                        1 -> pushController(FactionSelectController::class.java)
-                        2 -> pushController(DeckbuildController::class.java)
+                        1 -> router.pushController(RouterTransaction.with(FactionSelectController()))
+                        2 -> router.pushController(RouterTransaction.with(DeckbuildController(1)))
                         3 -> Log.d(TAG, "Export item selected but not yet implemented.")
                         4 -> Log.d(TAG, "Settings item selected but not yet implemented.")
                     }
-                    true
+                    false
                 }
                 .build()
-    }
-
-    private fun pushController(controller: Class<out Controller>) {
-
     }
 
 }

@@ -38,7 +38,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
     constructor(args: Bundle) : super()
 
     companion object {
-        val TAG: String = this::class.java.name
+        val TAG: String = LeaderConfirmController::class.java.name
     }
 
     @Inject

@@ -19,7 +19,7 @@ class DeckbuildPresenter
                     private val cardRepository: CardRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
     }
 
     /**

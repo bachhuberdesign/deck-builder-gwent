@@ -18,7 +18,7 @@ class CardViewerPresenter
                     val deckRepository: DeckRepository) : BasePresenter<CardViewerMvpContract>() {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = CardViewerPresenter::class.java.name
     }
 
     /**

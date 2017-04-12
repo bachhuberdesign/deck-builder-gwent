@@ -22,7 +22,7 @@ import kotlin.collections.ArrayList
 class DeckRepository @Inject constructor(var gson: Gson, val database: BriteDatabase) {
 
     companion object {
-        @JvmStatic val TAG: String = this::class.java.name
+        @JvmStatic val TAG: String = DeckRepository::class.java.name
     }
 
     fun deckNameExists(deckName: String): Boolean {
