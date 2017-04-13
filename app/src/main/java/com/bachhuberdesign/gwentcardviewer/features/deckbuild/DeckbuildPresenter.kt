@@ -43,7 +43,7 @@ class DeckbuildPresenter
         val filteredList: MutableList<Card> = ArrayList()
         deck.cards.forEach { card ->
             if (card.selectedLane == lane) {
-                Log.d(TAG, "Filtering cards: selectedLane: ${card.selectedLane}, lane to filter to: $lane")
+                Log.d(TAG, "Adding card ${card.name} to filtered list. selectedLane: ${card.selectedLane}, lane to filter to: $lane")
                 filteredList.add(card)
             }
         }

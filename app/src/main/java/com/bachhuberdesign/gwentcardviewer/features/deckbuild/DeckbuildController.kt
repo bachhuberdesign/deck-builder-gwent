@@ -128,13 +128,12 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun onDeckLoaded(deck: Deck) {
-        factionId = deck.faction
         Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
                 "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
 
-        deck.cards.forEach { card ->
-            Log.d(TAG, "onDeckLoaded() card: ${card.name}")
-        }
+        deck.cards.forEach { card -> Log.d(TAG, "Card ${card.name} loaded") }
+
+        factionId = deck.faction
 
         view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
         view!!.leader_name_text.text = deck.cards[0].name
@@ -165,6 +164,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         var previousTag: Int = 0
 
         cards.forEachIndexed { index, card ->
+            Log.d(TAG, "Adding card ${card.name} to lane $lane layout.")
             if (card.selectedLane == lane) {
                 // Create view to hold card image
                 val imageView: ImageView = ImageView(activity)
