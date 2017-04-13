@@ -5,6 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT
 import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
@@ -12,15 +15,19 @@ import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardFilters
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.SlideInChangeHandler
+import com.bachhuberdesign.gwentcardviewer.util.dpToPx
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -141,10 +148,49 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun showCardsByLane(cards: List<Card>, lane: Int) {
         if (cards.isEmpty()) {
             Log.d(TAG, "No cards available for lane $lane.")
-        } else {
-            cards.forEach { card ->
-                Log.d(TAG, "showCardsByLane() card: ${card.name}, lane: ${card.lane}, " +
-                        "selectedLane: ${card.selectedLane}")
+            return
+        }
+
+        val layout: RelativeLayout?
+
+        when (lane) {
+            Lane.MELEE -> layout = view!!.melee_image_holder
+            Lane.RANGED -> layout = view!!.ranged_image_holder
+            Lane.SIEGE -> layout = view!!.siege_image_holder
+            Lane.EVENT -> layout = view!!.event_image_holder
+            else -> throw IndexOutOfBoundsException("Expected ${Lane.MELEE}, ${Lane.RANGED}, " +
+                    "${Lane.SIEGE}, or ${Lane.EVENT}. Actual value received: $lane.")
+        }
+
+        var previousTag: Int = 0
+
+        cards.forEachIndexed { index, card ->
+            if (card.selectedLane == lane) {
+                // Create view to hold card image
+                val imageView: ImageView = ImageView(activity)
+                imageView.id = View.generateViewId()
+                imageView.tag = index + 42
+
+                // Set LayoutParams for view
+                val params = RelativeLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
+                params.setMargins(0, 8, 0, 8)
+
+                // Position view based on previous cards
+                if (previousTag == 0) {
+                    params.addRule(RelativeLayout.ALIGN_PARENT_START)
+                } else {
+                    params.addRule(RelativeLayout.END_OF, layout.findViewWithTag(previousTag).id)
+                }
+
+                // Add view and load image
+                layout!!.addView(imageView, params)
+
+                Glide.with(activity)
+                        .load(card.iconUrl)
+                        .fitCenter()
+                        .into(imageView)
+
+                previousTag = imageView.tag as Int
             }
         }
     }

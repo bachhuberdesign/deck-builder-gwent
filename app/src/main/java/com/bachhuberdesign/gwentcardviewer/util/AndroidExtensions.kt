@@ -70,3 +70,8 @@ fun Context.getStringResourceByName(key: String): String {
     val resourceId = this.resources.getIdentifier(key, "string", this.packageName)
     return this.getString(resourceId)
 }
+
+fun Context.dpToPx(dp: Int): Float {
+    val scale = this.resources.displayMetrics.density
+    return dp * scale + 0.5f
+}
