@@ -26,7 +26,7 @@ data class Deck(var id: Int = 0,
     companion object {
         const val TABLE = "user_decks"
         const val JOIN_CARD_TABLE = "user_decks_cards"
-        const val ID = "id"
+        const val ID = "_id"
         const val NAME = "name"
         const val FACTION = "faction"
         const val FAVORITED = "favorited"
