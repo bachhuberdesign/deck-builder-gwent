@@ -7,6 +7,7 @@ import com.bachhuberdesign.gwentcardviewer.inject.module.DatabaseModule
 import com.bachhuberdesign.gwentcardviewer.inject.module.NetworkModule
 import com.bachhuberdesign.gwentcardviewer.inject.module.RepositoryModule
 import com.bumptech.glide.request.target.ViewTarget
+import com.facebook.stetho.Stetho
 
 /**
  * @author Eric Bachhuber
@@ -22,6 +23,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // Enable Stetho debugging
+        if (BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this)
+        }
 
         // Workaround for Glide setTag issue: See http://stackoverflow.com/questions/34833627
         ViewTarget.setTagId(R.id.glide_tag)
