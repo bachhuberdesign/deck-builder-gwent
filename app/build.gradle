@@ -111,6 +111,10 @@ dependencies {
 
     // Dialog
     compile 'com.afollestad.material-dialogs:core:0.9.4.2'
+
+    // Stetho
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }
 
 repositories {
