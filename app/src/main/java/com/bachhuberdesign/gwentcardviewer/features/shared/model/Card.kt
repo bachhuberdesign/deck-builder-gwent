@@ -29,7 +29,7 @@ data class Card(var cardId: Int = 0,
 
     companion object {
         const val TABLE = "cards"
-        const val ID = "id"
+        const val ID = "_id"
         const val NAME = "name"
         const val DESCRIPTION = "description"
         const val FLAVOR_TEXT = "flavor_text"

@@ -2,10 +2,12 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.content.ContentValues
 import android.database.Cursor
+import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
+import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
 import com.google.gson.Gson
 import com.squareup.sqlbrite.BriteDatabase
 import java.util.*
@@ -46,9 +48,10 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun getCardsForDeck(deckId: Int): MutableList<Card> {
-        val cursor = database.query("SELECT * FROM ${Card.TABLE} AS t1 " +
+        // TODO:
+        val cursor = database.query("SELECT * FROM ${Card.TABLE} " +
                 "JOIN user_decks_cards as t2 " +
-                "ON t1.id = t2.card_id " +
+                "ON ${Card.ID} = t2.card_id " +
                 "WHERE t2.deck_id = $deckId")
 
         val cards: MutableList<Card> = ArrayList()
@@ -58,6 +61,8 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
                 cards.add(Card.MAPPER.apply(cursor))
             }
         }
+
+        cards.forEach { card -> Log.d(TAG, "getCardsForDeck() cardId: ${card.cardId}") }
 
         return cards
     }
