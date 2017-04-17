@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
+import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
@@ -27,10 +28,14 @@ class CardViewerPresenter
     fun checkCardAddable(card: Card, deckId: Int) {
         val deck = deckRepository.getDeckById(deckId)
 
-        if (deck != null && Deck.isCardAddableToDeck(deck, card)) {
+        if (deck != null) {
+            val cardAddable = Deck.isCardAddableToDeck(deck, card)
+
             if (isViewAttached()) {
-                view!!.onCardChecked(card)
+                view!!.onCardChecked(card, cardAddable)
             }
+        } else {
+            Log.e(TAG, "Tried checking card addable but deck $deckId == null.")
         }
     }
 

@@ -129,11 +129,13 @@ class CardViewerController : Controller, CardViewerMvpContract {
         TODO("Method not yet implemented")
     }
 
-    override fun onCardChecked(card: Card) {
-        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}")
+    override fun onCardChecked(card: Card, cardAddable: Boolean) {
+        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}, Addable: $cardAddable")
 
-        val deckbuildController = parentController as DeckbuildController
-        deckbuildController.addCardToCurrentDeck(card)
+        if (cardAddable) {
+            (parentController as DeckbuildController).addCardToCurrentDeck(card)
+        }
+
         isAddCardButtonClickable = true
     }
 

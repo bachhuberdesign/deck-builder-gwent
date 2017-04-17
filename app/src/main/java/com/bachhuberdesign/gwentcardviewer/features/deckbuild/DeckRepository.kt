@@ -48,7 +48,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return deck
     }
 
-    fun queryCardsForDeck(deckId: Int): Observable<MutableList<Card>> {
+    fun observeCardUpdates(deckId: Int): Observable<MutableList<Card>> {
         val tables: MutableList<String> = arrayListOf(Card.TABLE, "user_decks_cards")
         val query: String = "SELECT * FROM ${Card.TABLE} " +
                 "JOIN user_decks_cards as t2 " +
@@ -57,14 +57,12 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
 
         return database.createQuery(tables, query)
                 .mapToList(Card.MAP1)
-                .last()
+                .skip(1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getCardsForDeck(deckId: Int): MutableList<Card> {
-        // TODO:
-
         val cursor = database.query("SELECT * FROM ${Card.TABLE} " +
                 "JOIN user_decks_cards as t2 " +
                 "ON ${Card.ID} = t2.card_id " +
