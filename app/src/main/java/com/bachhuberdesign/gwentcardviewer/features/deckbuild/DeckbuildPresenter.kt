@@ -1,7 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.util.Log
-import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
@@ -18,8 +17,7 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckbuildPresenter
-@Inject constructor(private val deckRepository: DeckRepository,
-                    private val cardRepository: CardRepository) : BasePresenter<DeckbuildMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
@@ -35,16 +33,21 @@ class DeckbuildPresenter
     }
 
     fun subscribeToCardUpdates(deckId: Int) {
-        subscription = deckRepository.queryCardsForDeck(deckId)
+        subscription = deckRepository.observeCardUpdates(deckId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cards ->
                     if (cards.isNotEmpty() && isViewAttached()) {
+                        // TODO: collect cards to animate and retrieve them with helper method
                         view!!.onCardAdded(cards.last())
                     }
                 }, { error ->
                     Log.e(TAG, "Error querying cards for deck $deckId", error)
                 })
+    }
+
+    fun loadCardsToAnimate() {
+        // TODO:
     }
 
     /**
@@ -86,10 +89,6 @@ class DeckbuildPresenter
      */
     fun removeCardFromDeck(card: Card) {
         Log.d(TAG, "removeCard() called for card ${card.cardId}")
-
-        if (isViewAttached()) {
-            view!!.onCardRemoved(card)
-        }
     }
 
     /**
