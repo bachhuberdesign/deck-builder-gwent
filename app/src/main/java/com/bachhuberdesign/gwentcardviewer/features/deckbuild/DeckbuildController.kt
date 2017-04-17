@@ -101,12 +101,12 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     /**
-     * Wrapper function which calls [DeckbuildController]'s presenter.addCard(int).
+     * Wrapper function which calls [DeckbuildController]'s presenter.addCardToDeck(int).
      *
      * Callback function onCardAdded() will be called by the presenter if the card is persisted successfully.
      */
     fun addCardToCurrentDeck(card: Card) {
-        presenter.addCard(deckId, card)
+        presenter.addCardToDeck(card, deckId)
         childRouters.forEach { router ->
             if (router.backstackSize > 0) {
                 router.popCurrentController()

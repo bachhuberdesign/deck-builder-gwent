@@ -6,6 +6,8 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -22,11 +24,34 @@ class DeckbuildPresenter
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
     }
 
+
+    override fun attach(view: DeckbuildMvpContract) {
+        super.attach(view)
+    }
+
+    override fun detach() {
+        super.detach()
+    }
+
     /**
      *
      */
     fun loadUserDeck(deckId: Int) {
         val deck: Deck? = deckRepository.getDeckById(deckId)
+
+        // TODO:
+        deckRepository.queryCardsForDeck(deckId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ query ->
+                    query.forEach { card ->
+                        if (isViewAttached()) {
+                            view!!.onCardAdded(card)
+                        }
+                    }
+                }, { error ->
+                    Log.e(TAG, "Error querying cards for deck $deckId", error)
+                })
 
         if (deck == null && isViewAttached()) {
             view!!.onErrorLoadingDeck("Error loading deck $deckId")
@@ -53,11 +78,8 @@ class DeckbuildPresenter
     /**
      *
      */
-    fun addCard(deckId: Int, card: Card) {
-        val deck: Deck = deckRepository.getDeckById(deckId) ?: throw Exception("Deck $deckId not found.")
-
-        deck.cards.add(card)
-        deckRepository.saveDeck(deck)
+    fun addCardToDeck(card: Card, deckId: Int) {
+        deckRepository.addCardToDeck(card, deckId)
         if (isViewAttached()) {
             view!!.onCardAdded(card)
         }
@@ -66,20 +88,13 @@ class DeckbuildPresenter
     /**
      *
      */
-    fun removeCard(cardId: Int) {
+    fun removeCardFromDeck(cardId: Int) {
         Log.d(TAG, "removeCard() called for card $cardId")
         // TODO:
 
         if (isViewAttached()) {
             view!!.onCardRemoved()
         }
-    }
-
-    /**
-     *
-     */
-    fun saveDeck(deck: Deck) {
-        deckRepository.saveDeck(deck)
     }
 
     /**

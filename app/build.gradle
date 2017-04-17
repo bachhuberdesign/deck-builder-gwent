@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
 
 android {
     compileSdkVersion 25
@@ -17,6 +25,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -80,6 +92,7 @@ dependencies {
     // Rx
     compile "io.reactivex.rxjava2:rxjava:2.0.8"
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex:rxandroid:1.2.1'
 
     // Networking
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -110,7 +123,7 @@ dependencies {
     compile "com.mikepenz:materialize:1.0.1@aar"
 
     // Dialog
-    compile 'com.afollestad.material-dialogs:core:0.9.4.2'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.3'
 
     // Stetho
     compile 'com.facebook.stetho:stetho:1.5.0'
@@ -121,17 +134,5 @@ repositories {
     jcenter()
     maven {
         url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1/'
-    }
-}
-
-// Remove once MaterialDialogs has been updated to use latest support library
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'com.android.support') {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion '25.3.1'
-            }
-        }
     }
 }

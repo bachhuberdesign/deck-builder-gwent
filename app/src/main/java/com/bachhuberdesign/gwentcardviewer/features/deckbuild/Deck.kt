@@ -2,6 +2,8 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.database.Cursor
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.util.getBooleanFromColumn
 import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
 import com.bachhuberdesign.gwentcardviewer.util.getLongFromColumn
@@ -32,6 +34,7 @@ data class Deck(var id: Int = 0,
         const val FAVORITED = "favorited"
         const val CREATED_DATE = "created_date"
         const val LAST_UPDATE = "last_update"
+        const val MAX_NUM_CARDS = 40
 
         val MAPPER = Function<Cursor, Deck> { cursor ->
             val deck = Deck()
@@ -45,7 +48,31 @@ data class Deck(var id: Int = 0,
         }
 
         fun isCardAddableToDeck(deck: Deck, card: Card): Boolean {
-            // TODO: Add validation checks
+            // TODO: Check if too many of card are already in deck
+            // https://www.playgwent.com/en/faq
+
+            // Check that deck is not full
+            if (deck.cards.size >= MAX_NUM_CARDS) {
+                return false
+            }
+
+            // If leader card is being added, check that no leader already exists in deck
+            if (card.cardType == CardType.LEADER) {
+                deck.cards.forEach {
+                    if (card.cardType == CardType.LEADER) {
+                        return false
+                    }
+                }
+            }
+
+            // Check that card is neutral or same faction as deck
+            if (card.faction != Faction.NEUTRAL) {
+                if (deck.faction != card.faction) {
+                    return false
+                }
+            }
+
+            // TODO: Add additional validation checks
 
             return true
         }
