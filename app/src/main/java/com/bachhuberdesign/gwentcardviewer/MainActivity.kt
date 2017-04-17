@@ -37,10 +37,6 @@ class MainActivity : BaseActivity() {
         router = Conductor.attachRouter(this, container, savedInstanceState)
 
         if (!router.hasRootController()) {
-            Log.d(TAG, "Setting root controller")
-
-            // TODO: Show drawer
-
             if (!BuildConfig.DEBUG) {
                 router.setRoot(RouterTransaction.with(DeckbuildController(1)))
             } else {

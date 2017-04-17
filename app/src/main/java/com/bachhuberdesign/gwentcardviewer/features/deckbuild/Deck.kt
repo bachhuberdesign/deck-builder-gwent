@@ -69,9 +69,6 @@ data class Deck(var id: Int = 0,
                 it.cardId == card.cardId
             }
 
-            Log.d("Deck", "filteredByLeader() size: ${filteredByLeader.size}")
-            Log.d("Deck", "filteredById() size: ${filteredById.size}")
-
             if (card.cardType == CardType.BRONZE && filteredById.size >= 3) return false
             if (card.cardType == CardType.SILVER && filteredById.size >= 2) return false
             if (card.cardType == CardType.GOLD && filteredById.isNotEmpty()) return false
