@@ -27,7 +27,7 @@ data class Faction(
         const val SKELLIGE = 4
         const val NILFGAARD = 5
         const val TABLE = "factions"
-        const val ID = "id"
+        const val ID = "_id"
         const val NAME = "name"
         const val EFFECT = "effect"
         const val ICON_URL = "icon_url"
