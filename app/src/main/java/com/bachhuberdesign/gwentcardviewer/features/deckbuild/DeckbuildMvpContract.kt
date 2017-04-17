@@ -12,7 +12,7 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun onCardAdded(card: Card)
 
-    fun onCardRemoved()
+    fun onCardRemoved(card: Card)
 
     fun onDeckDeleted(deckId: Int)
 

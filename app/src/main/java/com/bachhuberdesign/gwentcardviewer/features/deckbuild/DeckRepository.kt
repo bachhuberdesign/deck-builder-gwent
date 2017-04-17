@@ -57,7 +57,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
 
         return database.createQuery(tables, query)
                 .mapToList(Card.MAP1)
-                .last()
+                .skip(1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
