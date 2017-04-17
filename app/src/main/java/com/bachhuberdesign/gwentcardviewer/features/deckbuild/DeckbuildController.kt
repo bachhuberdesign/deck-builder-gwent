@@ -76,8 +76,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onAttach(view: View) {
         super.onAttach(view)
+
         presenter.attach(this)
         presenter.loadUserDeck(deckId)
+        presenter.subscribeToCardUpdates(deckId)
     }
 
     override fun onDetach(view: View) {
@@ -115,11 +117,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun onCardAdded(card: Card) {
-        Toast.makeText(activity, "Card ${card.cardId} added", Toast.LENGTH_LONG).show()
         Log.d(TAG, "onCardAdded() " + card.toString())
     }
 
-    override fun onCardRemoved() {
+    override fun onCardRemoved(card: Card) {
         Log.d(TAG, "onCardRemoved()")
     }
 
@@ -130,8 +131,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onDeckLoaded(deck: Deck) {
         Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
                 "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
-
-        deck.cards.forEach { card -> Log.d(TAG, "Card ${card.name} loaded") }
 
         factionId = deck.faction
 
@@ -164,7 +163,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         var previousTag: Int = 0
 
         cards.forEachIndexed { index, card ->
-            Log.d(TAG, "Adding card ${card.name} to lane $lane layout.")
             if (card.selectedLane == lane) {
                 // Create view to hold card image
                 val imageView: ImageView = ImageView(activity)

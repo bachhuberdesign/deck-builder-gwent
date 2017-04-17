@@ -6,6 +6,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -24,13 +25,26 @@ class DeckbuildPresenter
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
     }
 
-
-    override fun attach(view: DeckbuildMvpContract) {
-        super.attach(view)
-    }
+    var subscription: Subscription? = null
 
     override fun detach() {
         super.detach()
+        if (subscription != null) {
+            subscription!!.unsubscribe()
+        }
+    }
+
+    fun subscribeToCardUpdates(deckId: Int) {
+        subscription = deckRepository.queryCardsForDeck(deckId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ cards ->
+                    if (cards.isNotEmpty() && isViewAttached()) {
+                        view!!.onCardAdded(cards.last())
+                    }
+                }, { error ->
+                    Log.e(TAG, "Error querying cards for deck $deckId", error)
+                })
     }
 
     /**
@@ -38,20 +52,6 @@ class DeckbuildPresenter
      */
     fun loadUserDeck(deckId: Int) {
         val deck: Deck? = deckRepository.getDeckById(deckId)
-
-        // TODO:
-        deckRepository.queryCardsForDeck(deckId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ query ->
-                    query.forEach { card ->
-                        if (isViewAttached()) {
-                            view!!.onCardAdded(card)
-                        }
-                    }
-                }, { error ->
-                    Log.e(TAG, "Error querying cards for deck $deckId", error)
-                })
 
         if (deck == null && isViewAttached()) {
             view!!.onErrorLoadingDeck("Error loading deck $deckId")
@@ -68,7 +68,6 @@ class DeckbuildPresenter
         val filteredList: MutableList<Card> = ArrayList()
         deck.cards.forEach { card ->
             if (card.selectedLane == lane) {
-                Log.d(TAG, "Adding card ${card.name} to filtered list. selectedLane: ${card.selectedLane}, lane to filter to: $lane")
                 filteredList.add(card)
             }
         }
@@ -80,20 +79,16 @@ class DeckbuildPresenter
      */
     fun addCardToDeck(card: Card, deckId: Int) {
         deckRepository.addCardToDeck(card, deckId)
-        if (isViewAttached()) {
-            view!!.onCardAdded(card)
-        }
     }
 
     /**
      *
      */
-    fun removeCardFromDeck(cardId: Int) {
-        Log.d(TAG, "removeCard() called for card $cardId")
-        // TODO:
+    fun removeCardFromDeck(card: Card) {
+        Log.d(TAG, "removeCard() called for card ${card.cardId}")
 
         if (isViewAttached()) {
-            view!!.onCardRemoved()
+            view!!.onCardRemoved(card)
         }
     }
 
