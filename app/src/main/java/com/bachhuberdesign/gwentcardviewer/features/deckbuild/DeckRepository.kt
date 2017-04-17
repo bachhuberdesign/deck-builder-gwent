@@ -2,14 +2,15 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
-import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
 import com.google.gson.Gson
 import com.squareup.sqlbrite.BriteDatabase
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -47,8 +48,23 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return deck
     }
 
+    fun queryCardsForDeck(deckId: Int): Observable<MutableList<Card>> {
+        val tables: MutableList<String> = arrayListOf(Card.TABLE, "user_decks_cards")
+        val query: String = "SELECT * FROM ${Card.TABLE} " +
+                "JOIN user_decks_cards as t2 " +
+                "ON ${Card.ID} = t2.card_id " +
+                "WHERE t2.deck_id = $deckId"
+
+        return database.createQuery(tables, query)
+                .mapToList(Card.MAP1)
+                .last()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun getCardsForDeck(deckId: Int): MutableList<Card> {
         // TODO:
+
         val cursor = database.query("SELECT * FROM ${Card.TABLE} " +
                 "JOIN user_decks_cards as t2 " +
                 "ON ${Card.ID} = t2.card_id " +
@@ -61,8 +77,6 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
                 cards.add(Card.MAPPER.apply(cursor))
             }
         }
-
-        cards.forEach { card -> Log.d(TAG, "getCardsForDeck() cardId: ${card.cardId}") }
 
         return cards
     }
@@ -106,28 +120,30 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
             database.update(Deck.TABLE, deckValues, "${Deck.ID} = ${deck.id}")
         }
 
-        database.delete(Deck.JOIN_CARD_TABLE, "deck_id = ${deck.id}")
-
-        deck.cards.forEach { card ->
-            val cardValues = ContentValues()
-            cardValues.put("card_id", card.cardId)
-            cardValues.put("deck_id", deck.id)
-
-            if (card.selectedLane > 0) {
-                cardValues.put(Card.SELECTED_LANE, card.selectedLane)
-            } else {
-                cardValues.put(Card.SELECTED_LANE, card.lane)
-            }
-
-            database.insert(Deck.JOIN_CARD_TABLE, cardValues)
-        }
-
         return deck.id
     }
 
+    fun addCardToDeck(card: Card, deckId: Int) {
+        val values = ContentValues()
+        values.put("card_id", card.cardId)
+        values.put("deck_id", deckId)
+
+        if (card.selectedLane > 0) {
+            values.put(Card.SELECTED_LANE, card.selectedLane)
+        } else {
+            values.put(Card.SELECTED_LANE, card.lane)
+        }
+
+        database.insert(Deck.JOIN_CARD_TABLE, values)
+    }
+
+    fun deleteCardFromDeck(card: Card, deckId: Int) {
+        // TODO: Add where clause with selected_lane and card_id
+    }
+
     fun deleteDeck(deckId: Int) {
-        database.delete(Deck.TABLE, "id = $deckId")
         database.delete(Deck.JOIN_CARD_TABLE, "deck_id = $deckId")
+        database.delete(Deck.TABLE, "id = $deckId")
     }
 
 }

@@ -4,6 +4,7 @@ import android.database.Cursor
 import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
 import com.bachhuberdesign.gwentcardviewer.util.getStringFromColumn
 import io.reactivex.functions.Function
+import rx.functions.Func1
 
 /**
  * @author Eric Bachhuber
@@ -45,6 +46,31 @@ data class Card(var cardId: Int = 0,
         const val RARITY = "rarity"
         const val TYPE = "type"
         const val SELECTED_LANE = "selected_lane"
+
+        val MAP1 = Func1<Cursor, Card> { cursor ->
+            val card = Card()
+            card.cardId = cursor.getIntFromColumn(Card.ID)
+            card.name = cursor.getStringFromColumn(Card.NAME)
+            card.description = cursor.getStringFromColumn(Card.DESCRIPTION)
+            card.flavorText = cursor.getStringFromColumn(Card.FLAVOR_TEXT)
+            card.iconUrl = cursor.getStringFromColumn(Card.ICON_URL)
+            card.mill = cursor.getIntFromColumn(Card.MILL)
+            card.millPremium = cursor.getIntFromColumn(Card.MILL_PREMIUM)
+            card.scrap = cursor.getIntFromColumn(Card.SCRAP)
+            card.scrapPremium = cursor.getIntFromColumn(Card.SCRAP_PREMIUM)
+            card.faction = cursor.getIntFromColumn(Card.FACTION)
+            card.lane = cursor.getIntFromColumn(Card.LANE)
+            card.rarity = cursor.getIntFromColumn(Card.RARITY)
+            card.cardType = cursor.getIntFromColumn(Card.TYPE)
+
+            try {
+                card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
+            } catch (e: Exception) {
+                card.selectedLane = 0
+            }
+
+            card
+        }
 
         val MAPPER = Function<Cursor, Card> { cursor ->
             val card = Card()
