@@ -1,7 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.database.Cursor
-import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
@@ -61,8 +60,8 @@ data class Deck(var id: Int = 0,
                 }
             }
 
-            val filteredByLeader = deck.cards.filter {
-                it.cardType == CardType.LEADER
+            val filteredByCardType = deck.cards.filter {
+                it.cardType == card.cardType
             }
 
             val filteredById = deck.cards.filter {
@@ -70,9 +69,14 @@ data class Deck(var id: Int = 0,
             }
 
             if (card.cardType == CardType.BRONZE && filteredById.size >= 3) return false
-            if (card.cardType == CardType.SILVER && filteredById.size >= 2) return false
+
+            if (card.cardType == CardType.SILVER && filteredById.isNotEmpty()) return false
+            if (card.cardType == CardType.SILVER && filteredByCardType.size >= 6) return false
+
             if (card.cardType == CardType.GOLD && filteredById.isNotEmpty()) return false
-            if (card.cardType == CardType.LEADER && filteredByLeader.isNotEmpty()) return false
+            if (card.cardType == CardType.GOLD && filteredByCardType.size >= 4) return false
+
+            if (card.cardType == CardType.LEADER && filteredByCardType.isNotEmpty()) return false
 
             return true
         }
