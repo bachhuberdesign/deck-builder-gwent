@@ -37,6 +37,14 @@ class LeaderConfirmPresenter
         }
     }
 
+    fun loadDefaultDeckName(leader: Card) {
+        val count = repository.countUserDecksWithLeader(leader.cardId)
+
+        if (isViewAttached()) {
+            view!!.onDefaultDeckNameLoaded("${leader.name} Deck #${count + 1}")
+        }
+    }
+
     private fun isDeckNameValid(deckName: String): Boolean {
         if (deckName.isNullOrEmpty()) {
             view!!.displayError("Please enter a name for your deck.")
@@ -47,4 +55,5 @@ class LeaderConfirmPresenter
         }
         return true
     }
+
 }
