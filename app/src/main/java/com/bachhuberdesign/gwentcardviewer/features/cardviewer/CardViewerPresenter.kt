@@ -1,11 +1,12 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
-import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -27,16 +28,30 @@ class CardViewerPresenter
      */
     fun checkCardAddable(card: Card, deckId: Int) {
         val deck = deckRepository.getDeckById(deckId)
+        val cardAddable = Deck.isCardAddableToDeck(deck!!, card)
 
-        if (deck != null) {
-            val cardAddable = Deck.isCardAddableToDeck(deck, card)
-
+        if (cardAddable && displayMultiLaneSelection(card).isNotEmpty()) {
             if (isViewAttached()) {
-                view!!.onCardChecked(card, cardAddable)
+                view!!.showLaneSelection(displayMultiLaneSelection(card), card)
             }
-        } else {
-            Log.e(TAG, "Tried checking card addable but deck $deckId == null.")
+        } else if (isViewAttached()) {
+            view!!.onCardChecked(card, cardAddable)
         }
+
+    }
+
+    fun displayMultiLaneSelection(card: Card): List<Int> {
+        val lanesToDisplay: MutableList<Int> = LinkedList()
+
+        when (card.lane) {
+            Lane.ALL -> lanesToDisplay.addAll(listOf(Lane.MELEE, Lane.RANGED, Lane.SIEGE, Lane.EVENT))
+            Lane.MELEE_RANGED -> lanesToDisplay.addAll(listOf(Lane.MELEE, Lane.RANGED))
+            Lane.MELEE_RANGED_SIEGE -> lanesToDisplay.addAll(listOf(Lane.MELEE, Lane.RANGED, Lane.SIEGE))
+            Lane.RANGED_SIEGE -> lanesToDisplay.addAll(listOf(Lane.RANGED, Lane.SIEGE))
+            Lane.MELEE_SIEGE -> lanesToDisplay.addAll(listOf(Lane.MELEE, Lane.SIEGE))
+        }
+
+        return lanesToDisplay
     }
 
     fun getAllCards() {
