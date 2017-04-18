@@ -26,9 +26,12 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
 import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -126,7 +129,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         // Delay to wait for pop animation to finish
         Maybe.empty<Any>()
-                .delay(500, TimeUnit.MILLISECONDS)
+                .delay(500, MILLISECONDS)
                 .doOnComplete {
                     presenter.loadCardsToAnimate()
                 }
@@ -210,8 +213,16 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun animateCards(cardsToAnimate: List<Card>) {
-        // TODO: Animate cards into their selected lanes here by using Observable.interval for iteration
-        Log.d(TAG, "animateCards()")
+        // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
+        Observable.fromArray(cardsToAnimate)
+                .flatMapIterable { cards -> cards }
+                .zipWith(Observable.interval(500, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
+                .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
+                .subscribe { card ->
+                    // TODO: Animate here
+                    Log.d(TAG, "Animating card ${card.cardId}, current time: ${System.currentTimeMillis()}")
+                }
     }
 
 }
+
