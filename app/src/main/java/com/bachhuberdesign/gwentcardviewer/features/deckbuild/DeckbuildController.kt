@@ -58,6 +58,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
 
+        activity?.title = "Deckbuild Controller"
+
         childRouter = getChildRouter(container).setPopsLastView(true)
 
         (activity as MainActivity).persistedComponent
@@ -144,8 +146,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun onDeckLoaded(deck: Deck) {
-        Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
-                "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
+        activity?.title = deck.name
 
         factionId = deck.faction
 
@@ -209,7 +210,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun animateCards(cardsToAnimate: List<Card>) {
-        // TODO: Animate cards into their selected lanes here
+        // TODO: Animate cards into their selected lanes here by using Observable.interval for iteration
         Log.d(TAG, "animateCards()")
     }
 

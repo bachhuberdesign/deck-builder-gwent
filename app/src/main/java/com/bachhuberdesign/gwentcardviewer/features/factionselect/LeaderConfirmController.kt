@@ -52,6 +52,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_leader_confirm)
+        activity?.title = "Select Leader"
 
         (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))

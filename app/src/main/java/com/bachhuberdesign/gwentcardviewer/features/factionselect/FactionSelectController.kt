@@ -45,6 +45,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_faction_select)
+        activity?.title = "Select Faction"
 
         (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))

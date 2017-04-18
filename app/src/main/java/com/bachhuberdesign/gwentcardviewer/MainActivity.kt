@@ -37,11 +37,7 @@ class MainActivity : BaseActivity() {
         router = Conductor.attachRouter(this, container, savedInstanceState)
 
         if (!router.hasRootController()) {
-            if (!BuildConfig.DEBUG) {
-                router.setRoot(RouterTransaction.with(DeckbuildController(1)))
-            } else {
-                router.setRoot(RouterTransaction.with(FactionSelectController()))
-            }
+            router.setRoot(RouterTransaction.with(FactionSelectController()))
         }
 
         initNavigationDrawer()
