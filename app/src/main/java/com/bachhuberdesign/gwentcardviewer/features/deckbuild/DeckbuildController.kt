@@ -25,9 +25,10 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
+import io.reactivex.Maybe
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
 
 /**
  * @author Eric Bachhuber
@@ -109,11 +110,25 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
      */
     fun addCardToCurrentDeck(card: Card) {
         presenter.addCardToDeck(card, deckId)
+    }
+
+    /**
+     *
+     */
+    fun closeCardViewerAndAnimate() {
         childRouters.forEach { router ->
             if (router.backstackSize > 0) {
                 router.popCurrentController()
             }
         }
+
+        // Delay to wait for pop animation to finish
+        Maybe.empty<Any>()
+                .delay(500, TimeUnit.MILLISECONDS)
+                .doOnComplete {
+                    presenter.loadCardsToAnimate()
+                }
+                .subscribe()
     }
 
     override fun onCardAdded(card: Card) {
@@ -191,6 +206,11 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 previousTag = imageView.tag as Int
             }
         }
+    }
+
+    override fun animateCards(cardsToAnimate: List<Card>) {
+        // TODO: Animate cards into their selected lanes here
+        Log.d(TAG, "animateCards()")
     }
 
 }
