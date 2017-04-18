@@ -24,7 +24,6 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
-
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -130,6 +129,21 @@ class CardViewerController : Controller, CardViewerMvpContract {
         adapter.notifyDataSetChanged()
     }
 
+    override fun onListFiltered(filteredCards: List<Card>) {
+        TODO("Method not yet implemented")
+    }
+
+    override fun onCardChecked(card: Card, isCardAddable: Boolean) {
+        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}, Addable: $isCardAddable")
+
+        if (isCardAddable) {
+            (parentController as DeckbuildController).addCardToCurrentDeck(card)
+            (parentController as DeckbuildController).closeCardViewerAndAnimate()
+        }
+
+        isAddCardButtonClickable = true
+    }
+
     override fun showLaneSelection(lanesToDisplay: List<Int>, card: Card) {
         val laneNames: MutableList<String> = ArrayList()
 
@@ -152,25 +166,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
                     }
 
                     (parentController as DeckbuildController).addCardToCurrentDeck(card)
+                    (parentController as DeckbuildController).closeCardViewerAndAnimate()
 
                     true
                 })
                 .positiveText(android.R.string.ok)
                 .show()
-    }
-
-    override fun onListFiltered(filteredCards: List<Card>) {
-        TODO("Method not yet implemented")
-    }
-
-    override fun onCardChecked(card: Card, isCardAddable: Boolean) {
-        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}, Addable: $isCardAddable")
-
-        if (isCardAddable) {
-            (parentController as DeckbuildController).addCardToCurrentDeck(card)
-        }
-
-        isAddCardButtonClickable = true
     }
 
 }

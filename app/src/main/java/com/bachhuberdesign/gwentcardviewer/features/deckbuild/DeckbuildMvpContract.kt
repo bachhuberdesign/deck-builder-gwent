@@ -22,4 +22,6 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun showCardsByLane(cards: List<Card>, lane: Int)
 
+    fun animateCards(cardsToAnimate: List<Card>)
+
 }
