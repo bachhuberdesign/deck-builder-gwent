@@ -14,6 +14,8 @@ interface CardViewerMvpContract : MvpContract {
 
     fun onListFiltered(filteredCards: List<Card>)
 
-    fun onCardChecked(card: Card, cardAddable: Boolean)
+    fun onCardChecked(card: Card, isCardAddable: Boolean)
+
+    fun showLaneSelection(lanesToDisplay: List<Int>, card: Card)
 
 }

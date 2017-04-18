@@ -7,11 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
+import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.google.gson.Gson
@@ -20,6 +23,7 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -78,6 +82,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
             }
 
             override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
+
                 // Check if clickable to prevent duplicate presenter calls
                 if (isAddCardButtonClickable) {
                     isAddCardButtonClickable = false
@@ -125,14 +130,43 @@ class CardViewerController : Controller, CardViewerMvpContract {
         adapter.notifyDataSetChanged()
     }
 
+    override fun showLaneSelection(lanesToDisplay: List<Int>, card: Card) {
+        val laneNames: MutableList<String> = ArrayList()
+
+        lanesToDisplay.forEach { laneInt ->
+            laneNames.add(activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(laneInt)))
+        }
+
+        MaterialDialog.Builder(activity!!)
+                .title("Choose A Lane To Display This Card.")
+                .items(laneNames)
+                .itemsCallbackSingleChoice(0, { dialog, view, which, text ->
+                    when (text) {
+                        activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.EVENT)) -> card.selectedLane = Lane.EVENT
+                        activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.MELEE)) -> card.selectedLane = Lane.MELEE
+                        activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.RANGED)) -> card.selectedLane = Lane.RANGED_SIEGE
+                        activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.SIEGE)) -> card.selectedLane = Lane.SIEGE
+                        else -> {
+                            throw UnsupportedOperationException("Selected lane does not match Event/Melee/Ranged/Siege. Lane text: $text")
+                        }
+                    }
+
+                    (parentController as DeckbuildController).addCardToCurrentDeck(card)
+
+                    true
+                })
+                .positiveText(android.R.string.ok)
+                .show()
+    }
+
     override fun onListFiltered(filteredCards: List<Card>) {
         TODO("Method not yet implemented")
     }
 
-    override fun onCardChecked(card: Card, cardAddable: Boolean) {
-        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}, Addable: $cardAddable")
+    override fun onCardChecked(card: Card, isCardAddable: Boolean) {
+        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}, Addable: $isCardAddable")
 
-        if (cardAddable) {
+        if (isCardAddable) {
             (parentController as DeckbuildController).addCardToCurrentDeck(card)
         }
 
