@@ -23,22 +23,30 @@ class DeckbuildPresenter
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
     }
 
-    var subscription: Subscription? = null
+    var cardSubscription: Subscription? = null
+    var cardsToAnimate: MutableList<Card> = ArrayList()
 
     override fun detach() {
         super.detach()
-        if (subscription != null) {
-            subscription!!.unsubscribe()
+        if (cardSubscription != null) {
+            cardSubscription!!.unsubscribe()
+        }
+
+        if (cardsToAnimate.isNotEmpty()) {
+            cardsToAnimate.clear()
         }
     }
 
+    /**
+     *
+     */
     fun subscribeToCardUpdates(deckId: Int) {
-        subscription = deckRepository.observeCardUpdates(deckId)
+        cardSubscription = deckRepository.observeCardUpdates(deckId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cards ->
                     if (cards.isNotEmpty() && isViewAttached()) {
-                        // TODO: collect cards to animate and retrieve them with helper method
+                        cardsToAnimate.add(cards.last())
                         view!!.onCardAdded(cards.last())
                     }
                 }, { error ->
@@ -46,8 +54,16 @@ class DeckbuildPresenter
                 })
     }
 
+    /**
+     *
+     */
     fun loadCardsToAnimate() {
-        // TODO:
+        if (cardsToAnimate.isEmpty()) {
+            Log.d(TAG, "loadCardsToAnimate(): No cards need to be added to view.")
+        } else if (isViewAttached()) {
+            view!!.animateCards(cardsToAnimate)
+            cardsToAnimate.clear()
+        }
     }
 
     /**
