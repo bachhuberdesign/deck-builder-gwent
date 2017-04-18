@@ -48,6 +48,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
     lateinit var presenter: LeaderConfirmPresenter
 
     var card: Card? = null
+    var defaultDeckName = "New Deck"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_leader_confirm)
@@ -69,18 +70,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
         view.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(card?.faction))
 
         view.confirm_leader_button.setOnClickListener {
-            MaterialDialog.Builder(activity!!)
-                    .title("Confirm Deck Creation")
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("Enter a name for your new deck", "New Deck 1", { dialog, input ->
-                    })
-                    .negativeText(android.R.string.cancel)
-                    .positiveText(R.string.create_deck)
-                    .onPositive { dialog, which ->
-                        val deckName = dialog.inputEditText?.text.toString().trim()
-                        presenter.saveNewDeck(deckName, card!!)
-                    }
-                    .show()
+            showDeckCreateDialog()
         }
 
         return view
@@ -89,6 +79,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
+        card?.let { presenter.loadDefaultDeckName(it) }
     }
 
     override fun onDetach(view: View) {
@@ -101,6 +92,21 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
         super.onSaveInstanceState(outState)
     }
 
+    private fun showDeckCreateDialog() {
+        MaterialDialog.Builder(activity!!)
+                .title("Confirm Deck Creation")
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input("Enter a name for your new deck", defaultDeckName, { dialog, input ->
+                })
+                .negativeText(android.R.string.cancel)
+                .positiveText(R.string.create_deck)
+                .onPositive { dialog, which ->
+                    val deckName = dialog.inputEditText?.text.toString().trim()
+                    presenter.saveNewDeck(deckName, card!!)
+                }
+                .show()
+    }
+
     override fun onDeckSaved(deckId: Int) {
         router.setRoot(RouterTransaction.with(DeckbuildController(deckId))
                 .tag(DeckbuildController.TAG)
@@ -111,6 +117,10 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
 
     override fun displayError(messageToDisplay: String) {
         Toast.makeText(activity, messageToDisplay, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onDefaultDeckNameLoaded(deckName: String) {
+        defaultDeckName = deckName
     }
 
 }
