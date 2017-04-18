@@ -46,5 +46,4 @@ class DeckCardListController : Controller(), DeckCardListMvpContract {
         super.onDetach(view)
     }
 
-
 }
