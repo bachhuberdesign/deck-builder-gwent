@@ -2,6 +2,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.content.ContentValues
 import android.database.Cursor
+import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardException
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction

@@ -1,5 +1,7 @@
 package com.bachhuberdesign.gwentcardviewer.features.shared.model
 
+import io.reactivex.functions.Function
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -17,6 +19,16 @@ class Lane {
         const val RANGED_SIEGE = 7
         const val MELEE_RANGED_SIEGE = 8
         const val ALL: Int = 99
+
+        val ID_TO_KEY = Function<Int, String> { laneId ->
+            when (laneId) {
+                EVENT -> "event"
+                MELEE -> "melee"
+                SIEGE -> "siege"
+                RANGED -> "ranged"
+                else -> throw IndexOutOfBoundsException("laneId value was $laneId, expected 1-4.")
+            }
+        }
     }
 
 }
