@@ -42,6 +42,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
     var recyclerView: RecyclerView? = null
     var adapter: FastItemAdapter<FactionItem>? = null
+    var isLeaderClickable: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_faction_select)
@@ -62,8 +63,11 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             }
 
             override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionItem>, item: FactionItem) {
-                val index = Integer.valueOf(view.tag as String)
-                beginCardExpandAnimation(view as ImageView, item.leaders!![index])
+                if (isLeaderClickable) {
+                    isLeaderClickable = false
+                    val index = Integer.valueOf(view.tag as String)
+                    beginCardExpandAnimation(view as ImageView, item.leaders!![index])
+                }
             }
         })
 
@@ -162,6 +166,5 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
                 .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
                 .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
     }
-
 
 }
