@@ -2,6 +2,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.content.ContentValues
 import android.database.Cursor
+import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
@@ -11,6 +12,7 @@ import com.squareup.sqlbrite.BriteDatabase
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -28,7 +30,10 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun deckNameExists(deckName: String): Boolean {
-        val count = database.readableDatabase.compileStatement("SELECT COUNT(*) FROM ${Deck.TABLE} WHERE ${Deck.NAME} = '$deckName';")
+        var normalizedDeckName = Normalizer.normalize(deckName, Normalizer.Form.NFD).replace("[^\\p{ASCII}]", "")
+        normalizedDeckName = normalizedDeckName.replace("'", "''")
+
+        val count = database.readableDatabase.compileStatement("SELECT COUNT(*) FROM ${Deck.TABLE} WHERE ${Deck.NAME} = '$normalizedDeckName';")
 
         return count.simpleQueryForLong() > 0
     }
