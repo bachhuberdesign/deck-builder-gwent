@@ -2,13 +2,11 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -201,24 +199,23 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     params.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
                 }
 
-                // Add view and load image
-                layout!!.addView(imageView, params)
-
                 Glide.with(activity)
                         .load(card.iconUrl)
+                        .animate(R.anim.slide_right)
                         .fitCenter()
                         .into(imageView)
+
+                // Add view and load image
+                layout!!.addView(imageView, params)
             }
         }
     }
 
     override fun animateCards(cardsToAnimate: List<Card>) {
-        TransitionManager.beginDelayedTransition(view!!.constraint_layout)
-
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
         Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
-                .zipWith(Observable.interval(1, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
+                .zipWith(Observable.interval(500, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
                 .subscribe { card ->
                     val layout: LinearLayout?
@@ -235,13 +232,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     val imageView: ImageView = ImageView(activity)
                     imageView.id = View.generateViewId()
 
-                    // Set LayoutParams for view
-                    val params = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
+                    val imageViewParams = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
 
                     if (layout.childCount > 0) {
-                        params.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
+                        imageViewParams.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
                     }
 
+                    // Load image and animate
                     activity!!.runOnUiThread {
                         Glide.with(activity)
                                 .load(card.iconUrl)
@@ -249,15 +246,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                                 .fitCenter()
                                 .into(imageView)
 
-                        // Add view and load image
-                        layout!!.addView(imageView, params)
-//
-//                        val animation = AnimationUtils.loadAnimation(activity!!, R.anim.slide_right)
-//                        animation.startOffset = 0
-//                        imageView.startAnimation(animation)
+                        layout!!.addView(imageView, imageViewParams)
                     }
-
-                    Log.d(TAG, "Animating card ${card.cardId}, current time: ${System.currentTimeMillis()}")
                 }
     }
 
