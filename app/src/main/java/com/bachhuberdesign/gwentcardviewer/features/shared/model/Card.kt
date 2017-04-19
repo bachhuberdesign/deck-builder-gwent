@@ -1,6 +1,7 @@
 package com.bachhuberdesign.gwentcardviewer.features.shared.model
 
 import android.database.Cursor
+import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.util.getIntFromColumn
 import com.bachhuberdesign.gwentcardviewer.util.getStringFromColumn
 import io.reactivex.functions.Function
@@ -63,6 +64,7 @@ data class Card(var cardId: Int = 0,
             card.rarity = cursor.getIntFromColumn(Card.RARITY)
             card.cardType = cursor.getIntFromColumn(Card.TYPE)
 
+            Log.d("Card", "Mapping to card: selectedLane: ${cursor.getIntFromColumn(Card.SELECTED_LANE)}")
             try {
                 card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
             } catch (e: Exception) {

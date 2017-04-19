@@ -1,12 +1,14 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.os.Bundle
-import android.support.constraint.ConstraintSet
+import android.support.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
@@ -17,6 +19,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.SlideInChangeHandler
+import com.bachhuberdesign.gwentcardviewer.util.dpToPx
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
@@ -24,6 +27,8 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
 import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
@@ -164,136 +169,82 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             return
         }
 
-        val guidelineLeft: Int = view!!.card_images_start_guideline.id
-        var guidelineTop: Int? = null
-        var guidelineBottom: Int? = null
+        val layout: LinearLayout?
 
         when (lane) {
-            Lane.MELEE -> {
-                guidelineTop = view!!.melee_top_guideline.id
-                guidelineBottom = view!!.ranged_top_guideline.id
-            }
-            Lane.RANGED -> {
-                guidelineTop = view!!.ranged_top_guideline.id
-                guidelineBottom = view!!.siege_top_guideline.id
-            }
-            Lane.SIEGE -> {
-                guidelineTop = view!!.siege_top_guideline.id
-                guidelineBottom = view!!.event_top_guideline.id
-            }
-            Lane.EVENT -> {
-                guidelineTop = view!!.event_top_guideline.id
-                guidelineBottom = view!!.event_bottom_guideline.id
-            }
+            Lane.MELEE -> layout = view!!.melee_image_holder
+            Lane.RANGED -> layout = view!!.ranged_image_holder
+            Lane.SIEGE -> layout = view!!.siege_image_holder
+            Lane.EVENT -> layout = view!!.event_image_holder
             else -> throw IndexOutOfBoundsException("Expected ${Lane.MELEE}, ${Lane.RANGED}, " +
                     "${Lane.SIEGE}, or ${Lane.EVENT}. Actual value received: $lane.")
         }
 
-        val views: MutableList<Int> = ArrayList()
-        val weights: MutableList<Float> = ArrayList()
-
         cards.forEachIndexed { index, card ->
-            val imageView: ImageView = ImageView(activity)
-            imageView.id = View.generateViewId()
+            if (card.selectedLane == lane) {
+                // Create view to hold card image
+                val imageView: ImageView = ImageView(activity)
+                imageView.id = View.generateViewId()
 
-            view!!.constraint_layout.addView(imageView)
-            views.add(imageView.id)
-            weights.add(0.0f)
+                // Set LayoutParams for view
+                val params = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
+                if (index > 0) {
+                    params.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
+                }
+
+                // Add view and load image
+                layout!!.addView(imageView, params)
+
+                Glide.with(activity)
+                        .load(card.iconUrl)
+                        .fitCenter()
+                        .into(imageView)
+            }
         }
-
-        // Guideline 6 TOP, guideline 7 BOTTOM, guideline 5 LEFT, guideline 4 RIGHT
-
-        var previousId: Int = 0
-        val constraintSet = ConstraintSet()
-        if (views.size < 2) {
-            return
-        }
-        constraintSet.clone(view!!.constraint_layout)
-        constraintSet.createHorizontalChain(views.first(), ConstraintSet.LEFT,
-                views.last(), ConstraintSet.RIGHT,
-                views.toIntArray(), null,
-                ConstraintSet.CHAIN_PACKED)
-
-        views.forEach { id ->
-            constraintSet.constrainWidth(id, 150)
-            constraintSet.constrainHeight(id, ConstraintSet.WRAP_CONTENT)
-        }
-
-        constraintSet.connect(views.first(), ConstraintSet.LEFT, guidelineLeft, ConstraintSet.LEFT, 0)
-        constraintSet.connect(views.first(), ConstraintSet.TOP, guidelineTop, ConstraintSet.TOP, 0)
-        constraintSet.connect(views.last(), ConstraintSet.TOP, guidelineTop, ConstraintSet.TOP, 0)
-
-        activity!!.runOnUiThread {
-            constraintSet.applyTo(view!!.constraint_layout)
-        }
-
-        views.forEachIndexed { index, id ->
-            Log.d(TAG, "Icon URL to load: ${cards[index].iconUrl}")
-            Glide.with(activity)
-                    .load(cards[index].iconUrl)
-                    .fitCenter()
-                    .into(view!!.findViewById(id) as ImageView)
-        }
-
-
-//        var previousTag: Int = 0
-//
-//        cards.forEachIndexed { index, card ->
-//            if (card.selectedLane == lane) {
-//                // Create view to hold card image
-//                val imageView: ImageView = ImageView(activity)
-//                imageView.id = View.generateViewId()
-//                imageView.tag = index + 42
-//
-//                // Set LayoutParams for view
-//                val params = RelativeLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
-//                params.setMargins(0, 8, 0, 8)
-//
-//                // Position view based on previous cards
-//                if (previousTag == 0) {
-//                    params.addRule(RelativeLayout.ALIGN_PARENT_START)
-//                } else {
-//                    params.addRule(RelativeLayout.END_OF, layout.findViewWithTag(previousTag).id)
-//                }
-//
-//                // Add view and load image
-//                layout!!.addView(imageView, params)
-//
-//                Glide.with(activity)
-//                        .load(card.iconUrl)
-//                        .fitCenter()
-//                        .into(imageView)
-//
-//                previousTag = imageView.tag as Int
-//            }
-//        }
     }
 
     override fun animateCards(cardsToAnimate: List<Card>) {
-//        // Guideline 6 TOP, guideline 7 BOTTOM, guideline 5 LEFT, guideline 4 RIGHT
-//        val constraintSet = ConstraintSet()
-//
-//        constraintSet.clone(view!!.constraint_layout)
-//
-//        TransitionManager.beginDelayedTransition(view!!.constraint_layout)
-//
-//        constraintSet.centerVertically(R.id.deck_ranged_power_text, R.id.constraint_layout)
-//        constraintSet.centerHorizontally(R.id.deck_ranged_power_text, R.id.constraint_layout)
-//
-//        activity!!.runOnUiThread {
-//            constraintSet.applyTo(view!!.constraint_layout)
-//        }
-//
-//        // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
-//        Observable.fromArray(cardsToAnimate)
-//                .flatMapIterable { cards -> cards }
-//                .zipWith(Observable.interval(500, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
-//                .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
-//                .subscribe { card ->
-//                    // TODO: Animate here
-//                    Log.d(TAG, "Animating card ${card.cardId}, current time: ${System.currentTimeMillis()}")
-//                }
+        TransitionManager.beginDelayedTransition(view!!.constraint_layout)
+
+        // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
+        Observable.fromArray(cardsToAnimate)
+                .flatMapIterable { cards -> cards }
+                .zipWith(Observable.interval(500, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
+                .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
+                .subscribe { card ->
+                    val layout: LinearLayout?
+
+                    when (card.selectedLane) {
+                        Lane.MELEE -> layout = view!!.melee_image_holder
+                        Lane.RANGED -> layout = view!!.ranged_image_holder
+                        Lane.SIEGE -> layout = view!!.siege_image_holder
+                        Lane.EVENT -> layout = view!!.event_image_holder
+                        else -> throw IndexOutOfBoundsException("Expected ${Lane.MELEE}, ${Lane.RANGED}, " +
+                                "${Lane.SIEGE}, or ${Lane.EVENT}. Actual value received: ${card.selectedLane}.")
+                    }
+
+                    val imageView: ImageView = ImageView(activity)
+                    imageView.id = View.generateViewId()
+
+                    // Set LayoutParams for view
+                    val params = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
+
+                    if (layout.childCount > 0) {
+                        params.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
+                    }
+
+                    activity!!.runOnUiThread {
+                        Glide.with(activity)
+                                .load(card.iconUrl)
+                                .fitCenter()
+                                .into(imageView)
+
+                        // Add view and load image
+                        layout!!.addView(imageView, params)
+                    }
+
+                    Log.d(TAG, "Animating card ${card.cardId}, current time: ${System.currentTimeMillis()}")
+                }
     }
 
 }
-
