@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
+import android.net.Uri
 import android.os.Bundle
 import android.support.transition.TransitionManager
 import android.util.Log
@@ -32,7 +33,6 @@ import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
-
 
 /**
  * @author Eric Bachhuber
@@ -74,6 +74,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             deckId = args.getInt("deckId")
         }
 
+        Glide.with(activity!!)
+                .load(Uri.parse("file:///android_asset/card_backs_1_thumbnail.png"))
+                .fitCenter()
+                .dontAnimate()
+                .into(view.show_card_viewer_button)
+
+        view.show_card_viewer_button.background = null
         view.show_card_viewer_button.setOnClickListener {
             showCardPicker()
         }
@@ -236,6 +243,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     activity!!.runOnUiThread {
                         Glide.with(activity)
                                 .load(card.iconUrl)
+                                .dontAnimate()
                                 .fitCenter()
                                 .into(imageView)
 
