@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -33,6 +34,7 @@ import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -216,7 +218,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
         Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
-                .zipWith(Observable.interval(500, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
+                .zipWith(Observable.interval(1, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
                 .subscribe { card ->
                     val layout: LinearLayout?
@@ -243,12 +245,16 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     activity!!.runOnUiThread {
                         Glide.with(activity)
                                 .load(card.iconUrl)
-                                .dontAnimate()
+                                .animate(R.anim.slide_right)
                                 .fitCenter()
                                 .into(imageView)
 
                         // Add view and load image
                         layout!!.addView(imageView, params)
+//
+//                        val animation = AnimationUtils.loadAnimation(activity!!, R.anim.slide_right)
+//                        animation.startOffset = 0
+//                        imageView.startAnimation(animation)
                     }
 
                     Log.d(TAG, "Animating card ${card.cardId}, current time: ${System.currentTimeMillis()}")
