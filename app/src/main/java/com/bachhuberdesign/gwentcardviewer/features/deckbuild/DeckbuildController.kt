@@ -2,7 +2,6 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.os.Bundle
 import android.support.constraint.ConstraintSet
-import android.support.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -190,49 +189,50 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     "${Lane.SIEGE}, or ${Lane.EVENT}. Actual value received: $lane.")
         }
 
-        val views: MutableList<ImageView> = ArrayList()
+        val views: MutableList<Int> = ArrayList()
+        val weights: MutableList<Float> = ArrayList()
 
         cards.forEachIndexed { index, card ->
             val imageView: ImageView = ImageView(activity)
             imageView.id = View.generateViewId()
 
             view!!.constraint_layout.addView(imageView)
-            views.add(imageView)
+            views.add(imageView.id)
+            weights.add(0.0f)
         }
 
         // Guideline 6 TOP, guideline 7 BOTTOM, guideline 5 LEFT, guideline 4 RIGHT
 
         var previousId: Int = 0
-        views.forEachIndexed { index, v ->
-            val constraintSet = ConstraintSet()
+        val constraintSet = ConstraintSet()
+        if (views.size < 2) {
+            return
+        }
+        constraintSet.clone(view!!.constraint_layout)
+        constraintSet.createHorizontalChain(views.first(), ConstraintSet.LEFT,
+                views.last(), ConstraintSet.RIGHT,
+                views.toIntArray(), null,
+                ConstraintSet.CHAIN_PACKED)
 
-            constraintSet.clone(view!!.constraint_layout)
+        views.forEach { id ->
+            constraintSet.constrainWidth(id, 150)
+            constraintSet.constrainHeight(id, ConstraintSet.WRAP_CONTENT)
+        }
 
-            constraintSet.constrainHeight(v.id, 200)
-            constraintSet.constrainWidth(v.id, 150)
-            constraintSet.clear(v.id)
-            constraintSet.connect(v.id, ConstraintSet.TOP, guidelineTop!!, ConstraintSet.TOP, 0)
-            constraintSet.connect(v.id, ConstraintSet.BOTTOM, guidelineBottom!!, ConstraintSet.BOTTOM, 0)
+        constraintSet.connect(views.first(), ConstraintSet.LEFT, guidelineLeft, ConstraintSet.LEFT, 0)
+        constraintSet.connect(views.first(), ConstraintSet.TOP, guidelineTop, ConstraintSet.TOP, 0)
+        constraintSet.connect(views.last(), ConstraintSet.TOP, guidelineTop, ConstraintSet.TOP, 0)
 
-            if (index == 0) {
-                constraintSet.connect(v.id, ConstraintSet.LEFT, guidelineLeft, ConstraintSet.LEFT, 0)
-                constraintSet.connect(v.id, ConstraintSet.RIGHT, view!!.constraint_layout.id, ConstraintSet.RIGHT)
-            } else {
-                constraintSet.connect(v.id, ConstraintSet.LEFT, previousId, ConstraintSet.RIGHT, 0)
-            }
+        activity!!.runOnUiThread {
+            constraintSet.applyTo(view!!.constraint_layout)
+        }
 
+        views.forEachIndexed { index, id ->
             Log.d(TAG, "Icon URL to load: ${cards[index].iconUrl}")
             Glide.with(activity)
                     .load(cards[index].iconUrl)
                     .fitCenter()
-                    .into(v)
-
-
-            activity!!.runOnUiThread {
-                constraintSet.applyTo(view!!.constraint_layout)
-            }
-
-            previousId = v.id
+                    .into(view!!.findViewById(id) as ImageView)
         }
 
 
