@@ -185,66 +185,94 @@
         app:layout_constraintStart_toStartOf="@+id/faction_name_text"
         app:layout_constraintTop_toBottomOf="@+id/faction_name_text"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/show_card_viewer_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:text="Add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="@+id/event_bottom_guideline"/>
 
-    <RelativeLayout
-        android:id="@+id/melee_image_holder"
+    <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/ranged_top_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/card_images_start_guideline"
         app:layout_constraintTop_toTopOf="@+id/melee_top_guideline">
-    </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/ranged_image_holder"
+        <LinearLayout
+            android:id="@+id/melee_image_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal"
+            android:paddingEnd="15dp"/>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/siege_top_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/card_images_start_guideline"
         app:layout_constraintTop_toTopOf="@+id/ranged_top_guideline">
-    </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/siege_image_holder"
+        <LinearLayout
+            android:id="@+id/ranged_image_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="0dp"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal"
+            android:paddingEnd="15dp"/>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="8dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/event_top_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/card_images_start_guideline"
         app:layout_constraintTop_toTopOf="@+id/siege_top_guideline">
-    </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/event_image_holder"
+        <LinearLayout
+            android:id="@+id/siege_image_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="0dp"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal"
+            android:paddingEnd="15dp"/>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="8dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/event_bottom_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/card_images_start_guideline"
         app:layout_constraintTop_toTopOf="@+id/event_top_guideline">
-    </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/event_image_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="0dp"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal"
+            android:paddingEnd="15dp"/>
+    </HorizontalScrollView>
 
 </android.support.constraint.ConstraintLayout>
