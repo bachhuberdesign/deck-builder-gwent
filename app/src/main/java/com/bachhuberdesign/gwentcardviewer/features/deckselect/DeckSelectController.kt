@@ -40,6 +40,8 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deck_select)
 
+        activity?.title = "Deck List"
+
         (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)

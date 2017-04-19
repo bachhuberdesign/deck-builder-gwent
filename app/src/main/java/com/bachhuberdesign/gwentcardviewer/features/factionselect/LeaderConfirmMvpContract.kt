@@ -13,4 +13,6 @@ interface LeaderConfirmMvpContract : MvpContract {
 
     fun displayError(messageToDisplay: String)
 
+    fun onDefaultDeckNameLoaded(deckName: String)
+
 }

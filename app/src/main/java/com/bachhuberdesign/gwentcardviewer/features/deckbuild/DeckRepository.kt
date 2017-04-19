@@ -2,7 +2,6 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.content.ContentValues
 import android.database.Cursor
-import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardException
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
@@ -92,6 +91,17 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         }
 
         return decks
+    }
+
+    fun countUserDecksWithLeader(leaderCardId: Int): Int {
+        val cursor = database.query("SELECT * FROM ${Deck.TABLE} " +
+                "JOIN user_decks_cards as t2 " +
+                "ON ${Deck.ID} = t2.deck_id " +
+                "WHERE t2.card_id = $leaderCardId")
+
+        cursor.use { cursor ->
+            return cursor.count
+        }
     }
 
     fun getFactions(): Cursor {
