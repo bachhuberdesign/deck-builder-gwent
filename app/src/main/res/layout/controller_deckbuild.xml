@@ -4,7 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <TextView
         android:id="@+id/deck_event_power_total_text"
@@ -199,6 +201,8 @@
     <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/ranged_top_guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -207,10 +211,12 @@
 
         <LinearLayout
             android:id="@+id/melee_image_holder"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:animateLayoutChanges="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingEnd="15dp"/>
     </HorizontalScrollView>
@@ -218,6 +224,8 @@
     <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/siege_top_guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -231,6 +239,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="0dp"
             android:animateLayoutChanges="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingEnd="15dp"/>
     </HorizontalScrollView>
@@ -238,6 +248,8 @@
     <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/event_top_guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -251,6 +263,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="0dp"
             android:animateLayoutChanges="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingEnd="15dp"/>
     </HorizontalScrollView>
@@ -258,6 +272,8 @@
     <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/event_bottom_guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -271,6 +287,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="0dp"
             android:animateLayoutChanges="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingEnd="15dp"/>
     </HorizontalScrollView>
