@@ -26,6 +26,7 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -187,27 +188,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     "${Lane.SIEGE}, or ${Lane.EVENT}. Actual value received: $lane.")
         }
 
-        cards.forEachIndexed { index, card ->
-            if (card.selectedLane == lane) {
-                // Create view to hold card image
-                val imageView: ImageView = ImageView(activity)
-                imageView.id = View.generateViewId()
-
-                // Set LayoutParams for view
-                val params = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
-                if (index > 0) {
-                    params.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
-                }
-
-                Glide.with(activity)
-                        .load(card.iconUrl)
-                        .animate(R.anim.slide_right)
-                        .fitCenter()
-                        .into(imageView)
-
-                // Add view and load image
-                layout!!.addView(imageView, params)
-            }
+        if (layout.childCount == 0) {
+            animateCards(cards)
+        } else {
+            Log.d(TAG, "Lane $lane already loaded.")
         }
     }
 
@@ -215,7 +199,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
         Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
-                .zipWith(Observable.interval(500, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
+                .zipWith(Observable.interval(200, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
                 .subscribe { card ->
                     val layout: LinearLayout?
@@ -240,13 +224,15 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
                     // Load image and animate
                     activity!!.runOnUiThread {
+                        layout!!.addView(imageView, imageViewParams)
+
                         Glide.with(activity)
                                 .load(card.iconUrl)
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .animate(R.anim.slide_right)
                                 .fitCenter()
                                 .into(imageView)
-
-                        layout!!.addView(imageView, imageViewParams)
                     }
                 }
     }
