@@ -64,6 +64,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
 
         Glide.with(activity!!)
                 .load(Uri.parse(card?.iconUrl))
+                .dontAnimate()
                 .into(view.leader_image)
 
         view.leader_name_text.text = card?.name
