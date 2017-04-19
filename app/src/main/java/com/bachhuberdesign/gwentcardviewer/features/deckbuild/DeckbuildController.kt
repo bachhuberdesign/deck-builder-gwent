@@ -138,7 +138,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         // Delay to wait for pop animation to finish
         Maybe.empty<Any>()
-                .delay(500, MILLISECONDS)
+                .delay(100, MILLISECONDS)
                 .doOnComplete {
                     presenter.loadCardsToAnimate()
                 }
