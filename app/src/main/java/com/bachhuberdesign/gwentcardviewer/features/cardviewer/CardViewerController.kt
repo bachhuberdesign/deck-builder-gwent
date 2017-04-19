@@ -158,7 +158,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                     when (text) {
                         activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.EVENT)) -> card.selectedLane = Lane.EVENT
                         activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.MELEE)) -> card.selectedLane = Lane.MELEE
-                        activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.RANGED)) -> card.selectedLane = Lane.RANGED_SIEGE
+                        activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.RANGED)) -> card.selectedLane = Lane.RANGED
                         activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(Lane.SIEGE)) -> card.selectedLane = Lane.SIEGE
                         else -> {
                             throw UnsupportedOperationException("Selected lane does not match Event/Melee/Ranged/Siege. Lane text: $text")

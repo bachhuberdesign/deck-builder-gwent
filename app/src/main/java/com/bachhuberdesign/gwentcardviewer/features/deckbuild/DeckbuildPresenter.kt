@@ -46,6 +46,7 @@ class DeckbuildPresenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cards ->
                     if (cards.isNotEmpty() && isViewAttached()) {
+                        Log.d(TAG, "Adding card to animation cache: ${cards.last().name}, lane: ${cards.last().lane}, selectedLane: ${cards.last().selectedLane}")
                         cardsToAnimate.add(cards.last())
                         view!!.onCardAdded(cards.last())
                     }
