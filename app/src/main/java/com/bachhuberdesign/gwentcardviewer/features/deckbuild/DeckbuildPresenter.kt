@@ -81,6 +81,7 @@ class DeckbuildPresenter
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.RANGED), Lane.RANGED)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.SIEGE), Lane.SIEGE)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.EVENT), Lane.EVENT)
+            refreshTotals()
         }
     }
 
@@ -99,6 +100,8 @@ class DeckbuildPresenter
      */
     fun addCardToDeck(card: Card, deckId: Int) {
         deckRepository.addCardToDeck(card, deckId)
+
+        refreshTotals()
     }
 
     /**
@@ -116,6 +119,15 @@ class DeckbuildPresenter
 
         if (isViewAttached()) {
             view!!.onDeckDeleted(deckId)
+        }
+    }
+
+    private fun refreshTotals() {
+        // TODO: Query database for totals
+
+        if (isViewAttached()) {
+            val totals = LaneTotals(meleeTotal = 11, rangedTotal = 22, siegeTotal = 33, eventTotal = 44)
+            view!!.deckTotalsUpdated(totals)
         }
     }
 

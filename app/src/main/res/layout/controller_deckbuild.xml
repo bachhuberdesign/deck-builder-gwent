@@ -9,7 +9,7 @@
     android:clipToPadding="false">
 
     <TextView
-        android:id="@+id/deck_event_power_total_text"
+        android:id="@+id/event_lane_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -18,13 +18,14 @@
         android:layout_marginTop="8dp"
         android:fontFamily="serif"
         android:gravity="center"
-        android:text="E:"
+        android:text="E"
         android:textAlignment="center"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/event_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/event_top_guideline"/>
+        app:layout_constraintTop_toBottomOf="@+id/event_lane_power_text"/>
 
     <TextView
         android:id="@+id/deck_power_total_text"
@@ -45,59 +46,60 @@
         app:layout_constraintTop_toTopOf="@+id/event_bottom_guideline"/>
 
     <TextView
-        android:id="@+id/deck_siege_power_text"
+        android:id="@+id/siege_lane_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="serif"
         android:gravity="center"
-        android:text="S:"
+        android:text="S"
         android:textAlignment="center"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/event_top_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/horizontalScrollView2"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/siege_top_guideline"/>
+        app:layout_constraintTop_toBottomOf="@+id/siege_lane_power_text"
+        app:layout_constraintVertical_chainStyle="spread_inside"/>
 
     <TextView
-        android:id="@+id/deck_melee_power_text"
+        android:id="@+id/melee_lane_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="serif"
         android:gravity="center"
-        android:text="M:"
+        android:text="M"
         android:textAlignment="center"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/ranged_top_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/melee_top_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/melee_lane_power_text"
         app:layout_constraintVertical_chainStyle="spread_inside"/>
 
     <TextView
-        android:id="@+id/deck_ranged_power_text"
+        android:id="@+id/ranged_lane_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="serif"
         android:gravity="center"
-        android:text="R:"
+        android:text="R"
         android:textAlignment="center"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/siege_top_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/ranged_top_guideline"/>
+        app:layout_constraintTop_toBottomOf="@+id/ranged_lane_power_text"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
@@ -204,10 +206,11 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@+id/ranged_top_guideline"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/card_images_start_guideline"
-        app:layout_constraintTop_toTopOf="@+id/melee_top_guideline">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/melee_image_holder"
@@ -222,6 +225,7 @@
     </HorizontalScrollView>
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipChildren="false"
@@ -246,6 +250,7 @@
     </HorizontalScrollView>
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipChildren="false"
@@ -253,8 +258,10 @@
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/event_top_guideline"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/card_images_start_guideline"
-        app:layout_constraintTop_toTopOf="@+id/siege_top_guideline">
+        app:layout_constraintTop_toTopOf="@+id/siege_top_guideline"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:id="@+id/siege_image_holder"
@@ -292,5 +299,65 @@
             android:orientation="horizontal"
             android:paddingEnd="15dp"/>
     </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/melee_lane_power_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintBottom_toTopOf="@+id/melee_lane_icon"
+        app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/melee_top_guideline"/>
+
+    <TextView
+        android:id="@+id/ranged_lane_power_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintBottom_toTopOf="@+id/ranged_lane_icon"
+        app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/ranged_top_guideline"/>
+
+    <TextView
+        android:id="@+id/siege_lane_power_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintBottom_toTopOf="@+id/siege_lane_icon"
+        app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/siege_top_guideline"/>
+
+    <TextView
+        android:id="@+id/event_lane_power_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintBottom_toTopOf="@+id/event_lane_icon"
+        app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/event_top_guideline"/>
 
 </android.support.constraint.ConstraintLayout>

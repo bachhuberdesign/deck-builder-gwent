@@ -24,4 +24,6 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun animateCards(cardsToAnimate: List<Card>)
 
+    fun deckTotalsUpdated(totals: LaneTotals)
+
 }
