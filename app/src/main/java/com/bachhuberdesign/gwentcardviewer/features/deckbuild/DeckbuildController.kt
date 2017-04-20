@@ -34,7 +34,6 @@ import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
-
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
