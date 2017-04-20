@@ -81,7 +81,7 @@ class DeckbuildPresenter
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.RANGED), Lane.RANGED)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.SIEGE), Lane.SIEGE)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.EVENT), Lane.EVENT)
-            refreshTotals()
+            refreshTotals(deckId)
         }
     }
 
@@ -101,7 +101,7 @@ class DeckbuildPresenter
     fun addCardToDeck(card: Card, deckId: Int) {
         deckRepository.addCardToDeck(card, deckId)
 
-        refreshTotals()
+        refreshTotals(deckId)
     }
 
     /**
@@ -122,11 +122,16 @@ class DeckbuildPresenter
         }
     }
 
-    private fun refreshTotals() {
-        // TODO: Query database for totals
+    private fun refreshTotals(deckId: Int) {
+        val cards = deckRepository.getCardsForDeck(deckId)
+
+        val meleeTotal = cards.filter { it.selectedLane == Lane.MELEE }.sumBy { it.power }
+        val rangedTotal = cards.filter { it.selectedLane == Lane.RANGED }.sumBy { it.power }
+        val siegeTotal = cards.filter { it.selectedLane == Lane.SIEGE }.sumBy { it.power }
+        val eventTotal = cards.filter { it.selectedLane == Lane.EVENT }.sumBy { it.power }
 
         if (isViewAttached()) {
-            val totals = LaneTotals(meleeTotal = 11, rangedTotal = 22, siegeTotal = 33, eventTotal = 44)
+            val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal, eventTotal = eventTotal)
             view!!.deckTotalsUpdated(totals)
         }
     }
