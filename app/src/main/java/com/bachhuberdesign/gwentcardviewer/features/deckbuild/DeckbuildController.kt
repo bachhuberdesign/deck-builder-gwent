@@ -138,7 +138,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         // Delay to wait for pop animation to finish
         Maybe.empty<Any>()
-                .delay(100, MILLISECONDS)
+                .delay(150, MILLISECONDS)
                 .doOnComplete {
                     presenter.loadCardsToAnimate()
                 }
@@ -235,6 +235,17 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                                 .into(imageView)
                     }
                 }
+    }
+
+    override fun deckTotalsUpdated(totals: LaneTotals) {
+        Log.d(TAG, "deckTotalsUpdated(): $totals")
+        view!!.melee_lane_power_text.text = totals.meleeTotal.toString()
+        view!!.ranged_lane_power_text.text = totals.rangedTotal.toString()
+        view!!.siege_lane_power_text.text = totals.siegeTotal.toString()
+        view!!.event_lane_power_text.text = totals.eventTotal.toString()
+
+        val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal + totals.eventTotal
+        view!!.deck_power_total_text.text = totalPower.toString()
     }
 
 }
