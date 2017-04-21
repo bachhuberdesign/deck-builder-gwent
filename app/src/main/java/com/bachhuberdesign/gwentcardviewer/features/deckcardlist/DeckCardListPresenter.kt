@@ -1,7 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckcardlist
 
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
-import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectMvpContract
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import javax.inject.Inject
@@ -13,7 +12,7 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckCardListPresenter
-@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckSelectMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckCardListMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = DeckCardListPresenter::class.java.name
