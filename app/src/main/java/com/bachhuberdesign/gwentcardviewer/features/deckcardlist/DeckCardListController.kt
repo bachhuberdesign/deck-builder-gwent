@@ -12,8 +12,10 @@ import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.controller_deck_select.view.*
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -30,10 +32,10 @@ class DeckCardListController : Controller(), DeckCardListMvpContract {
     lateinit var presenter: DeckCardListPresenter
 
     var recyclerView: RecyclerView? = null
-    var fastItemAdapter: FastItemAdapter<DeckCardListHeaderItem>? = null
+    var fastItemAdapter: FastItemAdapter<AbstractItem<*, *>>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        val view = container.inflate(R.layout.controller_deck_select)
+        val view = container.inflate(R.layout.controller_deck_card_list)
 
         (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
@@ -53,11 +55,16 @@ class DeckCardListController : Controller(), DeckCardListMvpContract {
         super.onAttach(view)
         presenter.attach(this)
 
-        val header = DeckCardListHeaderItem()
         val subItem = DeckCardListItem()
-        val list: MutableList<DeckCardListItem> = ArrayList()
-        list.add(subItem)
-        header.withSubItems(list)
+        val header = DeckCardListHeaderItem()
+        val header2 = DeckCardListHeaderItem()
+        val subItem2 = DeckCardListItem()
+        val subItem3 = DeckCardListItem()
+
+        fastItemAdapter?.add(header)
+        fastItemAdapter?.add(subItem)
+        fastItemAdapter?.add(subItem2)
+        fastItemAdapter?.add(subItem3)
     }
 
     override fun onDetach(view: View) {
