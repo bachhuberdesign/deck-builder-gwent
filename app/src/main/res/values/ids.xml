@@ -4,4 +4,7 @@
     <item name="card_item" type="id"/>
     <item name="deck_item" type="id"/>
     <item name="faction_item" type="id"/>
+    <item name="sub_header_item" type="id"/>
+    <item name="header_item" type="id"/>
+    <item name="slim_card_item" type="id"/>
 </resources>
