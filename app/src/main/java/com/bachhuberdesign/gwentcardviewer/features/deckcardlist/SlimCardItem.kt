@@ -10,23 +10,24 @@ import com.mikepenz.fastadapter.items.AbstractItem
  * @version 1.0.0
  * @since 1.0.0
  */
-class DeckCardListItem : AbstractItem<DeckCardListItem, DeckCardListItem.ViewHolder>() {
+class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>() {
 
     companion object {
-        @JvmStatic val TAG: String = DeckCardListItem::class.java.name
+        @JvmStatic val TAG: String = SubHeaderItem::class.java.name
     }
 
     override fun getLayoutRes(): Int {
-        return R.layout.item_deck_card
+        return R.layout.item_slim_card
     }
 
     override fun getType(): Int {
-        return R.id.deck_card_list_item
+        return R.id.slim_card_item
     }
 
     override fun getViewHolder(v: View): ViewHolder {
         return ViewHolder(v)
     }
+
 
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)

@@ -14,6 +14,7 @@ import com.bluelinelabs.conductor.Controller
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.controller_deck_select.view.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -55,16 +56,34 @@ class DeckCardListController : Controller(), DeckCardListMvpContract {
         super.onAttach(view)
         presenter.attach(this)
 
-        val subItem = DeckCardListItem()
-        val header = DeckCardListHeaderItem()
-        val header2 = DeckCardListHeaderItem()
-        val subItem2 = DeckCardListItem()
-        val subItem3 = DeckCardListItem()
+        val abstractItems: MutableList<AbstractItem<*, *>> = LinkedList()
 
-        fastItemAdapter?.add(header)
-        fastItemAdapter?.add(subItem)
-        fastItemAdapter?.add(subItem2)
-        fastItemAdapter?.add(subItem3)
+        val leaderHeader = HeaderItem()
+        leaderHeader.leftText = "Leader"
+        abstractItems.add(leaderHeader)
+
+        val cardsHeader = HeaderItem()
+        cardsHeader.leftText = "Cards: "
+        cardsHeader.rightText = "0"
+        abstractItems.add(cardsHeader)
+
+        val meleeSubHeader = SubHeaderItem()
+        meleeSubHeader.textLeft = "Melee"
+        abstractItems.add(meleeSubHeader)
+
+        val rangedSubHeader = SubHeaderItem()
+        rangedSubHeader.textLeft = "Ranged"
+        abstractItems.add(rangedSubHeader)
+
+        val siegeSubHeader = SubHeaderItem()
+        siegeSubHeader.textLeft = "Siege"
+        abstractItems.add(siegeSubHeader)
+
+        val eventSubHeader = SubHeaderItem()
+        eventSubHeader.textLeft = "Event"
+        abstractItems.add(eventSubHeader)
+
+        fastItemAdapter?.add(abstractItems)
     }
 
     override fun onDetach(view: View) {
