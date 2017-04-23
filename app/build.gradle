@@ -40,7 +40,6 @@ android {
     lintOptions {
         abortOnError false
     }
-
 }
 
 dependencies {
@@ -104,6 +103,7 @@ dependencies {
     // FastAdapter
     compile('com.mikepenz:fastadapter:2.5.2@aar') { transitive = true }
     compile 'com.mikepenz:fastadapter-commons:2.5.2@aar'
+    compile 'com.mikepenz:fastadapter-extensions:2.5.2@aar'
 
     // Material Drawer
     compile('com.mikepenz:materialdrawer:5.9.0@aar') { transitive = true }

@@ -18,8 +18,8 @@ class SubHeaderItem : AbstractItem<SubHeaderItem, SubHeaderItem.ViewHolder>() {
         @JvmStatic val TAG: String = SubHeaderItem::class.java.name
     }
 
-    var textLeft = ""
-    var textRight = ""
+    var leftText = ""
+    var rightText = ""
 
     override fun getLayoutRes(): Int {
         return R.layout.item_sub_header
@@ -35,6 +35,9 @@ class SubHeaderItem : AbstractItem<SubHeaderItem, SubHeaderItem.ViewHolder>() {
 
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
+
+        holder.leftText.text = leftText
+        holder.rightText.text = rightText
     }
 
     override fun unbindView(holder: ViewHolder) {
