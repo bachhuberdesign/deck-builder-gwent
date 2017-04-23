@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.controller_deck_select.view.*
 import java.util.*
 import javax.inject.Inject
 
-
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
