@@ -12,7 +12,7 @@ import com.mikepenz.fastadapter.items.AbstractItem
  * @version 1.0.0
  * @since 1.0.0
  */
-class SlimSwipeableCardItem : AbstractItem<SlimSwipeableCardItem, SlimSwipeableCardItem.ViewHolder>(), ISwipeable<SlimSwipeableCardItem, IItem<*, *>> {
+class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwipeable<SlimCardItem, IItem<*, *>> {
 
     companion object {
         @JvmStatic val TAG: String = SubHeaderItem::class.java.name
@@ -24,7 +24,7 @@ class SlimSwipeableCardItem : AbstractItem<SlimSwipeableCardItem, SlimSwipeableC
         return swipeable
     }
 
-    override fun withIsSwipeable(swipeable: Boolean): SlimSwipeableCardItem {
+    override fun withIsSwipeable(swipeable: Boolean): SlimCardItem {
         this.swipeable = swipeable
         return this
     }
