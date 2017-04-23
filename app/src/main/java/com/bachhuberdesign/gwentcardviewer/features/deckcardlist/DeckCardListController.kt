@@ -1,7 +1,10 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckcardlist
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +16,18 @@ import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.mikepenz.fastadapter_extensions.swipe.SimpleSwipeCallback
 import kotlinx.android.synthetic.main.controller_deck_select.view.*
 import java.util.*
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
-class DeckCardListController : Controller(), DeckCardListMvpContract {
+class DeckCardListController : Controller(), DeckCardListMvpContract, SimpleSwipeCallback.ItemSwipeCallback {
 
     companion object {
         @JvmStatic val TAG: String = DeckSelectController::class.java.name
@@ -48,6 +53,16 @@ class DeckCardListController : Controller(), DeckCardListMvpContract {
         recyclerView?.layoutManager = layoutManager
         recyclerView?.adapter = fastItemAdapter
 
+        val touchCallback = ImprovedSwipeCallback(this,
+                activity!!.getDrawable(R.drawable.leak_canary_icon),
+                ItemTouchHelper.LEFT,
+                ContextCompat.getColor(activity, R.color.md_red_900))
+                .withBackgroundSwipeRight(ContextCompat.getColor(activity, R.color.md_blue_900))
+                .withLeaveBehindSwipeRight(activity!!.getDrawable(R.drawable.leak_canary_icon))
+
+        val touchHelper = ItemTouchHelper(touchCallback)
+        touchHelper.attachToRecyclerView(recyclerView)
+
         return view
     }
 
@@ -70,6 +85,9 @@ class DeckCardListController : Controller(), DeckCardListMvpContract {
         meleeSubHeader.textLeft = "Melee"
         abstractItems.add(meleeSubHeader)
 
+        val meleeSwipeItem = SlimSwipeableCardItem().withIsSwipeable(true)
+        abstractItems.add(meleeSwipeItem)
+
         val rangedSubHeader = SubHeaderItem()
         rangedSubHeader.textLeft = "Ranged"
         abstractItems.add(rangedSubHeader)
@@ -88,6 +106,10 @@ class DeckCardListController : Controller(), DeckCardListMvpContract {
     override fun onDetach(view: View) {
         super.onDetach(view)
         presenter.detach()
+    }
+
+    override fun itemSwiped(var1: Int, var2: Int) {
+        Log.d(TAG, "itemSwiped() var1: $var1, var2: $var2")
     }
 
 }

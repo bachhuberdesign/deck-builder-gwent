@@ -3,6 +3,8 @@ package com.bachhuberdesign.gwentcardviewer.features.deckcardlist
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.bachhuberdesign.gwentcardviewer.R
+import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.ISwipeable
 import com.mikepenz.fastadapter.items.AbstractItem
 
 /**
@@ -10,10 +12,21 @@ import com.mikepenz.fastadapter.items.AbstractItem
  * @version 1.0.0
  * @since 1.0.0
  */
-class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>() {
+class SlimSwipeableCardItem : AbstractItem<SlimSwipeableCardItem, SlimSwipeableCardItem.ViewHolder>(), ISwipeable<SlimSwipeableCardItem, IItem<*, *>> {
 
     companion object {
         @JvmStatic val TAG: String = SubHeaderItem::class.java.name
+    }
+
+    private var swipeable: Boolean = true
+
+    override fun isSwipeable(): Boolean {
+        return swipeable
+    }
+
+    override fun withIsSwipeable(swipeable: Boolean): SlimSwipeableCardItem {
+        this.swipeable = swipeable
+        return this
     }
 
     override fun getLayoutRes(): Int {
