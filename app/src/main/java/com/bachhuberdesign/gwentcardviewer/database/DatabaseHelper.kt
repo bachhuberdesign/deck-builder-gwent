@@ -50,7 +50,8 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                         "${Deck.LAST_UPDATE} INTEGER NOT NULL" +
                         ")"
         const val CREATE_TABLE_USER_DECKS_CARDS: String =
-                "CREATE TABLE ${Deck.JOIN_CARD_TABLE} ( " +
+                "CREATE TABLE ${Deck.JOIN_CARD_TABLE} (" +
+                        "join_id INTEGER NOT NULL PRIMARY KEY," +
                         "deck_id INTEGER NOT NULL, " +
                         "card_id INTEGER NOT NULL, " +
                         "${Card.SELECTED_LANE} INTEGER NOT NULL" +
