@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
@@ -74,28 +75,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
             deckId = args.getInt("deckId", 0)
         }
 
-        adapter = FastItemAdapter()
-        adapter.withItemEvent(object : ClickEventHook<CardItem>() {
-            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-                return (viewHolder as CardItem.ViewHolder).addCardButton
-            }
-
-            override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
-
-                // Check if clickable to prevent duplicate presenter calls
-                if (isAddCardButtonClickable) {
-                    isAddCardButtonClickable = false
-                    presenter.checkCardAddable(item.card, deckId)
-                }
-            }
-        })
-
-        val layoutManager = LinearLayoutManager(activity)
-
-        recyclerView = view.recycler_view
-        recyclerView.setHasFixedSize(false)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
+        initRecyclerView(view)
 
         return view
     }
@@ -117,16 +97,46 @@ class CardViewerController : Controller, CardViewerMvpContract {
         super.onSaveInstanceState(outState)
     }
 
+    private fun initRecyclerView(v: View) {
+        adapter = FastItemAdapter()
+        adapter.withItemEvent(object : ClickEventHook<CardItem>() {
+            override fun onBind(holder: RecyclerView.ViewHolder): View? {
+                return (holder as CardItem.ViewHolder).addCardButton
+            }
+
+            override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
+                // Check if clickable to prevent duplicate presenter calls
+                if (isAddCardButtonClickable) {
+                    isAddCardButtonClickable = false
+                    presenter.checkCardAddable(item.card, deckId)
+                }
+            }
+        })
+
+        val layoutManager = LinearLayoutManager(activity)
+
+        recyclerView = v.recycler_view
+        recyclerView.setHasFixedSize(false)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
+    }
+
     private fun refreshFilters(filters: CardFilters) {
         presenter.getCardsFiltered(filters)
     }
 
-    override fun onCardsLoaded(cards: List<Card>) {
+    override fun onDeckbuildModeCardsLoaded(cards: List<Card>, deck: Deck) {
         cards.forEach { card ->
-            adapter.add(CardItem(card, isDeckbuildMode = deckId > 0))
+            val cardItem = CardItem(card, true)
+            cardItem.count = deck.cards.filter { it.cardId == card.cardId }.size
+            adapter.add(cardItem)
         }
 
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onViewModeCardsLoaded(cards: List<Card>) {
+        TODO("Not yet implemented.")
     }
 
     override fun onListFiltered(filteredCards: List<Card>) {

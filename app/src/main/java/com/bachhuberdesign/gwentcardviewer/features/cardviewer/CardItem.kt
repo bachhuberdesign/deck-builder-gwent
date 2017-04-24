@@ -26,6 +26,8 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         @JvmStatic val TAG: String = CardItem::class.java.name
     }
 
+    var count = 0
+
     override fun getLayoutRes(): Int {
         return R.layout.item_card
     }

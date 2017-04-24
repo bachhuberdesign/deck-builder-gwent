@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
+import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 
@@ -10,7 +11,9 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
  */
 interface CardViewerMvpContract : MvpContract {
 
-    fun onCardsLoaded(cards: List<Card>)
+    fun onViewModeCardsLoaded(cards: List<Card>)
+
+    fun onDeckbuildModeCardsLoaded(cards: List<Card>, deck: Deck)
 
     fun onListFiltered(filteredCards: List<Card>)
 
