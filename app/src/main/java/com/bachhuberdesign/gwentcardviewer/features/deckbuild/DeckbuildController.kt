@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.animation.AnticipateOvershootInterpolator
-import android.view.animation.BounceInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -20,6 +19,7 @@ import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardFilters
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
 import com.bachhuberdesign.gwentcardviewer.features.deckcardlist.DeckDetailController
+import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
@@ -147,6 +147,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                             .pushChangeHandler(SlideInChangeHandler(350, true))
                             .popChangeHandler(SlideInChangeHandler(350, true)))
                 }
+                view!!.show_card_viewer_button.rotation = 0.0f
             }
         })
 
@@ -191,19 +192,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 .subscribe()
     }
 
-    override fun onCardAdded(card: Card) {
-        Log.d(TAG, "onCardAdded() " + card.toString())
-    }
-
-    override fun onCardRemoved(card: Card) {
-        Log.d(TAG, "onCardRemoved()")
-    }
-
-    override fun onDeckDeleted(deckId: Int) {
-        // TODO: Send back to faction select and remove DeckbuildController by tag
-        router.popCurrentController()
-    }
-
     override fun onDeckLoaded(deck: Deck) {
         activity?.title = deck.name
 
@@ -211,6 +199,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
         view!!.leader_name_text.text = deck.cards[0].name
+    }
+
+    override fun onDeckDeleted(deckId: Int) {
+        router.setRoot(RouterTransaction.with(FactionSelectController())
+                .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT))
+                .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT)))
+        router.popToRoot()
     }
 
     override fun onErrorLoadingDeck(message: String) {
@@ -301,8 +296,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun showDeckRenameDialog(currentDeckName: String) {
-        Log.d(TAG, "showDeckRenameDialog()")
-
         MaterialDialog.Builder(activity!!)
                 .title("Rename Deck")
                 .inputType(InputType.TYPE_CLASS_TEXT)
