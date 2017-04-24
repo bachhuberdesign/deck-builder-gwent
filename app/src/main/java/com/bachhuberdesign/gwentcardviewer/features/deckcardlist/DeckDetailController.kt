@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckcardlist
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -23,6 +24,8 @@ import com.bluelinelabs.conductor.Controller
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter_extensions.swipe.SimpleSwipeCallback
+import com.mikepenz.fontawesome_typeface_library.FontAwesome
+import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.controller_deck_select.view.*
 import java.util.*
 import javax.inject.Inject
@@ -93,11 +96,12 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         recyclerView?.adapter = fastItemAdapter
 
         val touchCallback = ImprovedSwipeCallback(this,
-                activity!!.getDrawable(R.drawable.leak_canary_icon),
+                IconicsDrawable(activity!!)
+                        .icon(FontAwesome.Icon.faw_minus)
+                        .color(Color.WHITE)
+                        .sizeDp(24),
                 ItemTouchHelper.LEFT,
-                ContextCompat.getColor(activity, R.color.md_red_900))
-                .withBackgroundSwipeRight(ContextCompat.getColor(activity, R.color.md_blue_900))
-                .withLeaveBehindSwipeRight(activity!!.getDrawable(R.drawable.leak_canary_icon))
+                ContextCompat.getColor(activity, R.color.colorAccent))
 
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(recyclerView)
