@@ -114,7 +114,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_delete_deck -> presenter.deleteDeck(deckId)
+            R.id.menu_delete_deck -> confirmDeckDeletion()
             R.id.menu_rename_deck -> presenter.onRenameButtonClicked(deckId)
         }
         return super.onOptionsItemSelected(item)
@@ -128,6 +128,16 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     .pushChangeHandler(SlideInChangeHandler(500, true))
                     .popChangeHandler(SlideInChangeHandler(500, true)))
         }
+    }
+
+    private fun confirmDeckDeletion() {
+        MaterialDialog.Builder(activity!!)
+                .title("Confirm Deletion")
+                .content("Are you sure you want to delete this deck? This cannot be un-done.")
+                .positiveText(android.R.string.ok)
+                .onPositive({ dialog, action -> presenter.deleteDeck(deckId) })
+                .negativeText(android.R.string.cancel)
+                .show()
     }
 
     /**
