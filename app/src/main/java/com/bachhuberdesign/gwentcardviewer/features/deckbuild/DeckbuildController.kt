@@ -26,7 +26,9 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.animation.ViewAnimationFactory
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -250,11 +252,14 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     activity!!.runOnUiThread {
                         layout!!.addView(imageView, imageViewParams)
 
+                        // TODO:
                         Glide.with(activity)
                                 .load(card.iconUrl)
-                                .skipMemoryCache(true)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .animate(R.anim.slide_right)
+                                .animate(object : ViewAnimationFactory<GlideDrawable>(activity!!, R.anim.slide_right) {
+                                    override fun build(isFromMemoryCache: Boolean, isFirstResource: Boolean): GlideAnimation<GlideDrawable> {
+                                        return super.build(false, isFirstResource)
+                                    }
+                                })
                                 .fitCenter()
                                 .into(imageView)
                     }
