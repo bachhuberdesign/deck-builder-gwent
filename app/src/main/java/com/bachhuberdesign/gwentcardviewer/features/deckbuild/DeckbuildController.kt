@@ -252,7 +252,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                     activity!!.runOnUiThread {
                         layout!!.addView(imageView, imageViewParams)
 
-                        // TODO:
                         Glide.with(activity)
                                 .load(card.iconUrl)
                                 .animate(object : ViewAnimationFactory<GlideDrawable>(activity!!, R.anim.slide_right) {
