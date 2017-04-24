@@ -130,6 +130,9 @@ dependencies {
     compile 'com.mikepenz:devicon-typeface:2.0.0.2@aar'
     compile 'com.mikepenz:foundation-icons-typeface:3.0.0.2@aar'
     compile 'com.mikepenz:ionicons-typeface:2.0.1.2@aar'
+
+    // Calligraphy
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }
 
 repositories {

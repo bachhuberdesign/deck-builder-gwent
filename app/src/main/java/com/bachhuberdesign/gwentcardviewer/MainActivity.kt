@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
@@ -15,6 +16,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import kotlinx.android.synthetic.main.activity_main.*
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 /**
  * @author Eric Bachhuber
@@ -78,6 +80,10 @@ class MainActivity : BaseActivity() {
                     false
                 }
                 .build()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
 }

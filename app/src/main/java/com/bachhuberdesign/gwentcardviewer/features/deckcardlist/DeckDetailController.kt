@@ -56,7 +56,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
     val items: MutableList<AbstractItem<*, *>> = LinkedList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        val view = container.inflate(R.layout.controller_deck_card_list)
+        val view = container.inflate(R.layout.controller_deck_detail)
 
         (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
