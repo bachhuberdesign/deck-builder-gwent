@@ -280,7 +280,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input("Enter a new name for your deck", currentDeckName, { dialog, input ->
                 })
-                .negativeText(android.R.string.cancel)
                 .positiveText(R.string.confirm)
                 .onPositive { dialog, which ->
                     val newDeckName = dialog.inputEditText?.text.toString().trim()
@@ -288,6 +287,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                         presenter.renameDeck(newDeckName, deckId)
                     }
                 }
+                .negativeText(android.R.string.cancel)
                 .show()
     }
 

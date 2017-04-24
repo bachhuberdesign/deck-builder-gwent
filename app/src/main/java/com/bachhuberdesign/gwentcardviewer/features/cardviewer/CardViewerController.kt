@@ -170,6 +170,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
                     true
                 })
+                .cancelListener { dialog -> isAddCardButtonClickable = true }
                 .positiveText(android.R.string.ok)
                 .show()
     }
