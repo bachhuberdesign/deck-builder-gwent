@@ -3,6 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import rx.Subscription
@@ -85,14 +86,13 @@ class DeckbuildPresenter
         }
     }
 
+    /**
+     *
+     */
     private fun filterCardsByLane(deck: Deck, lane: Int): List<Card> {
-        val filteredList: MutableList<Card> = ArrayList()
-        deck.cards.forEach { card ->
-            if (card.selectedLane == lane) {
-                filteredList.add(card)
-            }
-        }
-        return filteredList
+        return deck.cards
+                .filterNot { it.cardType == CardType.LEADER }
+                .filter { it.selectedLane == lane }
     }
 
     /**
@@ -115,6 +115,9 @@ class DeckbuildPresenter
         }
     }
 
+    /**
+     *
+     */
     private fun refreshTotals(deckId: Int) {
         val cards = deckRepository.getCardsForDeck(deckId)
 
@@ -129,6 +132,9 @@ class DeckbuildPresenter
         }
     }
 
+    /**
+     *
+     */
     fun renameDeck(newDeckName: String, deckId: Int) {
         Log.d(TAG, "renameDeck(): newDeckName: $newDeckName, deckId: $deckId")
 
@@ -138,6 +144,9 @@ class DeckbuildPresenter
         }
     }
 
+    /**
+     *
+     */
     fun onRenameButtonClicked(deckId: Int) {
         val deckName = deckRepository.getDeckById(deckId)?.name
         if (isViewAttached()) {
