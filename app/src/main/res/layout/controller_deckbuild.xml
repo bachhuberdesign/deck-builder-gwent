@@ -160,11 +160,12 @@
 
     <ImageButton
         android:id="@+id/show_card_viewer_button"
-        android:layout_width="50dp"
-        android:layout_height="75dp"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="@+id/event_bottom_guideline"/>

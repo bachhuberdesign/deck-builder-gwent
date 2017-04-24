@@ -1,11 +1,16 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.AnticipateOvershootInterpolator
+import android.view.animation.BounceInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -130,11 +135,22 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     private fun showCardPicker() {
         val filters = CardFilters(filterByFactions = Pair(true, factionId))
 
-        if (!childRouter.hasRootController()) {
-            childRouter.setRoot(RouterTransaction.with(CardViewerController(filters, deckId))
-                    .pushChangeHandler(SlideInChangeHandler(500, true))
-                    .popChangeHandler(SlideInChangeHandler(500, true)))
-        }
+        view!!.show_card_viewer_button.clearAnimation()
+
+        val cardFlip = ObjectAnimator.ofFloat(view!!.show_card_viewer_button, "rotation", 360.0f)
+        cardFlip.interpolator = AnticipateOvershootInterpolator()
+        cardFlip.duration = 500
+        cardFlip.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                if (!childRouter.hasRootController()) {
+                    childRouter.setRoot(RouterTransaction.with(CardViewerController(filters, deckId))
+                            .pushChangeHandler(SlideInChangeHandler(350, true))
+                            .popChangeHandler(SlideInChangeHandler(350, true)))
+                }
+            }
+        })
+
+        cardFlip.start()
     }
 
     private fun confirmDeckDeletion() {
@@ -227,10 +243,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun animateCards(cardsToAnimate: List<Card>) {
+
+        // TODO: Properly sub/unsub to prevent crash while leaving controller during animation
+
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
         Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
-                .zipWith(Observable.interval(200, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
+                .zipWith(Observable.interval(225, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
                 .subscribe { card ->
                     val layout: LinearLayout?
