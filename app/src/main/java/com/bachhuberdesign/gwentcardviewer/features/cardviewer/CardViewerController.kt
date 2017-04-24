@@ -83,7 +83,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.getCardsFiltered(filters!!)
+        presenter.getCardsFiltered(filters!!, deckId)
     }
 
     override fun onDetach(view: View) {
@@ -122,7 +122,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     private fun refreshFilters(filters: CardFilters) {
-        presenter.getCardsFiltered(filters)
+        presenter.getCardsFiltered(filters, deckId)
     }
 
     override fun onDeckbuildModeCardsLoaded(cards: List<Card>, deck: Deck) {

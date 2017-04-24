@@ -58,7 +58,7 @@ class CardViewerPresenter
         TODO("Method not yet implemented")
     }
 
-    fun getCardsFiltered(filters: CardFilters) {
+    fun getCardsFiltered(filters: CardFilters, deckId: Int) {
         // TODO: Refactor to query full card list and then filter rather
 
         if (filters.filterByFactions.first) {
@@ -71,10 +71,11 @@ class CardViewerPresenter
                 }
             }
 
-            val deck = deckRepository.getDeckById(filters.filterByDeck.second)
-
-            if (deck != null && isViewAttached()) {
-                view!!.onDeckbuildModeCardsLoaded(cards, deck)
+            if (deckId > 0) {
+                val deck = deckRepository.getDeckById(deckId)
+                if (deck != null && isViewAttached()) {
+                    view!!.onDeckbuildModeCardsLoaded(cards, deck)
+                }
             } else if (isViewAttached()) {
                 view!!.onViewModeCardsLoaded(cards)
             }

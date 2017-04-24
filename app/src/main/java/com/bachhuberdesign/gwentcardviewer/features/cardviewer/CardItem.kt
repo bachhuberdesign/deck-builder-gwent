@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.invisible
@@ -54,6 +55,12 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         holder.power.text = card.power.toString()
 
         if (isDeckbuildMode) {
+            if (card.cardType == CardType.BRONZE) {
+                holder.addCardButton.text = "$count / 3"
+            } else {
+                holder.addCardButton.text = "$count / 1"
+            }
+
             holder.addCardButton.visible()
         } else {
             holder.addCardButton.invisible()
