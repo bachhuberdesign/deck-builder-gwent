@@ -16,6 +16,7 @@ import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
+import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
 import com.bachhuberdesign.gwentcardviewer.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
@@ -102,11 +103,14 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
     }
 
     private fun buildItemList(deck: Deck) {
-        if (items.size > 0){
+        if (items.size > 0) {
             items.clear()
         }
         addHeaderItems()
-        addLaneItems(Lane.MELEE)
+        addLaneItems(Lane.MELEE, deck)
+        addLaneItems(Lane.RANGED, deck)
+        addLaneItems(Lane.SIEGE, deck)
+        addLaneItems(Lane.EVENT, deck)
         addFooterItems()
     }
 
@@ -124,33 +128,22 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
         items.add(cardsHeader)
     }
 
-    private fun addLaneItems(lane: Int) {
-        val meleeSubHeader = SubHeaderItem()
-        meleeSubHeader.leftText = "Melee"
-        meleeSubHeader.rightText = "0"
-        meleeSubHeader.withTag("melee_header")
-        items.add(meleeSubHeader)
+    private fun addLaneItems(lane: Int, deck: Deck) {
+        val laneText: String = activity!!.getStringResourceByName(Lane.ID_TO_KEY.apply(lane))
 
-        val rangedSubHeader = SubHeaderItem()
-        rangedSubHeader.leftText = "Ranged"
-        rangedSubHeader.rightText = "0"
-        rangedSubHeader.withTag("ranged_header")
-        items.add(rangedSubHeader)
+        val laneSubHeader = SubHeaderItem()
+        laneSubHeader.leftText = laneText
+        laneSubHeader.rightText = "0"
+        laneSubHeader.withTag("lane_${lane}_header")
+        items.add(laneSubHeader)
 
-        val rangedSwipeItem = SlimCardItem().withIsSwipeable(true)
-        items.add(rangedSwipeItem)
-
-        val siegeSubHeader = SubHeaderItem()
-        siegeSubHeader.leftText = "Siege"
-        siegeSubHeader.rightText = "0"
-        siegeSubHeader.withTag("siege_header")
-        items.add(siegeSubHeader)
-
-        val eventSubHeader = SubHeaderItem()
-        eventSubHeader.leftText = "Event"
-        eventSubHeader.rightText = "0"
-        eventSubHeader.withTag("event_header")
-        items.add(eventSubHeader)
+        deck.cards.filter { it.selectedLane == lane }
+                .forEach { card ->
+                    val swipeItem = SlimCardItem().withIsSwipeable(true)
+                    swipeItem.count = 55
+                    swipeItem.name = card.name
+                    items.add(swipeItem)
+                }
     }
 
     private fun addFooterItems() {
@@ -170,14 +163,6 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
 
         buildItemList(deck)
         fastItemAdapter?.add(items)
-    }
-
-    override fun onCardRemoved(cardId: Int) {
-        Log.d(TAG, "onCardRemoved(): cardId $cardId")
-    }
-
-    override fun showScrapCount(scrapCount: Int) {
-        Log.d(TAG, "showScrapCount: $scrapCount")
     }
 
     override fun showErrorMessage(message: String) {

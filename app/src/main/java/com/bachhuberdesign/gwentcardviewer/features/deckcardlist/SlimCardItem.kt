@@ -2,10 +2,12 @@ package com.bachhuberdesign.gwentcardviewer.features.deckcardlist
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.TextView
 import com.bachhuberdesign.gwentcardviewer.R
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ISwipeable
 import com.mikepenz.fastadapter.items.AbstractItem
+import kotlinx.android.synthetic.main.item_slim_card.view.*
 
 /**
  * @author Eric Bachhuber
@@ -19,6 +21,8 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
     }
 
     private var swipeable: Boolean = true
+    var name = ""
+    var count: Int = 0
 
     override fun isSwipeable(): Boolean {
         return swipeable
@@ -44,6 +48,8 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
 
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
+        holder.nameText.text = name
+        holder.countText.text = count.toString()
     }
 
     override fun unbindView(holder: ViewHolder) {
@@ -51,6 +57,8 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var nameText: TextView = view.card_name_text
+        var countText: TextView = view.card_count_text
     }
 
 }

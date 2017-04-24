@@ -12,10 +12,6 @@ interface DeckCardListMvpContract : MvpContract {
 
     fun onDeckLoaded(deck: Deck)
 
-    fun onCardRemoved(cardId: Int)
-
-    fun showScrapCount(scrapCount: Int)
-
     fun showErrorMessage(message: String)
 
 }

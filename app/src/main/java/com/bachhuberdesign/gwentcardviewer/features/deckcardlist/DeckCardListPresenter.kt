@@ -19,14 +19,6 @@ class DeckCardListPresenter
         @JvmStatic val TAG: String = DeckCardListPresenter::class.java.name
     }
 
-    override fun attach(view: DeckCardListMvpContract) {
-        super.attach(view)
-    }
-
-    override fun detach() {
-        super.detach()
-    }
-
     fun loadDeck(deckId: Int) {
         val deck = deckRepository.getDeckById(deckId)
 
@@ -41,10 +33,6 @@ class DeckCardListPresenter
 
     fun removeCardFromDeck(card: Card, deckId: Int) {
         deckRepository.deleteCardFromDeck(card, deckId)
-    }
-
-    private fun sortCards() {
-
     }
 
 }
