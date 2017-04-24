@@ -10,4 +10,6 @@
     <item name="menu_delete_deck" type="id"/>
     <item name="menu_rename_deck" type="id"/>
     <item name="menu_deck_details" type="id"/>
+    <item name="menu_search_cards" type="id"/>
+    <item name="menu_filter_cards" type="id"/>
 </resources>

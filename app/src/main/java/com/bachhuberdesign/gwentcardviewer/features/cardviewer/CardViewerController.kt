@@ -1,12 +1,11 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
@@ -22,6 +21,8 @@ import com.google.gson.Gson
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.mikepenz.fontawesome_typeface_library.FontAwesome
+import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
@@ -67,6 +68,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
+        setHasOptionsMenu(true)
+
         if (filters == null) {
             filters = gson.fromJson(args.getString("filters"), CardFilters::class.java)
         }
@@ -95,6 +98,22 @@ class CardViewerController : Controller, CardViewerMvpContract {
         outState.putString("filters", gson.toJson(filters))
         outState.putInt("deckId", deckId)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_card_viewer, menu)
+
+        menu.findItem(R.id.menu_filter_cards).icon = IconicsDrawable(activity!!)
+                .icon(FontAwesome.Icon.faw_filter)
+                .color(Color.WHITE)
+                .sizeDp(24)
+
+        menu.findItem(R.id.menu_search_cards).icon = IconicsDrawable(activity!!)
+                .icon(FontAwesome.Icon.faw_search)
+                .color(Color.WHITE)
+                .sizeDp(24)
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun initRecyclerView(v: View) {
