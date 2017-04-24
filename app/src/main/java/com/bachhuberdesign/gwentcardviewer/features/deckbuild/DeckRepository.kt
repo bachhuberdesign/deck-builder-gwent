@@ -86,7 +86,6 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
 
     fun getAllUserCreatedDecks(): List<Deck> {
         val cursor = database.query("SELECT * FROM ${Deck.TABLE}")
-
         val decks: MutableList<Deck> = ArrayList()
 
         cursor.use {
@@ -161,7 +160,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
 
     fun deleteDeck(deckId: Int) {
         database.delete(Deck.JOIN_CARD_TABLE, "deck_id = $deckId")
-        database.delete(Deck.TABLE, "id = $deckId")
+        database.delete(Deck.TABLE, "${Deck.ID} = $deckId")
     }
 
 }

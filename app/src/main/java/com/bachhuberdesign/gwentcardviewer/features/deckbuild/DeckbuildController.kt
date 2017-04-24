@@ -3,9 +3,7 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -63,6 +61,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         val view = container.inflate(R.layout.controller_deckbuild)
 
         activity?.title = "Deckbuild Controller"
+        setHasOptionsMenu(true)
 
         childRouter = getChildRouter(container).setPopsLastView(true)
 
@@ -104,6 +103,23 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt("deckId", deckId)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_deckbuild, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_delete_deck -> presenter.deleteDeck(deckId)
+            R.id.menu_rename_deck -> showDeckRenameDialog()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDeckRenameDialog() {
+        Log.d(TAG, "showDeckRenameDialog()")
     }
 
     private fun showCardPicker() {
@@ -154,6 +170,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onDeckDeleted(deckId: Int) {
         Log.d(TAG, "onDeckDeleted()")
+        router.popCurrentController()
     }
 
     override fun onDeckLoaded(deck: Deck) {

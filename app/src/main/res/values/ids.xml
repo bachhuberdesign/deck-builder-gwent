@@ -7,4 +7,6 @@
     <item name="sub_header_item" type="id"/>
     <item name="header_item" type="id"/>
     <item name="slim_card_item" type="id"/>
+    <item name="menu_delete_deck" type="id"/>
+    <item name="menu_rename_deck" type="id"/>
 </resources>

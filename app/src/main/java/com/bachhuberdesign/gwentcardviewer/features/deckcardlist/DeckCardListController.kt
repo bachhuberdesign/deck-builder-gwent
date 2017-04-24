@@ -115,13 +115,15 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
         addFooterItems(deck)
     }
 
-    private fun addHeaderItems(deck: Deck) {
+    private fun addHeaderItems(deck: Deck?) {
         val leaderHeader = HeaderItem()
         leaderHeader.leftText = "Leader"
         items.add(leaderHeader)
 
         val leaderItem = SlimCardItem().withIsSwipeable(false)
-        leaderItem.card = deck.cards[0]
+        if (deck?.cards?.size!! > 0) {
+            leaderItem.card = deck.cards[0]
+        }
         items.add(leaderItem)
 
         val cardsHeader = HeaderItem()
