@@ -13,11 +13,11 @@ import javax.inject.Inject
  * @since 1.0.0
  */
 @PersistedScope
-class DeckCardListPresenter
-@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckCardListMvpContract>() {
+class DeckDetailPresenter
+@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckDetailMvpContract>() {
 
     companion object {
-        @JvmStatic val TAG: String = DeckCardListPresenter::class.java.name
+        @JvmStatic val TAG: String = DeckDetailPresenter::class.java.name
     }
 
     fun loadDeck(deckId: Int) {

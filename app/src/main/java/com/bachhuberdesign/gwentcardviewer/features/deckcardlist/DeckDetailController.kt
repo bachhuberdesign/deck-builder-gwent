@@ -32,7 +32,7 @@ import javax.inject.Inject
  * @version 1.0.0
  * @since 1.0.0
  */
-class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeCallback.ItemSwipeCallback {
+class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallback.ItemSwipeCallback {
 
     constructor(deckId: Int) {
         this.deckId = deckId
@@ -45,7 +45,7 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
     }
 
     @Inject
-    lateinit var presenter: DeckCardListPresenter
+    lateinit var presenter: DeckDetailPresenter
 
     var recyclerView: RecyclerView? = null
     var fastItemAdapter: FastItemAdapter<AbstractItem<*, *>>? = null
