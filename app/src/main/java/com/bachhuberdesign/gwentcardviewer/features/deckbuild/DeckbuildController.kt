@@ -2,14 +2,14 @@ package com.bachhuberdesign.gwentcardviewer.features.deckbuild
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardFilters
@@ -63,6 +63,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         val view = container.inflate(R.layout.controller_deckbuild)
 
         activity?.title = "Deckbuild Controller"
+        setHasOptionsMenu(true)
 
         childRouter = getChildRouter(container).setPopsLastView(true)
 
@@ -104,6 +105,19 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt("deckId", deckId)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_deckbuild, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_delete_deck -> presenter.deleteDeck(deckId)
+            R.id.menu_rename_deck -> presenter.onRenameButtonClicked(deckId)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun showCardPicker() {
@@ -153,7 +167,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun onDeckDeleted(deckId: Int) {
-        Log.d(TAG, "onDeckDeleted()")
+        // TODO: Send back to faction select and remove DeckbuildController by tag
+        router.popCurrentController()
     }
 
     override fun onDeckLoaded(deck: Deck) {
@@ -245,6 +260,29 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal + totals.eventTotal
         view!!.deck_power_total_text.text = totalPower.toString()
+    }
+
+    override fun showDeckRenameDialog(currentDeckName: String) {
+        Log.d(TAG, "showDeckRenameDialog()")
+
+        MaterialDialog.Builder(activity!!)
+                .title("Rename Deck")
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input("Enter a new name for your deck", currentDeckName, { dialog, input ->
+                })
+                .negativeText(android.R.string.cancel)
+                .positiveText(R.string.confirm)
+                .onPositive { dialog, which ->
+                    val newDeckName = dialog.inputEditText?.text.toString().trim()
+                    if (currentDeckName != newDeckName) {
+                        presenter.renameDeck(newDeckName, deckId)
+                    }
+                }
+                .show()
+    }
+
+    override fun onDeckRenamed(newDeckName: String) {
+        activity?.title = newDeckName
     }
 
 }

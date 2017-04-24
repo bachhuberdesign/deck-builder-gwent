@@ -107,13 +107,6 @@ class DeckbuildPresenter
     /**
      *
      */
-    fun removeCardFromDeck(card: Card) {
-        Log.d(TAG, "removeCard() called for card ${card.cardId}")
-    }
-
-    /**
-     *
-     */
     fun deleteDeck(deckId: Int) {
         deckRepository.deleteDeck(deckId)
 
@@ -133,6 +126,22 @@ class DeckbuildPresenter
         if (isViewAttached()) {
             val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal, eventTotal = eventTotal)
             view!!.deckTotalsUpdated(totals)
+        }
+    }
+
+    fun renameDeck(newDeckName: String, deckId: Int) {
+        Log.d(TAG, "renameDeck(): newDeckName: $newDeckName, deckId: $deckId")
+
+        deckRepository.renameDeck(newDeckName, deckId)
+        if (isViewAttached()) {
+            view!!.onDeckRenamed(newDeckName)
+        }
+    }
+
+    fun onRenameButtonClicked(deckId: Int) {
+        val deckName = deckRepository.getDeckById(deckId)?.name
+        if (isViewAttached()) {
+            view!!.showDeckRenameDialog(deckName!!)
         }
     }
 

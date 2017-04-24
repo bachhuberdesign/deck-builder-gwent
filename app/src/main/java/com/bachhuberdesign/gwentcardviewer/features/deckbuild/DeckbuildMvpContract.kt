@@ -26,4 +26,8 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun deckTotalsUpdated(totals: LaneTotals)
 
+    fun showDeckRenameDialog(currentDeckName: String)
+
+    fun onDeckRenamed(newDeckName: String)
+
 }

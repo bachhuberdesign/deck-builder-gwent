@@ -123,24 +123,6 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
 
             override fun onAnimationEnd(animation: Animation) {
                 onLeaderSelected(leader)
-//                imageView.bringToFront()
-//                imageView.invalidate()
-//                imageView.translationZ = 999f
-//                imageView.elevation = 101f
-//                moveViewToScreenCenter(imageView)
-
-//                imageView.animate().translationX(50f).translationY(-500f).setDuration(2000).start()
-
-//                val scaleX = ObjectAnimator.ofFloat(newImageView, "scaleX", 1.5f)
-//                val scaleY = ObjectAnimator.ofFloat(newImageView, "scaleY", 1.5f)
-//
-//                scaleX.duration = 1000
-//                scaleY.duration = 1000
-//
-//                val animationSet = AnimatorSet()
-//
-//                animationSet.play(scaleX).with(scaleY)
-//                animationSet.start()
             }
         })
 
@@ -165,6 +147,8 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         router.pushController(RouterTransaction.with(LeaderConfirmController(leader))
                 .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
                 .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
+
+        isLeaderClickable = true
     }
 
 }

@@ -2,6 +2,7 @@ package com.bachhuberdesign.gwentcardviewer
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.deckcardlist.DeckCardListController
 import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectController
@@ -36,7 +37,6 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(toolbar)
 
         router = Conductor.attachRouter(this, container, savedInstanceState)
-
         if (!router.hasRootController()) {
             router.setRoot(RouterTransaction.with(DeckCardListController(1)))
         }

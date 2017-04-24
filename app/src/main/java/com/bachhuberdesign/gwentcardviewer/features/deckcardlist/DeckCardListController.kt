@@ -14,6 +14,7 @@ import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectController
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
@@ -106,20 +107,23 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
         if (items.size > 0) {
             items.clear()
         }
-        addHeaderItems()
+        addHeaderItems(deck)
         addLaneItems(Lane.MELEE, deck)
         addLaneItems(Lane.RANGED, deck)
         addLaneItems(Lane.SIEGE, deck)
         addLaneItems(Lane.EVENT, deck)
-        addFooterItems()
+        addFooterItems(deck)
     }
 
-    private fun addHeaderItems() {
+    private fun addHeaderItems(deck: Deck?) {
         val leaderHeader = HeaderItem()
         leaderHeader.leftText = "Leader"
         items.add(leaderHeader)
 
         val leaderItem = SlimCardItem().withIsSwipeable(false)
+        if (deck?.cards?.size!! > 0) {
+            leaderItem.card = deck.cards[0]
+        }
         items.add(leaderItem)
 
         val cardsHeader = HeaderItem()
@@ -138,6 +142,7 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
         items.add(laneSubHeader)
 
         deck.cards.filter { it.selectedLane == lane }
+                .filterNot { it.cardType == CardType.LEADER }
                 .forEach { card ->
                     val cardItem = SlimCardItem().withIsSwipeable(true)
                     cardItem.card = card
@@ -145,7 +150,7 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
                 }
     }
 
-    private fun addFooterItems() {
+    private fun addFooterItems(deck: Deck) {
     }
 
     override fun itemSwiped(position: Int, var2: Int) {
