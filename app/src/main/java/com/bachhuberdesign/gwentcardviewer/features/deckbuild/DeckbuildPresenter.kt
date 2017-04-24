@@ -49,7 +49,6 @@ class DeckbuildPresenter
                     if (cards.isNotEmpty() && isViewAttached()) {
                         Log.d(TAG, "Adding card to animation cache: ${cards.last().name}, lane: ${cards.last().lane}, selectedLane: ${cards.last().selectedLane}")
                         cardsToAnimate.add(cards.last())
-                        view!!.onCardAdded(cards.last())
                     }
                 }, { error ->
                     Log.e(TAG, "Error querying cards for deck $deckId", error)
@@ -136,8 +135,6 @@ class DeckbuildPresenter
      *
      */
     fun renameDeck(newDeckName: String, deckId: Int) {
-        Log.d(TAG, "renameDeck(): newDeckName: $newDeckName, deckId: $deckId")
-
         deckRepository.renameDeck(newDeckName, deckId)
         if (isViewAttached()) {
             view!!.onDeckRenamed(newDeckName)
