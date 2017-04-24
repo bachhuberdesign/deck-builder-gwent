@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import com.bachhuberdesign.gwentcardviewer.R
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ISwipeable
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -18,11 +19,11 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
 
     companion object {
         @JvmStatic val TAG: String = SubHeaderItem::class.java.name
+        @JvmStatic val TYPE: Int = R.id.slim_card_item
     }
 
     private var swipeable: Boolean = true
-    var name = ""
-    var count: Int = 0
+    var card: Card? = null
 
     override fun isSwipeable(): Boolean {
         return swipeable
@@ -48,8 +49,9 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
 
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
-        holder.nameText.text = name
-        holder.countText.text = count.toString()
+        holder.nameText.text = card?.name
+        // TODO:
+        holder.countText.text = "55"
     }
 
     override fun unbindView(holder: ViewHolder) {

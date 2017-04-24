@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckcardlist
 
+import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
@@ -31,8 +32,11 @@ class DeckCardListPresenter
         }
     }
 
-    fun removeCardFromDeck(card: Card, deckId: Int) {
-        deckRepository.deleteCardFromDeck(card, deckId)
+    fun removeCardFromDeck(card: Card?, deckId: Int) {
+        Log.d(TAG, "Removing card ${card?.cardId} from deck with selectedLane: ${card?.selectedLane}")
+        if (card != null) {
+            deckRepository.deleteCardFromDeck(card, deckId)
+        }
     }
 
 }

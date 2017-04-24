@@ -139,10 +139,9 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
 
         deck.cards.filter { it.selectedLane == lane }
                 .forEach { card ->
-                    val swipeItem = SlimCardItem().withIsSwipeable(true)
-                    swipeItem.count = 55
-                    swipeItem.name = card.name
-                    items.add(swipeItem)
+                    val cardItem = SlimCardItem().withIsSwipeable(true)
+                    cardItem.card = card
+                    items.add(cardItem)
                 }
     }
 
@@ -150,7 +149,11 @@ class DeckCardListController : Controller, DeckCardListMvpContract, SimpleSwipeC
     }
 
     override fun itemSwiped(position: Int, var2: Int) {
-        Log.d(TAG, "itemSwiped() position: $position, var2: $var2")
+        val item = fastItemAdapter?.getItem(position)
+        if (item?.getType() == SlimCardItem.TYPE) {
+            presenter.removeCardFromDeck((item as SlimCardItem).card, deckId)
+        }
+
         fastItemAdapter?.remove(position)
     }
 
