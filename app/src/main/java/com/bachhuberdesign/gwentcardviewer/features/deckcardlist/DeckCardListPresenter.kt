@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.deckcardlist
 
+import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
@@ -19,14 +20,6 @@ class DeckCardListPresenter
         @JvmStatic val TAG: String = DeckCardListPresenter::class.java.name
     }
 
-    override fun attach(view: DeckCardListMvpContract) {
-        super.attach(view)
-    }
-
-    override fun detach() {
-        super.detach()
-    }
-
     fun loadDeck(deckId: Int) {
         val deck = deckRepository.getDeckById(deckId)
 
@@ -39,12 +32,11 @@ class DeckCardListPresenter
         }
     }
 
-    fun removeCardFromDeck(card: Card, deckId: Int) {
-        deckRepository.deleteCardFromDeck(card, deckId)
-    }
-
-    private fun sortCards() {
-
+    fun removeCardFromDeck(card: Card?, deckId: Int) {
+        Log.d(TAG, "Removing card ${card?.cardId} from deck with selectedLane: ${card?.selectedLane}")
+        if (card != null) {
+            deckRepository.deleteCardFromDeck(card, deckId)
+        }
     }
 
 }

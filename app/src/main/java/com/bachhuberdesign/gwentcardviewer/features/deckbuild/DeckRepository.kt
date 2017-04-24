@@ -152,7 +152,10 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun deleteCardFromDeck(card: Card, deckId: Int) {
-        // TODO: Add where clause with selected_lane and card_id
+        Log.d(TAG, "deleteCardFromDeck() cardId: ${card.cardId}, deckId: $deckId")
+        database.delete(Deck.JOIN_CARD_TABLE, "deck_id = $deckId " +
+                "AND card_id = ${card.cardId} " +
+                "AND ${Card.SELECTED_LANE} = ${card.selectedLane}")
     }
 
     fun deleteDeck(deckId: Int) {
