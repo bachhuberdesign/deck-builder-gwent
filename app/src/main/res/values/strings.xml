@@ -13,5 +13,6 @@
     <string name="ranged">Ranged</string>
     <string name="siege">Siege</string>
     <string name="create_deck">Create Deck</string>
+    <string name="confirm">Confirm</string>
     <string name="create_deck_hint">Enter a name for your new deck</string>
 </resources>

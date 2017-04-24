@@ -163,4 +163,11 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         database.delete(Deck.TABLE, "${Deck.ID} = $deckId")
     }
 
+    fun renameDeck(newDeckName: String, deckId: Int) {
+        val values = ContentValues()
+        values.put(Deck.NAME, newDeckName)
+
+        database.update(Deck.TABLE, values, "${Deck.ID} = $deckId")
+    }
+
 }
