@@ -24,6 +24,7 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
 
     private var swipeable: Boolean = true
     var card: Card? = null
+    var count: Int = 0
 
     override fun isSwipeable(): Boolean {
         return swipeable
@@ -46,12 +47,15 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
         return ViewHolder(v)
     }
 
-
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
         holder.nameText.text = card?.name
-        // TODO:
-        holder.countText.text = "55"
+
+        if (count > 0) {
+            holder.countText.text = count.toString()
+        } else {
+            holder.countText.text = ""
+        }
     }
 
     override fun unbindView(holder: ViewHolder) {
