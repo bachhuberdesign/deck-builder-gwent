@@ -3,6 +3,10 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@id/menu_deck_details"
+        android:title="@string/menu_deck_details"
+        app:showAsAction="never"/>
+    <item
         android:id="@id/menu_rename_deck"
         android:title="@string/menu_rename_deck"
         app:showAsAction="never"/>

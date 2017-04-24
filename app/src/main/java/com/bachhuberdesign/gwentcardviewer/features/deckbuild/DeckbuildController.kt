@@ -14,14 +14,12 @@ import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.R
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardFilters
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
+import com.bachhuberdesign.gwentcardviewer.features.deckcardlist.DeckDetailController
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Faction
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
-import com.bachhuberdesign.gwentcardviewer.util.SlideInChangeHandler
-import com.bachhuberdesign.gwentcardviewer.util.dpToPx
-import com.bachhuberdesign.gwentcardviewer.util.getStringResourceByName
-import com.bachhuberdesign.gwentcardviewer.util.inflate
+import com.bachhuberdesign.gwentcardviewer.util.*
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -118,8 +116,15 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         when (item.itemId) {
             R.id.menu_delete_deck -> confirmDeckDeletion()
             R.id.menu_rename_deck -> presenter.onRenameButtonClicked(deckId)
+            R.id.menu_deck_details -> showDeckDetails(deckId)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDeckDetails(deckId: Int) {
+        router.pushController(RouterTransaction.with(DeckDetailController(deckId))
+                .pushChangeHandler(FlipChangeHandler())
+                .popChangeHandler(FlipChangeHandler()))
     }
 
     private fun showCardPicker() {

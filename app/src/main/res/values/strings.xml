@@ -2,6 +2,7 @@
     <string name="app_name">Deckbuilder</string>
     <string name="menu_delete_deck">Delete Deck</string>
     <string name="menu_rename_deck">Rename Deck</string>
+    <string name="menu_deck_details">Deck Details</string>
     <string name="neutral">Neutral</string>
     <string name="northern_realms">Northern Realms</string>
     <string name="scoiatael">Scoia\'tael</string>

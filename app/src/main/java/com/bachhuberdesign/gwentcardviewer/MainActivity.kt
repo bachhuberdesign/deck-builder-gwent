@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
-import com.bachhuberdesign.gwentcardviewer.features.deckcardlist.DeckDetailController
 import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectController
 import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
@@ -39,7 +38,7 @@ class MainActivity : BaseActivity() {
 
         router = Conductor.attachRouter(this, container, savedInstanceState)
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(DeckDetailController(1)))
+            router.setRoot(RouterTransaction.with(FactionSelectController()))
         }
 
         initNavigationDrawer()

@@ -9,4 +9,5 @@
     <item name="slim_card_item" type="id"/>
     <item name="menu_delete_deck" type="id"/>
     <item name="menu_rename_deck" type="id"/>
+    <item name="menu_deck_details" type="id"/>
 </resources>
