@@ -135,6 +135,15 @@ class CardViewerController : Controller, CardViewerMvpContract {
         adapter.notifyDataSetChanged()
     }
 
+    override fun handleBack(): Boolean {
+        if (deckId > 0) {
+            (parentController as DeckbuildController).closeCardViewerAndAnimate()
+            return true
+        } else {
+            return super.handleBack()
+        }
+    }
+
     override fun onViewModeCardsLoaded(cards: List<Card>) {
         TODO("Not yet implemented.")
     }
@@ -148,7 +157,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
         if (isCardAddable) {
             (parentController as DeckbuildController).addCardToCurrentDeck(card)
-            (parentController as DeckbuildController).closeCardViewerAndAnimate()
+            val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
+
+            val position = adapter.adapterItems.indexOf(item)
+            adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+
+            adapter.notifyAdapterItemChanged(position)
         }
 
         isAddCardButtonClickable = true
@@ -176,7 +190,13 @@ class CardViewerController : Controller, CardViewerMvpContract {
                     }
 
                     (parentController as DeckbuildController).addCardToCurrentDeck(card)
-                    (parentController as DeckbuildController).closeCardViewerAndAnimate()
+
+                    val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
+                    val position = adapter.adapterItems.indexOf(item)
+                    adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+                    adapter.notifyAdapterItemChanged(position)
+
+                    isAddCardButtonClickable = true
 
                     true
                 })
