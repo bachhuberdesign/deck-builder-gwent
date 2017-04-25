@@ -59,8 +59,6 @@ class CardViewerPresenter
     }
 
     fun getCardsFiltered(filters: CardFilters, deckId: Int) {
-        // TODO: Refactor to query full card list and then filter rather
-
         if (filters.filterByFactions.first) {
             val cursor = cardRepository.getAllFactionAndNeutralCards(filters.filterByFactions.second)
             val cards: MutableList<Card> = ArrayList()
@@ -71,13 +69,15 @@ class CardViewerPresenter
                 }
             }
 
+            val sortedCards: List<Card> = cards.sortedBy { card -> card.name }
+
             if (deckId > 0) {
                 val deck = deckRepository.getDeckById(deckId)
                 if (deck != null && isViewAttached()) {
-                    view!!.onDeckbuildModeCardsLoaded(cards, deck)
+                    view!!.onDeckbuildModeCardsLoaded(sortedCards, deck)
                 }
             } else if (isViewAttached()) {
-                view!!.onViewModeCardsLoaded(cards)
+                view!!.onViewModeCardsLoaded(sortedCards)
             }
         }
 

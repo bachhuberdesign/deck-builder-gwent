@@ -129,30 +129,28 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     private fun showSortingDialog() {
-        val items = arrayListOf("Name", "Rarity", "Scrap Cost", "Faction")
-        // TODO: Sort by name, sort by rarity, sort by scrap cost, ASC/DESC option
+        val items = arrayListOf(activity!!.getString(R.string.sort_name), activity!!.getString(R.string.sort_type),
+                activity!!.getString(R.string.sort_scrap_cost), activity!!.getString(R.string.sort_faction),
+                activity!!.getString(R.string.sort_lane))
 
         MaterialDialog.Builder(activity!!)
-                .title("title")
+                .title(R.string.sort_title)
                 .items(items)
                 .itemsCallbackSingleChoice(0, { dialog, view, which, text ->
-                    sortAdapter(text.toString(), dialog.isPromptCheckBoxChecked)
+                    val isSortAscending = dialog.isPromptCheckBoxChecked
+                    when (which) {
+                        0 -> adapter.itemAdapter.withComparator(CardItem.CardNameComparator(isSortAscending))
+                        1 -> adapter.itemAdapter.withComparator(CardItem.CardTypeComparator(isSortAscending))
+                        2 -> adapter.itemAdapter.withComparator(CardItem.CardScrapCostComparator(isSortAscending))
+                        3 -> adapter.itemAdapter.withComparator(CardItem.CardFactionComparator(isSortAscending))
+                        4 -> adapter.itemAdapter.withComparator(CardItem.CardLaneComparator(isSortAscending))
+                    }
                     true
                 })
-                .positiveText("Sort")
+                .positiveText(R.string.confirm)
                 .negativeText(android.R.string.cancel)
                 .checkBoxPromptRes(R.string.checkbox_sort_ascending, true, null)
                 .show()
-    }
-
-    private fun sortAdapter(sortType: String, isSortAscending: Boolean) {
-        when (sortType) {
-            "Name" -> adapter.itemAdapter.withComparator(CardItem.CardNameComparator(isSortAscending))
-        }
-    }
-
-    private fun nameComparator() {
-
     }
 
     private fun showSearchActionView(searchItem: MenuItem) {
