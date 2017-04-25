@@ -2,8 +2,10 @@ package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -114,11 +116,28 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .color(Color.WHITE)
                 .sizeDp(24)
 
+        val searchMenuItem = menu.findItem(R.id.menu_search_cards)
+        val searchView = searchMenuItem.actionView as SearchView
+        MenuItemCompat.expandActionView(searchMenuItem)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(queryText: String): Boolean {
+                Log.d(TAG, "onQueryTextChange(): $queryText")
+                adapter.filter(queryText)
+                return true
+            }
+
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                // Adapter filtering already handled by onQueryTextChange() -- ignore
+                return true
+            }
+        })
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun initRecyclerView(v: View) {
         adapter = FastItemAdapter()
+
         adapter.withItemEvent(object : ClickEventHook<CardItem>() {
             override fun onBind(holder: RecyclerView.ViewHolder): View? {
                 return (holder as CardItem.ViewHolder).addCardButton
@@ -131,6 +150,10 @@ class CardViewerController : Controller, CardViewerMvpContract {
                     presenter.checkCardAddable(item.card, deckId)
                 }
             }
+        })
+
+        adapter.withFilterPredicate({ item, constraint ->
+            !item.card.name.contains(constraint.toString(), ignoreCase = true)
         })
 
         val layoutManager = LinearLayoutManager(activity)
@@ -151,16 +174,6 @@ class CardViewerController : Controller, CardViewerMvpContract {
             cardItem.count = deck.cards.filter { it.cardId == card.cardId }.size
             adapter.add(cardItem)
         }
-
-        adapter.notifyDataSetChanged()
-
-        Log.d(TAG, "Filtering to scorch")
-        adapter.filter("scorch")
-        adapter.withFilterPredicate({ item, constraint ->
-            item.card.name.contains(constraint.toString(), ignoreCase = true)
-        })
-        adapter.notifyDataSetChanged()
-        adapter.notifyAdapterDataSetChanged()
     }
 
     override fun handleBack(): Boolean {
