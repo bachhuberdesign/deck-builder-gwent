@@ -4,6 +4,7 @@ import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckRepository
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BasePresenter
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Card
+import com.bachhuberdesign.gwentcardviewer.features.shared.model.CardType
 import com.bachhuberdesign.gwentcardviewer.features.shared.model.Lane
 import com.bachhuberdesign.gwentcardviewer.inject.annotation.PersistedScope
 import java.util.*
@@ -74,7 +75,7 @@ class CardViewerPresenter
             if (deckId > 0) {
                 val deck = deckRepository.getDeckById(deckId)
                 if (deck != null && isViewAttached()) {
-                    view!!.onDeckbuildModeCardsLoaded(sortedCards, deck)
+                    view!!.onDeckbuildModeCardsLoaded(sortedCards.filterNot { it.cardType == CardType.LEADER }, deck)
                 }
             } else if (isViewAttached()) {
                 view!!.onViewModeCardsLoaded(sortedCards)

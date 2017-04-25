@@ -95,9 +95,9 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
     class CardTypeComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
         override fun compare(lhs: CardItem, rhs: CardItem): Int {
             if (isSortAscending) {
-                return lhs.card.cardType.compareTo(rhs.card.cardType)
-            } else {
                 return rhs.card.cardType.compareTo(lhs.card.cardType)
+            } else {
+                return lhs.card.cardType.compareTo(rhs.card.cardType)
             }
         }
     }
