@@ -10,6 +10,7 @@ import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
@@ -29,6 +30,8 @@ class MainActivity : BaseActivity() {
     }
 
     lateinit var router: Router
+
+    var result: Drawer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +60,14 @@ class MainActivity : BaseActivity() {
         val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
         val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
 
-        val result = DrawerBuilder()
+        result = DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
+                .withActionBarDrawerToggle(true)
+                .withOnDrawerNavigationListener({ view ->
+                    router.handleBack()
+                    true
+                })
                 .addDrawerItems(
                         newDeck,
                         editDeck,
@@ -79,6 +87,16 @@ class MainActivity : BaseActivity() {
                     false
                 }
                 .build()
+    }
+
+    fun displayHomeAsUp(isEnabled: Boolean) {
+        if (isEnabled) {
+            result?.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        } else {
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            result?.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {

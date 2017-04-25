@@ -70,6 +70,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
+        (activity as MainActivity).displayHomeAsUp(true)
         setHasOptionsMenu(true)
 
         if (filters == null) {
@@ -199,27 +200,22 @@ class CardViewerController : Controller, CardViewerMvpContract {
         }
     }
 
-    override fun onViewModeCardsLoaded(cards: List<Card>) {
-        TODO("Not yet implemented.")
-    }
-
-    override fun onListFiltered(filteredCards: List<Card>) {
-        TODO("Method not yet implemented")
-    }
-
     override fun onCardChecked(card: Card, isCardAddable: Boolean) {
         if (isCardAddable) {
-            // TODO: Extract method to re-use
             (parentController as DeckbuildController).addCardToCurrentDeck(card)
-            val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
-
-            val position = adapter.adapterItems.indexOf(item)
-            adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
-
-            adapter.notifyAdapterItemChanged(position)
+            updateCount(card)
         }
 
         isAddCardButtonClickable = true
+    }
+
+    private fun updateCount(card: Card) {
+        val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
+
+        val position = adapter.adapterItems.indexOf(item)
+        adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+
+        adapter.notifyAdapterItemChanged(position)
     }
 
     override fun showLaneSelection(lanesToDisplay: List<Int>, card: Card) {
@@ -242,13 +238,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
                             throw UnsupportedOperationException("Selected lane does not match Event/Melee/Ranged/Siege. Lane text: $text")
                         }
                     }
-                    // TODO: Extract method to re-use
                     (parentController as DeckbuildController).addCardToCurrentDeck(card)
-
-                    val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
-                    val position = adapter.adapterItems.indexOf(item)
-                    adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
-                    adapter.notifyAdapterItemChanged(position)
+                    updateCount(card)
 
                     isAddCardButtonClickable = true
 
@@ -257,6 +248,14 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .cancelListener { dialog -> isAddCardButtonClickable = true }
                 .positiveText(android.R.string.ok)
                 .show()
+    }
+
+    override fun onViewModeCardsLoaded(cards: List<Card>) {
+        TODO("Not yet implemented.")
+    }
+
+    override fun onListFiltered(filteredCards: List<Card>) {
+        TODO("Method not yet implemented")
     }
 
 }
