@@ -26,6 +26,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -152,6 +153,14 @@ class CardViewerController : Controller, CardViewerMvpContract {
         }
 
         adapter.notifyDataSetChanged()
+
+        Log.d(TAG, "Filtering to scorch")
+        adapter.filter("scorch")
+        adapter.withFilterPredicate({ item, constraint ->
+            item.card.name.contains(constraint.toString(), ignoreCase = true)
+        })
+        adapter.notifyDataSetChanged()
+        adapter.notifyAdapterDataSetChanged()
     }
 
     override fun handleBack(): Boolean {
@@ -172,9 +181,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun onCardChecked(card: Card, isCardAddable: Boolean) {
-        Log.d(TAG, "onCardChecked: Name: ${card.name}, ID: ${card.cardId}, Addable: $isCardAddable")
-
         if (isCardAddable) {
+            // TODO: Extract method to re-use
             (parentController as DeckbuildController).addCardToCurrentDeck(card)
             val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
 
@@ -207,7 +215,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                             throw UnsupportedOperationException("Selected lane does not match Event/Melee/Ranged/Siege. Lane text: $text")
                         }
                     }
-
+                    // TODO: Extract method to re-use
                     (parentController as DeckbuildController).addCardToCurrentDeck(card)
 
                     val item = adapter.adapterItems.find { it.card.cardId == card.cardId }

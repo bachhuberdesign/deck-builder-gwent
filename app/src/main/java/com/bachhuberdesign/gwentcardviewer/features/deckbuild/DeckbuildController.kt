@@ -5,11 +5,14 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -137,9 +140,9 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         view!!.show_card_viewer_button.clearAnimation()
 
-        val cardFlip = ObjectAnimator.ofFloat(view!!.show_card_viewer_button, "rotation", 360.0f)
-        cardFlip.interpolator = AnticipateOvershootInterpolator()
-        cardFlip.duration = 500
+        val cardFlip = ObjectAnimator.ofFloat(view!!.show_card_viewer_button, "rotationY", 360.0f)
+        cardFlip.interpolator = OvershootInterpolator()
+        cardFlip.duration = 725
         cardFlip.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 if (!childRouter.hasRootController()) {
@@ -147,7 +150,9 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                             .pushChangeHandler(SlideInChangeHandler(350, true))
                             .popChangeHandler(SlideInChangeHandler(350, true)))
                 }
-                view!!.show_card_viewer_button.rotation = 0.0f
+                Handler().postDelayed({
+                    view!!.show_card_viewer_button.rotationY = 0.0f
+                }, 500)
             }
         })
 
