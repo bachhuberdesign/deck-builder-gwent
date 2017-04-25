@@ -153,7 +153,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
         })
 
         adapter.withFilterPredicate({ item, constraint ->
-            !item.card.name.contains(constraint.toString(), ignoreCase = true)
+            val cardNameCondensed: String = item.card.name.replace("[\\W]".toRegex(), "")
+            val constraintCondensed: String = constraint.replace("[\\W]".toRegex(), "")
+            val descriptionCondensed: String = item.card.description.replace("[\\W]".toRegex(), "")
+
+            !(cardNameCondensed.contains(constraintCondensed, ignoreCase = true)
+                    || descriptionCondensed.contains(constraintCondensed, ignoreCase = true))
         })
 
         val layoutManager = LinearLayoutManager(activity)
