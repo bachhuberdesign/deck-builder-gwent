@@ -28,6 +28,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
+
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -107,7 +108,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
         inflater.inflate(R.menu.menu_card_viewer, menu)
 
         menu.findItem(R.id.menu_filter_cards).icon = IconicsDrawable(activity!!)
-                .icon(FontAwesome.Icon.faw_filter)
+                .icon(FontAwesome.Icon.faw_sort_amount_desc)
                 .color(Color.WHITE)
                 .sizeDp(18)
 
@@ -122,9 +123,36 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_search_cards -> showSearchActionView(item)
-            R.id.menu_filter_cards -> Log.d(TAG, "menu_filter_cards clicked") // TODO
+            R.id.menu_filter_cards -> showSortingDialog()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSortingDialog() {
+        val items = arrayListOf("Name", "Rarity", "Scrap Cost", "Faction")
+        // TODO: Sort by name, sort by rarity, sort by scrap cost, ASC/DESC option
+
+        MaterialDialog.Builder(activity!!)
+                .title("title")
+                .items(items)
+                .itemsCallbackSingleChoice(0, { dialog, view, which, text ->
+                    sortAdapter(text.toString(), dialog.isPromptCheckBoxChecked)
+                    true
+                })
+                .positiveText("Sort")
+                .negativeText(android.R.string.cancel)
+                .checkBoxPromptRes(R.string.checkbox_sort_ascending, true, null)
+                .show()
+    }
+
+    private fun sortAdapter(sortType: String, isSortAscending: Boolean) {
+        when (sortType) {
+            "Name" -> adapter.itemAdapter.withComparator(CardItem.CardNameComparator(isSortAscending))
+        }
+    }
+
+    private fun nameComparator() {
+
     }
 
     private fun showSearchActionView(searchItem: MenuItem) {
@@ -257,5 +285,6 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onListFiltered(filteredCards: List<Card>) {
         TODO("Method not yet implemented")
     }
+
 
 }

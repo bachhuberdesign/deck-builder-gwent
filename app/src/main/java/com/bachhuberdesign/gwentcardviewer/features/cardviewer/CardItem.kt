@@ -15,6 +15,7 @@ import com.bachhuberdesign.gwentcardviewer.util.visible
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.item_card.view.*
+import java.io.Serializable
 
 /**
  * @author Eric Bachhuber
@@ -80,6 +81,16 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         var power: TextView = view.card_power_text
         var cardImage: ImageView = view.card_image
         var addCardButton: Button = view.add_card_button
+    }
+
+    class CardNameComparator(val isSortAscending: Boolean) : Comparator<CardItem>, Serializable {
+        override fun compare(lhs: CardItem, rhs: CardItem): Int {
+            if (isSortAscending) {
+                return lhs.card.name.compareTo(rhs.card.name)
+            } else {
+                return rhs.card.name.compareTo(lhs.card.name)
+            }
+        }
     }
 
 }

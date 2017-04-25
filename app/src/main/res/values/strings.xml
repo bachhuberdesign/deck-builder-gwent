@@ -18,4 +18,5 @@
     <string name="create_deck">Create Deck</string>
     <string name="confirm">Confirm</string>
     <string name="create_deck_hint">Enter a name for your new deck</string>
+    <string name="checkbox_sort_ascending">Sort Ascending</string>
 </resources>
