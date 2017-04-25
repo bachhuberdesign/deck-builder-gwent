@@ -28,7 +28,6 @@ import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
-
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -109,16 +108,27 @@ class CardViewerController : Controller, CardViewerMvpContract {
         menu.findItem(R.id.menu_filter_cards).icon = IconicsDrawable(activity!!)
                 .icon(FontAwesome.Icon.faw_filter)
                 .color(Color.WHITE)
-                .sizeDp(24)
+                .sizeDp(18)
 
         menu.findItem(R.id.menu_search_cards).icon = IconicsDrawable(activity!!)
                 .icon(FontAwesome.Icon.faw_search)
                 .color(Color.WHITE)
-                .sizeDp(24)
+                .sizeDp(18)
 
-        val searchMenuItem = menu.findItem(R.id.menu_search_cards)
-        val searchView = searchMenuItem.actionView as SearchView
-        MenuItemCompat.expandActionView(searchMenuItem)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_search_cards -> showSearchActionView(item)
+            R.id.menu_filter_cards -> Log.d(TAG, "menu_filter_cards clicked") // TODO
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSearchActionView(searchItem: MenuItem) {
+        val searchView = searchItem.actionView as SearchView
+        MenuItemCompat.expandActionView(searchItem)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(queryText: String): Boolean {
                 Log.d(TAG, "onQueryTextChange(): $queryText")
@@ -131,8 +141,6 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 return true
             }
         })
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun initRecyclerView(v: View) {
@@ -157,6 +165,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
             val constraintCondensed: String = constraint.replace("[\\W]".toRegex(), "")
             val descriptionCondensed: String = item.card.description.replace("[\\W]".toRegex(), "")
 
+            // Filter out any item that doesn't match card name or description constraints
             !(cardNameCondensed.contains(constraintCondensed, ignoreCase = true)
                     || descriptionCondensed.contains(constraintCondensed, ignoreCase = true))
         })
