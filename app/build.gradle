@@ -1,7 +1,9 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply {
+    plugin 'com.android.application'
+    plugin 'kotlin-android'
+    plugin 'kotlin-kapt'
+    plugin 'kotlin-android-extensions'
+}
 
 android {
     compileSdkVersion 24
@@ -122,6 +124,14 @@ dependencies {
 
     // Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+
+    // Charts
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+
+    // Workaround for source downloading issue in Android Studio
+    // https://issuetracker.google.com/issues/37125917
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2:sources@jar'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.1.1:sources@jar'
 }
 
 repositories {
