@@ -7,6 +7,7 @@ import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildControlle
 import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectController
 import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
+import com.bachhuberdesign.gwentcardviewer.util.DeckDrawerItem
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -15,8 +16,8 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import kotlinx.android.synthetic.main.activity_main.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @author Eric Bachhuber
@@ -60,6 +61,10 @@ class MainActivity : BaseActivity() {
         val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
         val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
 
+        val deckItem1 = DeckDrawerItem().withDeckName("Deck 1")
+        val deckItem2 = DeckDrawerItem().withDeckName("Deck 2")
+        val deckItem3 = DeckDrawerItem().withDeckName("Deck 3")
+
         result = DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -74,6 +79,9 @@ class MainActivity : BaseActivity() {
                         deckSelect,
                         export,
                         DividerDrawerItem(),
+                        deckItem1,
+                        deckItem2,
+                        deckItem3,
                         settings
                 )
                 .withOnDrawerItemClickListener { view, position, drawerItem ->

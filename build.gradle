@@ -12,9 +12,6 @@ buildscript {
         // Build Tools
         classpath 'com.android.tools.build:gradle:2.4.0-alpha6'
 
-        // Annotation Processor
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-
         // Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
