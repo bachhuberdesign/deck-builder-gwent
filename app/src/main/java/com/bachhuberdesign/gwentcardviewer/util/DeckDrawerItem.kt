@@ -51,11 +51,13 @@ class DeckDrawerItem : AbstractDrawerItem<DeckDrawerItem, DeckDrawerItem.ViewHol
 
         holder.nameText.text = deckName
 
-        Glide.with(holder.itemView.context)
-                .load(Uri.parse("file:///android_asset/leader-slim.png"))
-                .centerCrop()
-                .dontAnimate()
-                .into(holder.background)
+        if (backgroundUrl.isNotEmpty()) {
+            Glide.with(holder.itemView.context)
+                    .load(Uri.parse(backgroundUrl))
+                    .centerCrop()
+                    .dontAnimate()
+                    .into(holder.background)
+        }
     }
 
     override fun unbindView(holder: ViewHolder) {
