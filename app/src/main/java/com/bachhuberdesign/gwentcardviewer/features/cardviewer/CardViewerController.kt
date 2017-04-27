@@ -28,7 +28,6 @@ import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.controller_cardviewer.view.*
 import javax.inject.Inject
 
-
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
@@ -71,6 +70,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
+        (activity as MainActivity).displayHomeAsUp(true)
         setHasOptionsMenu(true)
 
         if (filters == null) {
@@ -107,18 +107,54 @@ class CardViewerController : Controller, CardViewerMvpContract {
         inflater.inflate(R.menu.menu_card_viewer, menu)
 
         menu.findItem(R.id.menu_filter_cards).icon = IconicsDrawable(activity!!)
-                .icon(FontAwesome.Icon.faw_filter)
+                .icon(FontAwesome.Icon.faw_sort_amount_desc)
                 .color(Color.WHITE)
-                .sizeDp(24)
+                .sizeDp(18)
 
         menu.findItem(R.id.menu_search_cards).icon = IconicsDrawable(activity!!)
                 .icon(FontAwesome.Icon.faw_search)
                 .color(Color.WHITE)
-                .sizeDp(24)
+                .sizeDp(18)
 
-        val searchMenuItem = menu.findItem(R.id.menu_search_cards)
-        val searchView = searchMenuItem.actionView as SearchView
-        MenuItemCompat.expandActionView(searchMenuItem)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_search_cards -> showSearchActionView(item)
+            R.id.menu_filter_cards -> showSortingDialog()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSortingDialog() {
+        val items = arrayListOf(activity!!.getString(R.string.sort_name), activity!!.getString(R.string.sort_type),
+                activity!!.getString(R.string.sort_scrap_cost), activity!!.getString(R.string.sort_faction),
+                activity!!.getString(R.string.sort_lane))
+
+        MaterialDialog.Builder(activity!!)
+                .title(R.string.sort_title)
+                .items(items)
+                .itemsCallbackSingleChoice(0, { dialog, view, which, text ->
+                    val isSortAscending = dialog.isPromptCheckBoxChecked
+                    when (which) {
+                        0 -> adapter.itemAdapter.withComparator(CardItem.CardNameComparator(isSortAscending))
+                        1 -> adapter.itemAdapter.withComparator(CardItem.CardTypeComparator(isSortAscending))
+                        2 -> adapter.itemAdapter.withComparator(CardItem.CardScrapCostComparator(isSortAscending))
+                        3 -> adapter.itemAdapter.withComparator(CardItem.CardFactionComparator(isSortAscending))
+                        4 -> adapter.itemAdapter.withComparator(CardItem.CardLaneComparator(isSortAscending))
+                    }
+                    true
+                })
+                .positiveText(R.string.confirm)
+                .negativeText(android.R.string.cancel)
+                .checkBoxPromptRes(R.string.checkbox_sort_ascending, true, null)
+                .show()
+    }
+
+    private fun showSearchActionView(searchItem: MenuItem) {
+        val searchView = searchItem.actionView as SearchView
+        MenuItemCompat.expandActionView(searchItem)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(queryText: String): Boolean {
                 Log.d(TAG, "onQueryTextChange(): $queryText")
@@ -131,8 +167,6 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 return true
             }
         })
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun initRecyclerView(v: View) {
@@ -153,7 +187,13 @@ class CardViewerController : Controller, CardViewerMvpContract {
         })
 
         adapter.withFilterPredicate({ item, constraint ->
-            !item.card.name.contains(constraint.toString(), ignoreCase = true)
+            val cardNameCondensed: String = item.card.name.replace("[\\W]".toRegex(), "")
+            val constraintCondensed: String = constraint.replace("[\\W]".toRegex(), "")
+            val descriptionCondensed: String = item.card.description.replace("[\\W]".toRegex(), "")
+
+            // Filter out any item that doesn't match card name or description constraints
+            !(cardNameCondensed.contains(constraintCondensed, ignoreCase = true)
+                    || descriptionCondensed.contains(constraintCondensed, ignoreCase = true))
         })
 
         val layoutManager = LinearLayoutManager(activity)
@@ -185,27 +225,22 @@ class CardViewerController : Controller, CardViewerMvpContract {
         }
     }
 
-    override fun onViewModeCardsLoaded(cards: List<Card>) {
-        TODO("Not yet implemented.")
-    }
-
-    override fun onListFiltered(filteredCards: List<Card>) {
-        TODO("Method not yet implemented")
-    }
-
     override fun onCardChecked(card: Card, isCardAddable: Boolean) {
         if (isCardAddable) {
-            // TODO: Extract method to re-use
             (parentController as DeckbuildController).addCardToCurrentDeck(card)
-            val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
-
-            val position = adapter.adapterItems.indexOf(item)
-            adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
-
-            adapter.notifyAdapterItemChanged(position)
+            updateCount(card)
         }
 
         isAddCardButtonClickable = true
+    }
+
+    private fun updateCount(card: Card) {
+        val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
+
+        val position = adapter.adapterItems.indexOf(item)
+        adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+
+        adapter.notifyAdapterItemChanged(position)
     }
 
     override fun showLaneSelection(lanesToDisplay: List<Int>, card: Card) {
@@ -228,13 +263,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
                             throw UnsupportedOperationException("Selected lane does not match Event/Melee/Ranged/Siege. Lane text: $text")
                         }
                     }
-                    // TODO: Extract method to re-use
                     (parentController as DeckbuildController).addCardToCurrentDeck(card)
-
-                    val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
-                    val position = adapter.adapterItems.indexOf(item)
-                    adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
-                    adapter.notifyAdapterItemChanged(position)
+                    updateCount(card)
 
                     isAddCardButtonClickable = true
 
@@ -244,5 +274,14 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .positiveText(android.R.string.ok)
                 .show()
     }
+
+    override fun onViewModeCardsLoaded(cards: List<Card>) {
+        TODO("Not yet implemented.")
+    }
+
+    override fun onListFiltered(filteredCards: List<Card>) {
+        TODO("Method not yet implemented")
+    }
+
 
 }

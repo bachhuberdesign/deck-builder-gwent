@@ -82,4 +82,65 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         var addCardButton: Button = view.add_card_button
     }
 
+    class CardNameComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
+        override fun compare(lhs: CardItem, rhs: CardItem): Int {
+            if (isSortAscending) {
+                return lhs.card.name.compareTo(rhs.card.name)
+            } else {
+                return rhs.card.name.compareTo(lhs.card.name)
+            }
+        }
+    }
+
+    class CardTypeComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
+        override fun compare(lhs: CardItem, rhs: CardItem): Int {
+            if (isSortAscending) {
+                return rhs.card.cardType.compareTo(lhs.card.cardType)
+            } else {
+                return lhs.card.cardType.compareTo(rhs.card.cardType)
+            }
+        }
+    }
+
+    class CardRarityComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
+        override fun compare(lhs: CardItem, rhs: CardItem): Int {
+            if (isSortAscending) {
+                return lhs.card.rarity.compareTo(rhs.card.rarity)
+            } else {
+                return rhs.card.rarity.compareTo(lhs.card.rarity)
+            }
+        }
+    }
+
+    class CardScrapCostComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
+        override fun compare(lhs: CardItem, rhs: CardItem): Int {
+            if (isSortAscending) {
+                return lhs.card.scrap.compareTo(rhs.card.scrap)
+            } else {
+                return rhs.card.scrap.compareTo(lhs.card.scrap)
+            }
+        }
+    }
+
+    class CardFactionComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
+        override fun compare(lhs: CardItem, rhs: CardItem): Int {
+            if (isSortAscending) {
+                return lhs.card.faction.compareTo(rhs.card.faction)
+            } else {
+                return rhs.card.faction.compareTo(lhs.card.faction)
+            }
+        }
+    }
+
+    class CardLaneComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
+        override fun compare(lhs: CardItem, rhs: CardItem): Int {
+            if (isSortAscending) {
+                return lhs.card.lane.compareTo(rhs.card.lane)
+            } else {
+                return rhs.card.lane.compareTo(lhs.card.lane)
+            }
+        }
+    }
+
+
 }

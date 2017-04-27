@@ -10,8 +10,6 @@ import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnticipateOvershootInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -187,6 +185,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 router.popCurrentController()
             }
         }
+
+        (activity as MainActivity).displayHomeAsUp(false)
 
         // Delay to wait for pop animation to finish
         Maybe.empty<Any>()

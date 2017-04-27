@@ -18,4 +18,12 @@
     <string name="create_deck">Create Deck</string>
     <string name="confirm">Confirm</string>
     <string name="create_deck_hint">Enter a name for your new deck</string>
+    <string name="checkbox_sort_ascending">Sort Ascending</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_rarity">Rarity</string>
+    <string name="sort_type">Type</string>
+    <string name="sort_lane">Lane</string>
+    <string name="sort_scrap_cost">Scrap Cost</string>
+    <string name="sort_faction">Faction</string>
+    <string name="sort_title">Sort Card List</string>
 </resources>

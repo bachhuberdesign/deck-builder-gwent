@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.inject
 
+import com.bachhuberdesign.gwentcardviewer.MainActivity
 import com.bachhuberdesign.gwentcardviewer.features.cardviewer.CardViewerController
 import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.gwentcardviewer.features.deckcardlist.DeckDetailController
@@ -19,6 +20,8 @@ import dagger.Subcomponent
 @ActivityScope
 @Subcomponent(modules = arrayOf(ActivityModule::class))
 interface ActivityComponent {
+
+    fun inject(mainActivity: MainActivity)
 
     fun inject(baseActivity: BaseActivity)
 
