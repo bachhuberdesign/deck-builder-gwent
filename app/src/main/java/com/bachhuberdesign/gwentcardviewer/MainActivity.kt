@@ -9,7 +9,6 @@ import com.bachhuberdesign.gwentcardviewer.features.deckbuild.DeckbuildControlle
 import com.bachhuberdesign.gwentcardviewer.features.deckselect.DeckSelectController
 import com.bachhuberdesign.gwentcardviewer.features.factionselect.FactionSelectController
 import com.bachhuberdesign.gwentcardviewer.features.shared.base.BaseActivity
-import com.bachhuberdesign.gwentcardviewer.inject.module.ActivityModule
 import com.bachhuberdesign.gwentcardviewer.util.DeckDrawerItem
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
