@@ -63,7 +63,7 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
         }
 
         Glide.with(activity!!)
-                .load(Uri.parse(card?.iconUrl))
+                .load(Uri.parse("file:///android_asset/cards/${card?.iconUrl}"))
                 .dontAnimate()
                 .into(view.leader_image)
 

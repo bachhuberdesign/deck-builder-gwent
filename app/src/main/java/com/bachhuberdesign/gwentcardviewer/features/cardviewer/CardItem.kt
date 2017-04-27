@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.cardviewer
 
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -46,7 +47,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
 
         Glide.clear(holder.cardImage)
         Glide.with(holder.itemView.context)
-                .load(card.iconUrl)
+                .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))
                 .into(holder.cardImage)
 
         holder.name.text = card.name

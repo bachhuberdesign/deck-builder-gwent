@@ -1,5 +1,6 @@
 package com.bachhuberdesign.gwentcardviewer.features.factionselect
 
+import android.net.Uri
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -51,16 +52,17 @@ class FactionItem : AbstractItem<FactionItem, FactionItem.ViewHolder>() {
         Glide.clear(viewHolder.leader3)
 
         Glide.with(viewHolder.itemView.context)
-                .load(leaders?.get(0)?.iconUrl)
+                .load(Uri.parse("file:///android_asset/cards/${leaders?.get(0)?.iconUrl}"))
+                .fitCenter()
                 .into(viewHolder.leader1)
 
         Glide.with(viewHolder.itemView.context)
-                .load(leaders?.get(1)?.iconUrl)
+                .load(Uri.parse("file:///android_asset/cards/${leaders?.get(1)?.iconUrl}"))
                 .fitCenter()
                 .into(viewHolder.leader2)
 
         Glide.with(viewHolder.itemView.context)
-                .load(leaders?.get(2)?.iconUrl)
+                .load(Uri.parse("file:///android_asset/cards/${leaders?.get(2)?.iconUrl}"))
                 .fitCenter()
                 .into(viewHolder.leader3)
     }

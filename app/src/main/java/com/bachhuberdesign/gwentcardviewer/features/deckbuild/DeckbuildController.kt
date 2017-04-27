@@ -277,7 +277,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                         layout!!.addView(imageView, imageViewParams)
 
                         Glide.with(activity)
-                                .load(card.iconUrl)
+                                .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))
                                 .animate(object : ViewAnimationFactory<GlideDrawable>(activity!!, R.anim.slide_right) {
                                     override fun build(isFromMemoryCache: Boolean, isFirstResource: Boolean): GlideAnimation<GlideDrawable> {
                                         return super.build(false, isFirstResource)
