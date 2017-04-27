@@ -63,8 +63,8 @@ data class Card(var cardId: Int = 0,
             card.lane = cursor.getIntFromColumn(Card.LANE)
             card.rarity = cursor.getIntFromColumn(Card.RARITY)
             card.cardType = cursor.getIntFromColumn(Card.TYPE)
+            card.power = cursor.getIntFromColumn(Card.POWER)
 
-            Log.d("Card", "Mapping to card: selectedLane: ${cursor.getIntFromColumn(Card.SELECTED_LANE)}")
             try {
                 card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
             } catch (e: Exception) {
@@ -89,6 +89,7 @@ data class Card(var cardId: Int = 0,
             card.lane = cursor.getIntFromColumn(Card.LANE)
             card.rarity = cursor.getIntFromColumn(Card.RARITY)
             card.cardType = cursor.getIntFromColumn(Card.TYPE)
+            card.power = cursor.getIntFromColumn(Card.POWER)
 
             try {
                 card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
