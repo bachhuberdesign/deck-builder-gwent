@@ -78,14 +78,8 @@ class MainActivity : BaseActivity(), MainMvpContract {
         val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck")
         val editDeck = PrimaryDrawerItem().withIdentifier(2).withName("Edit Deck")
         val export = PrimaryDrawerItem().withIdentifier(3).withName("Export")
-        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
         val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
-
-        val deck0 = DeckDrawerItem().withDeckName("").withTag("deck0")
-        val deck1 = DeckDrawerItem().withDeckName("").withTag("deck1")
-        val deck2 = DeckDrawerItem().withDeckName("").withTag("deck2")
-        val deck3 = DeckDrawerItem().withDeckName("").withTag("deck3")
-        val deck4 = DeckDrawerItem().withDeckName("").withTag("deck4")
+        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -100,13 +94,7 @@ class MainActivity : BaseActivity(), MainMvpContract {
                         editDeck,
                         deckSelect,
                         export,
-                        DividerDrawerItem(),
-                        deck0,
-                        deck1,
-                        deck2,
-                        deck3,
-                        deck4,
-                        settings
+                        DividerDrawerItem()
                 )
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
@@ -119,6 +107,8 @@ class MainActivity : BaseActivity(), MainMvpContract {
                     false
                 }
                 .build()
+
+        result?.addStickyFooterItem(settings)
     }
 
     fun displayHomeAsUp(isEnabled: Boolean) {
@@ -134,14 +124,17 @@ class MainActivity : BaseActivity(), MainMvpContract {
     override fun showRecentDecksInDrawer(decks: List<Deck>) {
         Log.d(TAG, "showRecentDecksInDrawer()")
         decks.forEachIndexed { index, deck ->
-            val oldItem = result?.getDrawerItem("deck$index") as IDrawerItem<*, *>
-
             val newItem = DeckDrawerItem()
                     .withDeckName(deck.name)
                     .withBackgroundUrl("file:///android_asset/leader-slim.png") // Update
                     .withTag("deck$index")
 
-            result?.updateItemAtPosition(newItem, result?.getPosition(oldItem)!!)
+            if (result?.getDrawerItem("deck$index") != null) {
+                val oldItem = result?.getDrawerItem("deck$index") as IDrawerItem<*, *>
+                result?.updateItemAtPosition(newItem, result?.getPosition(oldItem)!!)
+            } else {
+                result?.addItem(newItem)
+            }
         }
     }
 
