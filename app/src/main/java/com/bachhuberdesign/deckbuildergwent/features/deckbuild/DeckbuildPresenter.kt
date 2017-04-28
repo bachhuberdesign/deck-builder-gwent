@@ -123,10 +123,9 @@ class DeckbuildPresenter
         val meleeTotal = cards.filter { it.selectedLane == Lane.MELEE }.sumBy { it.power }
         val rangedTotal = cards.filter { it.selectedLane == Lane.RANGED }.sumBy { it.power }
         val siegeTotal = cards.filter { it.selectedLane == Lane.SIEGE }.sumBy { it.power }
-        val eventTotal = cards.filter { it.selectedLane == Lane.EVENT }.sumBy { it.power }
 
         if (isViewAttached()) {
-            val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal, eventTotal = eventTotal)
+            val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal)
             view!!.deckTotalsUpdated(totals)
         }
     }

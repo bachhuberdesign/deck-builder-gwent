@@ -294,9 +294,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         view!!.melee_lane_power_text.text = totals.meleeTotal.toString()
         view!!.ranged_lane_power_text.text = totals.rangedTotal.toString()
         view!!.siege_lane_power_text.text = totals.siegeTotal.toString()
-        view!!.event_lane_power_text.text = totals.eventTotal.toString()
 
-        val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal + totals.eventTotal
+        val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal
         view!!.deck_power_total_text.text = totalPower.toString()
     }
 
