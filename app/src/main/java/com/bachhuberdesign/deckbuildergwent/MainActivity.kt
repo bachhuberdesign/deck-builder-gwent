@@ -18,6 +18,7 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import kotlinx.android.synthetic.main.activity_main.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import javax.inject.Inject
@@ -80,9 +81,11 @@ class MainActivity : BaseActivity(), MainMvpContract {
         val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
         val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
 
-        val deckItem1 = DeckDrawerItem().withDeckName("Deck 1").withBackgroundUrl("file:///android_asset/leader-slim.png")
-        val deckItem2 = DeckDrawerItem().withDeckName("Deck 2").withBackgroundUrl("file:///android_asset/leader-slim-2.png")
-        val deckItem3 = DeckDrawerItem().withDeckName("Deck 3").withBackgroundUrl("file:///android_asset/leader-slim-3.png")
+        val deck0 = DeckDrawerItem().withDeckName("").withTag("deck0")
+        val deck1 = DeckDrawerItem().withDeckName("").withTag("deck1")
+        val deck2 = DeckDrawerItem().withDeckName("").withTag("deck2")
+        val deck3 = DeckDrawerItem().withDeckName("").withTag("deck3")
+        val deck4 = DeckDrawerItem().withDeckName("").withTag("deck4")
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -98,9 +101,11 @@ class MainActivity : BaseActivity(), MainMvpContract {
                         deckSelect,
                         export,
                         DividerDrawerItem(),
-                        deckItem1,
-                        deckItem2,
-                        deckItem3,
+                        deck0,
+                        deck1,
+                        deck2,
+                        deck3,
+                        deck4,
                         settings
                 )
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
@@ -127,8 +132,16 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     override fun showRecentDecksInDrawer(decks: List<Deck>) {
-        decks.forEach { deck ->
-            Log.d(TAG, "Deck loaded: ${deck.name}")
+        Log.d(TAG, "showRecentDecksInDrawer()")
+        decks.forEachIndexed { index, deck ->
+            val oldItem = result?.getDrawerItem("deck$index") as IDrawerItem<*, *>
+
+            val newItem = DeckDrawerItem()
+                    .withDeckName(deck.name)
+                    .withBackgroundUrl("file:///android_asset/leader-slim.png") // Update
+                    .withTag("deck$index")
+
+            result?.updateItemAtPosition(newItem, result?.getPosition(oldItem)!!)
         }
     }
 
