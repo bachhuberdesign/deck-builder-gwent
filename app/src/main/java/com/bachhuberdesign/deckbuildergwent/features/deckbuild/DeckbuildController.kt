@@ -197,13 +197,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 .subscribe()
     }
 
-    override fun onDeckLoaded(deck: Deck, leader: Card) {
+    override fun onDeckLoaded(deck: Deck) {
         activity?.title = deck.name
 
         factionId = deck.faction
 
         view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
-        view!!.leader_name_text.text = leader.name
+        view!!.leader_name_text.text = deck.leader?.name
     }
 
     override fun onDeckDeleted(deckId: Int) {

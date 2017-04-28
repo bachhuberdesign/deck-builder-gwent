@@ -1,4 +1,4 @@
-package com.bachhuberdesign.deckbuildergwent.features.cardviewer;
+package com.bachhuberdesign.deckbuildergwent.features.shared.exception;
 
 /**
  * @author Eric Bachhuber

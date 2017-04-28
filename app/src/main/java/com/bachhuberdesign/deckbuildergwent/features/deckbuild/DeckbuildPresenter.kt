@@ -74,10 +74,9 @@ class DeckbuildPresenter
      */
     fun loadUserDeck(deckId: Int) {
         val deck: Deck? = deckRepository.getDeckById(deckId)
-        val leader: Card = cardRepository.getCardById(deck!!.leader)
 
-        if (isViewAttached()) {
-            view!!.onDeckLoaded(deck, leader)
+        if (deck != null && isViewAttached()) {
+            view!!.onDeckLoaded(deck)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.MELEE), Lane.MELEE)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.RANGED), Lane.RANGED)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.SIEGE), Lane.SIEGE)

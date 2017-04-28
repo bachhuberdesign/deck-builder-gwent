@@ -11,7 +11,7 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
  */
 interface DeckDetailMvpContract : MvpContract {
 
-    fun onDeckLoaded(deck: Deck, leader: Card)
+    fun onDeckLoaded(deck: Deck)
 
     fun showErrorMessage(message: String)
 

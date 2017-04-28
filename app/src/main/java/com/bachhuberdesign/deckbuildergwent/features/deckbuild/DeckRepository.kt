@@ -3,6 +3,8 @@ package com.bachhuberdesign.deckbuildergwent.features.deckbuild
 import android.content.ContentValues
 import android.database.Cursor
 import android.util.Log
+import com.bachhuberdesign.deckbuildergwent.features.shared.exception.CardException
+import com.bachhuberdesign.deckbuildergwent.features.shared.exception.DeckException
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
@@ -48,7 +50,12 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
             }
         }
 
-        deck?.cards = getCardsForDeck(deckId)
+        if (deck == null) {
+            throw DeckException("Unable to load deck $deckId")
+        } else {
+            deck!!.leader = getLeaderCardForDeck(deck!!.leaderId)
+            deck!!.cards = getCardsForDeck(deckId)
+        }
 
         return deck
     }
@@ -94,6 +101,18 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return cards
     }
 
+    private fun getLeaderCardForDeck(leaderCardId: Int): Card {
+        Log.d(TAG, "getLeaderCardForDeck(): leaderCardId $leaderCardId")
+        val cursor = database.query("SELECT * FROM ${Card.TABLE} WHERE ${Card.ID} =  $leaderCardId")
+        cursor.use { cursor ->
+            while (cursor.moveToNext()) {
+                return Card.MAPPER.apply(cursor)
+            }
+        }
+
+        throw CardException("Leader $leaderCardId not found.")
+    }
+
     fun getAllUserCreatedDecks(): List<Deck> {
         val cursor = database.query("SELECT * FROM ${Deck.TABLE}")
         val decks: MutableList<Deck> = ArrayList()
@@ -104,14 +123,16 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
             }
         }
 
+        decks.forEach { deck ->
+            deck.leader = getLeaderCardForDeck(deck.id)
+        }
+
         return decks
     }
 
     fun countUserDecksWithLeader(leaderCardId: Int): Int {
         val cursor = database.query("SELECT * FROM ${Deck.TABLE} " +
-                "JOIN user_decks_cards as t2 " +
-                "ON ${Deck.ID} = t2.deck_id " +
-                "WHERE t2.card_id = $leaderCardId")
+                "WHERE ${Deck.LEADER_ID} = $leaderCardId")
 
         cursor.use { cursor ->
             return cursor.count
@@ -132,7 +153,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
 
         deckValues.put(Deck.NAME, deck.name)
         deckValues.put(Deck.FACTION, deck.faction)
-        deckValues.put(Deck.LEADER, deck.leader)
+        deckValues.put(Deck.LEADER_ID, deck.leader!!.cardId)
         deckValues.put(Deck.FAVORITED, deck.isFavorited)
         deckValues.put(Deck.LAST_UPDATE, currentTime)
 
@@ -161,6 +182,13 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         database.insert(Deck.JOIN_CARD_TABLE, values)
     }
 
+    fun renameDeck(newDeckName: String, deckId: Int) {
+        val values = ContentValues()
+        values.put(Deck.NAME, newDeckName)
+
+        database.update(Deck.TABLE, values, "${Deck.ID} = $deckId")
+    }
+
     fun deleteCardFromDeck(card: Card, deckId: Int) {
         Log.i(TAG, "deleteCardFromDeck() cardId: ${card.cardId}, deckId: $deckId")
 
@@ -176,13 +204,6 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     fun deleteDeck(deckId: Int) {
         database.delete(Deck.JOIN_CARD_TABLE, "deck_id = $deckId")
         database.delete(Deck.TABLE, "${Deck.ID} = $deckId")
-    }
-
-    fun renameDeck(newDeckName: String, deckId: Int) {
-        val values = ContentValues()
-        values.put(Deck.NAME, newDeckName)
-
-        database.update(Deck.TABLE, values, "${Deck.ID} = $deckId")
     }
 
 }

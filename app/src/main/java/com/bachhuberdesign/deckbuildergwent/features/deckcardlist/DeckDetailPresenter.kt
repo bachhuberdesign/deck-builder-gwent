@@ -24,13 +24,9 @@ class DeckDetailPresenter
 
     fun loadDeck(deckId: Int) {
         val deck = deckRepository.getDeckById(deckId)
-        var leaderCard: Card? = null
 
-        if (deck != null) {
-            leaderCard = cardRepository.getCardById(deck.leader)
-            if (isViewAttached()) {
-                view!!.onDeckLoaded(deck, leaderCard)
-            }
+        if (deck != null && isViewAttached()) {
+            view!!.onDeckLoaded(deck)
         } else if (isViewAttached()) {
             view!!.showErrorMessage("Unable to load deck $deckId.")
         }

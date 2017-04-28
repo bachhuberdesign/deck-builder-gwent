@@ -15,7 +15,6 @@ import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectController
-import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
@@ -108,7 +107,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         touchHelper.attachToRecyclerView(recyclerView)
     }
 
-    private fun buildItemList(deck: Deck, leader: Card) {
+    private fun buildItemList(deck: Deck) {
         if (items.size > 0) {
             items.clear()
         }
@@ -126,9 +125,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         items.add(leaderHeader)
 
         val leaderItem = SlimCardItem().withIsSwipeable(false)
-        if (deck?.cards?.size!! > 0) {
-            leaderItem.card = deck.cards[0]
-        }
+        leaderItem.card = deck?.leader
         items.add(leaderItem)
 
         val cardsHeader = HeaderItem()
@@ -167,14 +164,14 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         fastItemAdapter?.remove(position)
     }
 
-    override fun onDeckLoaded(deck: Deck, leader: Card) {
+    override fun onDeckLoaded(deck: Deck) {
         Log.d(TAG, "Deck loaded $deck")
 
         if (fastItemAdapter != null && fastItemAdapter!!.adapterItems.size > 0) {
             fastItemAdapter?.clear()
         }
 
-        buildItemList(deck, leader)
+        buildItemList(deck)
         fastItemAdapter?.add(items)
     }
 
