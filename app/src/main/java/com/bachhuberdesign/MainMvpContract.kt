@@ -1,7 +1,7 @@
 package com.bachhuberdesign
 
-import com.bachhuberdesign.gwentcardviewer.features.deckbuild.Deck
-import com.bachhuberdesign.gwentcardviewer.features.shared.base.MvpContract
+import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
+import com.bachhuberdesign.deckbuildergwent.features.shared.base.MvpContract
 
 /**
  * @author Eric Bachhuber
