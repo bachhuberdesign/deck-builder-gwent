@@ -18,9 +18,9 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import kotlinx.android.synthetic.main.activity_main.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @author Eric Bachhuber
@@ -33,7 +33,8 @@ class MainActivity : BaseActivity(), MainMvpContract {
         @JvmStatic val TAG: String = MainActivity::class.java.name
     }
 
-    @Inject lateinit var presenter: MainPresenter
+    @Inject
+    lateinit var presenter: MainPresenter
 
     private lateinit var router: Router
 
@@ -126,8 +127,10 @@ class MainActivity : BaseActivity(), MainMvpContract {
         }
     }
 
-    override fun showRecentDecksInDrawer(decks: Map<String, Deck>) {
-        Log.d(TAG, "showRecentDecksInDrawer() ")
+    override fun showRecentDecksInDrawer(decks: List<Deck>) {
+        decks.forEach { deck ->
+            Log.d(TAG, "Deck loaded: ${deck.name}")
+        }
     }
 
 }

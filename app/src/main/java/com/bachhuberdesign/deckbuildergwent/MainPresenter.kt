@@ -1,9 +1,13 @@
 package com.bachhuberdesign.deckbuildergwent
 
+import android.util.Log
 import com.bachhuberdesign.MainMvpContract
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
+import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -19,13 +23,27 @@ class MainPresenter
         @JvmStatic val TAG: String = MainPresenter::class.java.name
     }
 
+    var deckSubscription: Subscription? = null
+
     override fun attach(view: MainMvpContract) {
         super.attach(view)
-        // TODO: Sub to deck updates
+
+        deckSubscription = deckRepository.observeRecentlyUpdatedDecks()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ decks ->
+                    if (decks.isNotEmpty() && isViewAttached()){
+                        view.showRecentDecksInDrawer(decks)
+                    }
+                }, { error ->
+                    Log.e(TAG, "Error querying decks.", error)
+                })
     }
 
     override fun detach() {
         super.detach()
-        // TODO: Unsub
+
+        deckSubscription?.unsubscribe()
     }
+
 }

@@ -9,6 +9,7 @@ import com.bachhuberdesign.deckbuildergwent.util.getIntFromColumn
 import com.bachhuberdesign.deckbuildergwent.util.getLongFromColumn
 import com.bachhuberdesign.deckbuildergwent.util.getStringFromColumn
 import io.reactivex.functions.Function
+import rx.functions.Func1
 import java.util.Date
 import kotlin.collections.ArrayList
 
@@ -35,6 +36,17 @@ data class Deck(var id: Int = 0,
         const val CREATED_DATE = "created_date"
         const val LAST_UPDATE = "last_update"
         const val MAX_NUM_CARDS = 41 // 40 + leader
+
+        val MAP1 = Func1<Cursor, Deck> { cursor ->
+            val deck = Deck()
+            deck.id = cursor.getIntFromColumn(Deck.ID)
+            deck.name = cursor.getStringFromColumn(Deck.NAME)
+            deck.faction = cursor.getIntFromColumn(Deck.FACTION)
+            deck.isFavorited = cursor.getBooleanFromColumn(Deck.FAVORITED)
+            deck.createdDate = Date(cursor.getLongFromColumn(Deck.CREATED_DATE))
+            deck.lastUpdate = Date(cursor.getLongFromColumn(Deck.LAST_UPDATE))
+            deck
+        }
 
         val MAPPER = Function<Cursor, Deck> { cursor ->
             val deck = Deck()

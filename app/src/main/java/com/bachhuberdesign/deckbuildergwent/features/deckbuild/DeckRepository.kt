@@ -53,6 +53,16 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return deck
     }
 
+    fun observeRecentlyUpdatedDecks(): Observable<MutableList<Deck>> {
+        val query = "SELECT * FROM ${Deck.TABLE} " +
+                "ORDER BY last_update DESC " +
+                "LIMIT 5"
+        return database.createQuery(Deck.TABLE, query)
+                .mapToList(Deck.MAP1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun observeCardUpdates(deckId: Int): Observable<MutableList<Card>> {
         val tables: MutableList<String> = arrayListOf(Card.TABLE, "user_decks_cards")
         val query: String = "SELECT * FROM ${Card.TABLE} " +
