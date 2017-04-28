@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bachhuberdesign.gwentcardviewer.MainActivity">
+    tools:context="com.bachhuberdesign.deckbuildergwent.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

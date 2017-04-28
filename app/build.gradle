@@ -4,13 +4,13 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion "26-rc1"
 
     defaultConfig {
-        applicationId "com.bachhuberdesign.gwentcardviewer"
+        applicationId "com.bachhuberdesign.deckbuildergwent"
         minSdkVersion 21
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

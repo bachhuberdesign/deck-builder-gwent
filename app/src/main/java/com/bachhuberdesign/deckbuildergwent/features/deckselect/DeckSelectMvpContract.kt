@@ -1,4 +1,4 @@
-package com.bachhuberdesign
+package com.bachhuberdesign.deckbuildergwent.features.deckselect
 
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.MvpContract
@@ -8,8 +8,10 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.base.MvpContract
  * @version 1.0.0
  * @since 1.0.0
  */
-interface MainMvpContract : MvpContract {
+interface DeckSelectMvpContract : MvpContract {
 
-    fun showRecentDecksInDrawer(decks: Map<String, Deck>)
+    fun onDecksLoaded(decks: List<Deck>)
+
+    fun onNoDecksAvailable()
 
 }
