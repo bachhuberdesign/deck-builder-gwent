@@ -35,6 +35,7 @@ import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.animation.ViewAnimationFactory
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.controller_deckbuild.view.*
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -59,6 +60,9 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     @Inject
     lateinit var presenter: DeckbuildPresenter
+
+    var animationDisposable: Disposable? = null
+
 
     lateinit var childRouter: Router
 
@@ -105,6 +109,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onDetach(view: View) {
         super.onDetach(view)
+        animationDisposable?.dispose()
         presenter.detach()
     }
 
@@ -243,11 +248,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun animateCards(cardsToAnimate: List<Card>) {
-
-        // TODO: Properly sub/unsub to prevent crash while leaving controller during animation
-
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
-        Observable.fromArray(cardsToAnimate)
+        animationDisposable = Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
                 .zipWith(Observable.interval(225, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
