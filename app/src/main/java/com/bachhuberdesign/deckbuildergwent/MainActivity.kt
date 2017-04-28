@@ -18,9 +18,10 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import kotlinx.android.synthetic.main.activity_main.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @author Eric Bachhuber
@@ -33,7 +34,8 @@ class MainActivity : BaseActivity(), MainMvpContract {
         @JvmStatic val TAG: String = MainActivity::class.java.name
     }
 
-    @Inject lateinit var presenter: MainPresenter
+    @Inject
+    lateinit var presenter: MainPresenter
 
     private lateinit var router: Router
 
@@ -59,7 +61,6 @@ class MainActivity : BaseActivity(), MainMvpContract {
 
     override fun onDestroy() {
         super.onDestroy()
-
         presenter.detach()
     }
 
@@ -77,12 +78,8 @@ class MainActivity : BaseActivity(), MainMvpContract {
         val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck")
         val editDeck = PrimaryDrawerItem().withIdentifier(2).withName("Edit Deck")
         val export = PrimaryDrawerItem().withIdentifier(3).withName("Export")
-        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
         val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
-
-        val deckItem1 = DeckDrawerItem().withDeckName("Deck 1").withBackgroundUrl("file:///android_asset/leader-slim.png")
-        val deckItem2 = DeckDrawerItem().withDeckName("Deck 2").withBackgroundUrl("file:///android_asset/leader-slim-2.png")
-        val deckItem3 = DeckDrawerItem().withDeckName("Deck 3").withBackgroundUrl("file:///android_asset/leader-slim-3.png")
+        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -97,11 +94,7 @@ class MainActivity : BaseActivity(), MainMvpContract {
                         editDeck,
                         deckSelect,
                         export,
-                        DividerDrawerItem(),
-                        deckItem1,
-                        deckItem2,
-                        deckItem3,
-                        settings
+                        DividerDrawerItem()
                 )
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
@@ -114,6 +107,8 @@ class MainActivity : BaseActivity(), MainMvpContract {
                     false
                 }
                 .build()
+
+        result?.addStickyFooterItem(settings)
     }
 
     fun displayHomeAsUp(isEnabled: Boolean) {
@@ -126,8 +121,21 @@ class MainActivity : BaseActivity(), MainMvpContract {
         }
     }
 
-    override fun showRecentDecksInDrawer(decks: Map<String, Deck>) {
-        Log.d(TAG, "showRecentDecksInDrawer() ")
+    override fun showRecentDecksInDrawer(decks: List<Deck>) {
+        Log.d(TAG, "showRecentDecksInDrawer()")
+        decks.forEachIndexed { index, deck ->
+            val newItem = DeckDrawerItem()
+                    .withDeckName(deck.name)
+                    .withBackgroundUrl("file:///android_asset/leader-slim.png") // Update
+                    .withTag("deck$index")
+
+            if (result?.getDrawerItem("deck$index") != null) {
+                val oldItem = result?.getDrawerItem("deck$index") as IDrawerItem<*, *>
+                result?.updateItemAtPosition(newItem, result?.getPosition(oldItem)!!)
+            } else {
+                result?.addItem(newItem)
+            }
+        }
     }
 
 }

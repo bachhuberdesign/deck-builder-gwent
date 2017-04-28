@@ -203,7 +203,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         factionId = deck.faction
 
         view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
-        view!!.leader_name_text.text = deck.cards[0].name
+        view!!.leader_name_text.text = deck.leader?.name
     }
 
     override fun onDeckDeleted(deckId: Int) {
@@ -294,9 +294,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         view!!.melee_lane_power_text.text = totals.meleeTotal.toString()
         view!!.ranged_lane_power_text.text = totals.rangedTotal.toString()
         view!!.siege_lane_power_text.text = totals.siegeTotal.toString()
-        view!!.event_lane_power_text.text = totals.eventTotal.toString()
 
-        val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal + totals.eventTotal
+        val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal
         view!!.deck_power_total_text.text = totalPower.toString()
     }
 

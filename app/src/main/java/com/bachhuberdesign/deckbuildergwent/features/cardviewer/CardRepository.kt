@@ -1,6 +1,7 @@
 package com.bachhuberdesign.deckbuildergwent.features.cardviewer
 
 import android.database.Cursor
+import com.bachhuberdesign.deckbuildergwent.features.shared.exception.CardException
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope

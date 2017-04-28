@@ -10,6 +10,6 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.base.MvpContract
  */
 interface MainMvpContract : MvpContract {
 
-    fun showRecentDecksInDrawer(decks: Map<String, Deck>)
+    fun showRecentDecksInDrawer(decks: List<Deck>)
 
 }

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
-import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardException
+import com.bachhuberdesign.deckbuildergwent.features.shared.exception.CardException
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType

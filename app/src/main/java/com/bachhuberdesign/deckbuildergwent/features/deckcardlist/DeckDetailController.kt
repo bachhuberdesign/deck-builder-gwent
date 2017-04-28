@@ -125,9 +125,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         items.add(leaderHeader)
 
         val leaderItem = SlimCardItem().withIsSwipeable(false)
-        if (deck?.cards?.size!! > 0) {
-            leaderItem.card = deck.cards[0]
-        }
+        leaderItem.card = deck?.leader
         items.add(leaderItem)
 
         val cardsHeader = HeaderItem()

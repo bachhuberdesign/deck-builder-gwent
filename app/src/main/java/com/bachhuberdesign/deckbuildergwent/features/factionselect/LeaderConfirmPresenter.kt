@@ -1,5 +1,6 @@
 package com.bachhuberdesign.deckbuildergwent.features.factionselect
 
+import android.util.Log
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
@@ -23,13 +24,14 @@ class LeaderConfirmPresenter
 
     fun saveNewDeck(deckName: String, leader: Card) {
         if (isDeckNameValid(deckName)) {
+            Log.d(TAG, "Preparing to save new deck. Leader: $leader")
             val deck: Deck = Deck(
                     name = deckName,
                     faction = leader.faction,
+                    leader = leader,
                     createdDate = Calendar.getInstance().time)
 
             val deckId = repository.saveDeck(deck)
-            repository.addCardToDeck(leader, deckId)
 
             if (isViewAttached()) {
                 view!!.onDeckSaved(deckId)

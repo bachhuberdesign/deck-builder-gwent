@@ -7,5 +7,4 @@ package com.bachhuberdesign.deckbuildergwent.features.deckbuild
  */
 data class LaneTotals(var meleeTotal: Int = 0,
                       var rangedTotal: Int = 0,
-                      var siegeTotal: Int = 0,
-                      var eventTotal: Int = 0)
+                      var siegeTotal: Int = 0)

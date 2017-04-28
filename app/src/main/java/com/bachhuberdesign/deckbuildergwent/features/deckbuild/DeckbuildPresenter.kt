@@ -1,6 +1,7 @@
 package com.bachhuberdesign.deckbuildergwent.features.deckbuild
 
 import android.util.Log
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
@@ -18,7 +19,8 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckbuildPresenter
-@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository,
+                    private val cardRepository: CardRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
@@ -73,9 +75,7 @@ class DeckbuildPresenter
     fun loadUserDeck(deckId: Int) {
         val deck: Deck? = deckRepository.getDeckById(deckId)
 
-        if (deck == null && isViewAttached()) {
-            view!!.onErrorLoadingDeck("Error loading deck $deckId")
-        } else if (deck != null && isViewAttached()) {
+        if (deck != null && isViewAttached()) {
             view!!.onDeckLoaded(deck)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.MELEE), Lane.MELEE)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.RANGED), Lane.RANGED)
@@ -123,10 +123,9 @@ class DeckbuildPresenter
         val meleeTotal = cards.filter { it.selectedLane == Lane.MELEE }.sumBy { it.power }
         val rangedTotal = cards.filter { it.selectedLane == Lane.RANGED }.sumBy { it.power }
         val siegeTotal = cards.filter { it.selectedLane == Lane.SIEGE }.sumBy { it.power }
-        val eventTotal = cards.filter { it.selectedLane == Lane.EVENT }.sumBy { it.power }
 
         if (isViewAttached()) {
-            val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal, eventTotal = eventTotal)
+            val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal)
             view!!.deckTotalsUpdated(totals)
         }
     }
