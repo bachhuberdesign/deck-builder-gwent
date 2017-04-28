@@ -26,10 +26,10 @@ class LeaderConfirmPresenter
             val deck: Deck = Deck(
                     name = deckName,
                     faction = leader.faction,
+                    leader = leader.cardId,
                     createdDate = Calendar.getInstance().time)
 
             val deckId = repository.saveDeck(deck)
-            repository.addCardToDeck(leader, deckId)
 
             if (isViewAttached()) {
                 view!!.onDeckSaved(deckId)

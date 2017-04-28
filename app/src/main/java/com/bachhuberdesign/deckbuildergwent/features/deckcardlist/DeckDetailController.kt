@@ -15,6 +15,7 @@ import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectController
+import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
@@ -107,7 +108,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         touchHelper.attachToRecyclerView(recyclerView)
     }
 
-    private fun buildItemList(deck: Deck) {
+    private fun buildItemList(deck: Deck, leader: Card) {
         if (items.size > 0) {
             items.clear()
         }
@@ -166,14 +167,14 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         fastItemAdapter?.remove(position)
     }
 
-    override fun onDeckLoaded(deck: Deck) {
+    override fun onDeckLoaded(deck: Deck, leader: Card) {
         Log.d(TAG, "Deck loaded $deck")
 
         if (fastItemAdapter != null && fastItemAdapter!!.adapterItems.size > 0) {
             fastItemAdapter?.clear()
         }
 
-        buildItemList(deck)
+        buildItemList(deck, leader)
         fastItemAdapter?.add(items)
     }
 

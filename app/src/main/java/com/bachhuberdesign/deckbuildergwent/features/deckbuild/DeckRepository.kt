@@ -132,6 +132,7 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
 
         deckValues.put(Deck.NAME, deck.name)
         deckValues.put(Deck.FACTION, deck.faction)
+        deckValues.put(Deck.LEADER, deck.leader)
         deckValues.put(Deck.FAVORITED, deck.isFavorited)
         deckValues.put(Deck.LAST_UPDATE, currentTime)
 

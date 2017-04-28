@@ -1,6 +1,7 @@
 package com.bachhuberdesign.deckbuildergwent.features.deckcardlist
 
 import android.util.Log
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
@@ -14,7 +15,8 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckDetailPresenter
-@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckDetailMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository,
+                    private val cardRepository: CardRepository) : BasePresenter<DeckDetailMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = DeckDetailPresenter::class.java.name
@@ -22,13 +24,15 @@ class DeckDetailPresenter
 
     fun loadDeck(deckId: Int) {
         val deck = deckRepository.getDeckById(deckId)
+        var leaderCard: Card? = null
 
-        if (deck == null) {
+        if (deck != null) {
+            leaderCard = cardRepository.getCardById(deck.leader)
             if (isViewAttached()) {
-                view!!.showErrorMessage("Unable to load deck $deckId.")
+                view!!.onDeckLoaded(deck, leaderCard)
             }
         } else if (isViewAttached()) {
-            view!!.onDeckLoaded(deck)
+            view!!.showErrorMessage("Unable to load deck $deckId.")
         }
     }
 

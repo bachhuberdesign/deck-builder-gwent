@@ -1,6 +1,7 @@
 package com.bachhuberdesign.deckbuildergwent.features.deckbuild
 
 import android.util.Log
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
@@ -18,7 +19,8 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckbuildPresenter
-@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository,
+                    private val cardRepository: CardRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
@@ -72,11 +74,10 @@ class DeckbuildPresenter
      */
     fun loadUserDeck(deckId: Int) {
         val deck: Deck? = deckRepository.getDeckById(deckId)
+        val leader: Card = cardRepository.getCardById(deck!!.leader)
 
-        if (deck == null && isViewAttached()) {
-            view!!.onErrorLoadingDeck("Error loading deck $deckId")
-        } else if (deck != null && isViewAttached()) {
-            view!!.onDeckLoaded(deck)
+        if (isViewAttached()) {
+            view!!.onDeckLoaded(deck, leader)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.MELEE), Lane.MELEE)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.RANGED), Lane.RANGED)
             view!!.showCardsByLane(filterCardsByLane(deck, Lane.SIEGE), Lane.SIEGE)

@@ -21,6 +21,7 @@ import kotlin.collections.ArrayList
 data class Deck(var id: Int = 0,
                 var name: String = "",
                 var faction: Int = 0,
+                var leader: Int = 0,
                 var cards: MutableList<Card> = ArrayList(),
                 var isFavorited: Boolean = false,
                 var createdDate: Date = Date(),
@@ -31,17 +32,19 @@ data class Deck(var id: Int = 0,
         const val JOIN_CARD_TABLE = "user_decks_cards"
         const val ID = "_id"
         const val NAME = "name"
+        const val LEADER = "leader"
         const val FACTION = "faction"
         const val FAVORITED = "favorited"
         const val CREATED_DATE = "created_date"
         const val LAST_UPDATE = "last_update"
-        const val MAX_NUM_CARDS = 41 // 40 + leader
+        const val MAX_NUM_CARDS = 40
 
         val MAP1 = Func1<Cursor, Deck> { cursor ->
             val deck = Deck()
             deck.id = cursor.getIntFromColumn(Deck.ID)
             deck.name = cursor.getStringFromColumn(Deck.NAME)
             deck.faction = cursor.getIntFromColumn(Deck.FACTION)
+            deck.leader = cursor.getIntFromColumn(Deck.LEADER)
             deck.isFavorited = cursor.getBooleanFromColumn(Deck.FAVORITED)
             deck.createdDate = Date(cursor.getLongFromColumn(Deck.CREATED_DATE))
             deck.lastUpdate = Date(cursor.getLongFromColumn(Deck.LAST_UPDATE))
@@ -53,6 +56,7 @@ data class Deck(var id: Int = 0,
             deck.id = cursor.getIntFromColumn(Deck.ID)
             deck.name = cursor.getStringFromColumn(Deck.NAME)
             deck.faction = cursor.getIntFromColumn(Deck.FACTION)
+            deck.leader = cursor.getIntFromColumn(Deck.LEADER)
             deck.isFavorited = cursor.getBooleanFromColumn(Deck.FAVORITED)
             deck.createdDate = Date(cursor.getLongFromColumn(Deck.CREATED_DATE))
             deck.lastUpdate = Date(cursor.getLongFromColumn(Deck.LAST_UPDATE))
@@ -80,6 +84,8 @@ data class Deck(var id: Int = 0,
                 it.cardId == card.cardId
             }
 
+            if (card.cardType == CardType.LEADER) return false
+
             if (card.cardType == CardType.BRONZE && filteredById.size >= 3) return false
 
             if (card.cardType == CardType.SILVER && filteredById.isNotEmpty()) return false
@@ -87,8 +93,6 @@ data class Deck(var id: Int = 0,
 
             if (card.cardType == CardType.GOLD && filteredById.isNotEmpty()) return false
             if (card.cardType == CardType.GOLD && filteredByCardType.size >= 4) return false
-
-            if (card.cardType == CardType.LEADER && filteredByCardType.isNotEmpty()) return false
 
             return true
         }

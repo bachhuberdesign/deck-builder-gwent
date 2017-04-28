@@ -45,6 +45,7 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                         "${Deck.ID} INTEGER NOT NULL PRIMARY KEY, " +
                         "${Deck.NAME} TEXT NOT NULL, " +
                         "${Deck.FACTION} INTEGER NOT NULL, " +
+                        "${Deck.LEADER} INTEGER NOT NULL, " +
                         "${Deck.FAVORITED} INTEGER NOT NULL DEFAULT 0, " +
                         "${Deck.CREATED_DATE} INTEGER NOT NULL, " +
                         "${Deck.LAST_UPDATE} INTEGER NOT NULL" +

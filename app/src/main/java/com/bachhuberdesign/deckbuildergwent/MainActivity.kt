@@ -60,7 +60,6 @@ class MainActivity : BaseActivity(), MainMvpContract {
 
     override fun onDestroy() {
         super.onDestroy()
-
         presenter.detach()
     }
 
