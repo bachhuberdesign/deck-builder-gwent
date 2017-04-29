@@ -129,12 +129,12 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     override fun showRecentDecksInDrawer(decks: List<Deck>) {
-        result?.removeItems(99)
-
-
-
-        // TODO:
-
+        // Use removeItem() x5 as workaround for bug with removeItems()
+        result?.removeItem(99)
+        result?.removeItem(99)
+        result?.removeItem(99)
+        result?.removeItem(99)
+        result?.removeItem(99)
 
         decks.forEachIndexed { index, deck ->
             val newItem = DeckDrawerItem()
