@@ -120,6 +120,7 @@ dependencies {
     // Iconics
     compile "com.mikepenz:iconics-core:2.8.3@aar"
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    compile 'com.mikepenz:community-material-typeface:1.9.32.1@aar'
 
     // Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'

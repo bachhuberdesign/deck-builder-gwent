@@ -2,7 +2,7 @@ package com.bachhuberdesign.deckbuildergwent
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import com.bachhuberdesign.MainMvpContract
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildController
@@ -13,6 +13,8 @@ import com.bachhuberdesign.deckbuildergwent.util.DeckDrawerItem
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.mikepenz.community_material_typeface_library.CommunityMaterial
+import com.mikepenz.fontawesome_typeface_library.FontAwesome
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
@@ -75,11 +77,10 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     private fun initNavigationDrawer() {
-        val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck")
-        val editDeck = PrimaryDrawerItem().withIdentifier(2).withName("Edit Deck")
-        val export = PrimaryDrawerItem().withIdentifier(3).withName("Export")
-        val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
-        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
+        val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck").withIcon(FontAwesome.Icon.faw_plus_circle)
+        val deckSelect = PrimaryDrawerItem().withIdentifier(2).withName("Deck List").withIcon(CommunityMaterial.Icon.cmd_cards_outline)
+        val export = PrimaryDrawerItem().withIdentifier(3).withName("Export").withIcon(CommunityMaterial.Icon.cmd_export)
+        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings").withIcon(FontAwesome.Icon.faw_sliders)
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -91,7 +92,6 @@ class MainActivity : BaseActivity(), MainMvpContract {
                 })
                 .addDrawerItems(
                         newDeck,
-                        editDeck,
                         deckSelect,
                         export,
                         DividerDrawerItem()
@@ -99,10 +99,9 @@ class MainActivity : BaseActivity(), MainMvpContract {
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
                         1 -> router.pushController(RouterTransaction.with(FactionSelectController()))
-                        2 -> router.pushController(RouterTransaction.with(DeckbuildController(1)))
-                        3 -> Log.d(TAG, "Export item selected but not yet implemented.")
-                        4 -> Log.d(TAG, "Settings item selected but not yet implemented.")
-                        5 -> router.pushController(RouterTransaction.with(DeckSelectController()))
+                        2 -> router.pushController(RouterTransaction.with(DeckSelectController()))
+                        3 -> Toast.makeText(this, "Export not yet implemented.", Toast.LENGTH_LONG).show()
+                        4 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
                         99 -> {
                             val deckId = (drawerItem as DeckDrawerItem).deckId
                             router.pushController(RouterTransaction.with(DeckbuildController(deckId)))
