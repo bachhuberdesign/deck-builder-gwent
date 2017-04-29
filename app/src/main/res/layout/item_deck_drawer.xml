@@ -2,17 +2,16 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
                                              android:layout_width="match_parent"
-                                             android:layout_height="54dp"
-                                             android:layout_marginBottom="4dp"
-                                             android:layout_marginTop="4dp"
-                                             android:background="@color/md_grey_800"
-                                             android:elevation="2.5dp">
+                                             android:layout_height="52dp"
+                                             android:layout_marginBottom="3dp"
+                                             android:layout_marginTop="3dp"
+                                             android:background="@color/colorPrimaryDark"
+                                             android:elevation="2.0dp">
 
     <ImageView
         android:id="@+id/slim_card_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +28,10 @@
         android:textAlignment="center"
         android:textColor="@color/md_white_1000"
         android:textSize="16sp"
+        android:shadowColor="@color/md_grey_900"
+        android:shadowDx="1.65"
+        android:shadowDy="1.65"
+        android:shadowRadius="1.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

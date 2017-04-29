@@ -2,6 +2,7 @@ package com.bachhuberdesign.deckbuildergwent
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.bachhuberdesign.MainMvpContract
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
@@ -24,6 +25,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import kotlinx.android.synthetic.main.activity_main.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -57,12 +59,15 @@ class MainActivity : BaseActivity(), MainMvpContract {
         }
 
         initNavigationDrawer()
+    }
 
+    override fun onResume() {
+        super.onResume()
         presenter.attach(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         presenter.detach()
     }
 
@@ -90,12 +95,7 @@ class MainActivity : BaseActivity(), MainMvpContract {
                     router.handleBack()
                     true
                 })
-                .addDrawerItems(
-                        newDeck,
-                        deckSelect,
-                        export,
-                        DividerDrawerItem()
-                )
+                .addDrawerItems(newDeck, deckSelect, export, DividerDrawerItem())
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
                         1 -> router.pushController(RouterTransaction.with(FactionSelectController()))
@@ -103,6 +103,7 @@ class MainActivity : BaseActivity(), MainMvpContract {
                         3 -> Toast.makeText(this, "Export not yet implemented.", Toast.LENGTH_LONG).show()
                         4 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
                         99 -> {
+                            // Item is a recent deck so start a transaction to DeckbuildController
                             val deckId = (drawerItem as DeckDrawerItem).deckId
                             router.pushController(RouterTransaction.with(DeckbuildController(deckId)))
                         }
@@ -114,6 +115,9 @@ class MainActivity : BaseActivity(), MainMvpContract {
         result?.addStickyFooterItem(settings)
     }
 
+    /**
+     *
+     */
     fun displayHomeAsUp(isEnabled: Boolean) {
         if (isEnabled) {
             result?.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
@@ -125,20 +129,22 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     override fun showRecentDecksInDrawer(decks: List<Deck>) {
+        result?.removeItems(99)
+
+
+
+        // TODO:
+
+
         decks.forEachIndexed { index, deck ->
             val newItem = DeckDrawerItem()
                     .withDeckName(deck.name)
                     .withDeckId(deck.id)
-                    .withBackgroundUrl("file:///android_asset/leader-slim.png") // Update
+                    .withBackgroundUrl("file:///android_asset/slim/${deck.leader?.iconUrl}")
                     .withIdentifier(99)
                     .withTag("deck$index")
 
-            if (result?.getDrawerItem("deck$index") != null) {
-                val oldItem = result?.getDrawerItem("deck$index") as IDrawerItem<*, *>
-                result?.updateItemAtPosition(newItem, result?.getPosition(oldItem)!!)
-            } else {
-                result?.addItem(newItem)
-            }
+            result?.addItem(newItem)
         }
     }
 
