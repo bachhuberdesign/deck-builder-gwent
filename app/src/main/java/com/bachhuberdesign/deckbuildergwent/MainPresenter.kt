@@ -2,6 +2,7 @@ package com.bachhuberdesign.deckbuildergwent
 
 import android.util.Log
 import com.bachhuberdesign.MainMvpContract
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
@@ -17,7 +18,8 @@ import javax.inject.Inject
  */
 @PersistedScope
 class MainPresenter
-@Inject constructor(val deckRepository: DeckRepository) : BasePresenter<MainMvpContract>() {
+@Inject constructor(val deckRepository: DeckRepository,
+                    val cardRepository: CardRepository) : BasePresenter<MainMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = MainPresenter::class.java.name
@@ -32,7 +34,11 @@ class MainPresenter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ decks ->
-                    if (decks.isNotEmpty() && isViewAttached()){
+
+                    decks.forEach { deck ->
+                        deck.leader = cardRepository.getCardById(deck.leaderId)
+                    }
+                    if (decks.isNotEmpty() && isViewAttached()) {
                         view.showRecentDecksInDrawer(decks)
                     }
                 }, { error ->

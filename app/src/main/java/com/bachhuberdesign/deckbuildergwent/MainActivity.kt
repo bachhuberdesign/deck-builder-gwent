@@ -3,6 +3,7 @@ package com.bachhuberdesign.deckbuildergwent
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.bachhuberdesign.MainMvpContract
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildController
@@ -13,6 +14,8 @@ import com.bachhuberdesign.deckbuildergwent.util.DeckDrawerItem
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.mikepenz.community_material_typeface_library.CommunityMaterial
+import com.mikepenz.fontawesome_typeface_library.FontAwesome
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
@@ -22,6 +25,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import kotlinx.android.synthetic.main.activity_main.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -55,12 +59,15 @@ class MainActivity : BaseActivity(), MainMvpContract {
         }
 
         initNavigationDrawer()
+    }
 
+    override fun onResume() {
+        super.onResume()
         presenter.attach(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         presenter.detach()
     }
 
@@ -75,11 +82,10 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     private fun initNavigationDrawer() {
-        val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck")
-        val editDeck = PrimaryDrawerItem().withIdentifier(2).withName("Edit Deck")
-        val export = PrimaryDrawerItem().withIdentifier(3).withName("Export")
-        val deckSelect = PrimaryDrawerItem().withIdentifier(5).withName("Deck List")
-        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
+        val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck").withIcon(FontAwesome.Icon.faw_plus_circle)
+        val deckSelect = PrimaryDrawerItem().withIdentifier(2).withName("Deck List").withIcon(CommunityMaterial.Icon.cmd_cards_outline)
+        val export = PrimaryDrawerItem().withIdentifier(3).withName("Export").withIcon(CommunityMaterial.Icon.cmd_export)
+        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings").withIcon(FontAwesome.Icon.faw_sliders)
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -89,20 +95,18 @@ class MainActivity : BaseActivity(), MainMvpContract {
                     router.handleBack()
                     true
                 })
-                .addDrawerItems(
-                        newDeck,
-                        editDeck,
-                        deckSelect,
-                        export,
-                        DividerDrawerItem()
-                )
+                .addDrawerItems(newDeck, deckSelect, export, DividerDrawerItem())
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
                         1 -> router.pushController(RouterTransaction.with(FactionSelectController()))
-                        2 -> router.pushController(RouterTransaction.with(DeckbuildController(1)))
-                        3 -> Log.d(TAG, "Export item selected but not yet implemented.")
-                        4 -> Log.d(TAG, "Settings item selected but not yet implemented.")
-                        5 -> router.pushController(RouterTransaction.with(DeckSelectController()))
+                        2 -> router.pushController(RouterTransaction.with(DeckSelectController()))
+                        3 -> Toast.makeText(this, "Export not yet implemented.", Toast.LENGTH_LONG).show()
+                        4 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
+                        99 -> {
+                            // Item is a recent deck so start a transaction to DeckbuildController
+                            val deckId = (drawerItem as DeckDrawerItem).deckId
+                            router.pushController(RouterTransaction.with(DeckbuildController(deckId)))
+                        }
                     }
                     false
                 }
@@ -111,6 +115,9 @@ class MainActivity : BaseActivity(), MainMvpContract {
         result?.addStickyFooterItem(settings)
     }
 
+    /**
+     *
+     */
     fun displayHomeAsUp(isEnabled: Boolean) {
         if (isEnabled) {
             result?.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
@@ -122,19 +129,22 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     override fun showRecentDecksInDrawer(decks: List<Deck>) {
-        Log.d(TAG, "showRecentDecksInDrawer()")
+        // Use removeItem() x5 as workaround for bug with removeItems()
+        result?.removeItem(99)
+        result?.removeItem(99)
+        result?.removeItem(99)
+        result?.removeItem(99)
+        result?.removeItem(99)
+
         decks.forEachIndexed { index, deck ->
             val newItem = DeckDrawerItem()
                     .withDeckName(deck.name)
-                    .withBackgroundUrl("file:///android_asset/leader-slim.png") // Update
+                    .withDeckId(deck.id)
+                    .withBackgroundUrl("file:///android_asset/slim/${deck.leader?.iconUrl}")
+                    .withIdentifier(99)
                     .withTag("deck$index")
 
-            if (result?.getDrawerItem("deck$index") != null) {
-                val oldItem = result?.getDrawerItem("deck$index") as IDrawerItem<*, *>
-                result?.updateItemAtPosition(newItem, result?.getPosition(oldItem)!!)
-            } else {
-                result?.addItem(newItem)
-            }
+            result?.addItem(newItem)
         }
     }
 

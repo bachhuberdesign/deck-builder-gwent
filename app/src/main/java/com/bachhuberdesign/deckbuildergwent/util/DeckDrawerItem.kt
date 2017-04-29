@@ -21,11 +21,17 @@ class DeckDrawerItem : AbstractDrawerItem<DeckDrawerItem, DeckDrawerItem.ViewHol
         @JvmStatic val TAG: String = DeckDrawerItem::class.java.name
     }
 
-    private var deckName: String = ""
-    private var backgroundUrl: String = ""
+    var deckName: String = ""
+    var deckId: Int = 0
+    var backgroundUrl: String = ""
 
     fun withDeckName(deckName: String): DeckDrawerItem {
         this.deckName = deckName
+        return this
+    }
+
+    fun withDeckId(deckId: Int): DeckDrawerItem {
+        this.deckId = deckId
         return this
     }
 

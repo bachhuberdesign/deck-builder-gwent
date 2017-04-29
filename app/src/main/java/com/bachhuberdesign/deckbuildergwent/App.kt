@@ -8,7 +8,6 @@ import com.bachhuberdesign.deckbuildergwent.inject.module.NetworkModule
 import com.bachhuberdesign.deckbuildergwent.inject.module.RepositoryModule
 import com.bumptech.glide.request.target.ViewTarget
 import com.facebook.stetho.Stetho
-import com.squareup.leakcanary.LeakCanary
 
 /**
  * @author Eric Bachhuber
@@ -24,11 +23,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-        LeakCanary.install(this)
 
         // Enable Stetho debugging
         if (BuildConfig.DEBUG) {
