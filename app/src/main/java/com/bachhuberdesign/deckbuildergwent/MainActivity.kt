@@ -103,6 +103,10 @@ class MainActivity : BaseActivity(), MainMvpContract {
                         3 -> Log.d(TAG, "Export item selected but not yet implemented.")
                         4 -> Log.d(TAG, "Settings item selected but not yet implemented.")
                         5 -> router.pushController(RouterTransaction.with(DeckSelectController()))
+                        99 -> {
+                            val deckId = (drawerItem as DeckDrawerItem).deckId
+                            router.pushController(RouterTransaction.with(DeckbuildController(deckId)))
+                        }
                     }
                     false
                 }
@@ -122,11 +126,12 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     override fun showRecentDecksInDrawer(decks: List<Deck>) {
-        Log.d(TAG, "showRecentDecksInDrawer()")
         decks.forEachIndexed { index, deck ->
             val newItem = DeckDrawerItem()
                     .withDeckName(deck.name)
+                    .withDeckId(deck.id)
                     .withBackgroundUrl("file:///android_asset/leader-slim.png") // Update
+                    .withIdentifier(99)
                     .withTag("deck$index")
 
             if (result?.getDrawerItem("deck$index") != null) {
