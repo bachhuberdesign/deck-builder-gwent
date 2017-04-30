@@ -57,9 +57,9 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
 
         if (isDeckbuildMode) {
             if (card.cardType == CardType.BRONZE) {
-                holder.addCardButton.text = "$count / 3"
+                holder.countText.text = "$count / 3"
             } else {
-                holder.addCardButton.text = "$count / 1"
+                holder.countText.text = "$count / 1"
             }
 
             holder.addCardButton.visible()
@@ -80,6 +80,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         var description: TextView = view.card_description_text
         var power: TextView = view.card_power_text
         var cardImage: ImageView = view.card_image
+        var countText: TextView = view.card_count_text
         var addCardButton: Button = view.add_card_button
     }
 
