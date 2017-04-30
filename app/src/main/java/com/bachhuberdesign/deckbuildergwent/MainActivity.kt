@@ -2,7 +2,6 @@ package com.bachhuberdesign.deckbuildergwent
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.bachhuberdesign.MainMvpContract
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
@@ -21,11 +20,9 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import kotlinx.android.synthetic.main.activity_main.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import javax.inject.Inject
-
 
 /**
  * @author Eric Bachhuber
@@ -85,7 +82,8 @@ class MainActivity : BaseActivity(), MainMvpContract {
         val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck").withIcon(FontAwesome.Icon.faw_plus_circle)
         val deckSelect = PrimaryDrawerItem().withIdentifier(2).withName("Deck List").withIcon(CommunityMaterial.Icon.cmd_cards_outline)
         val export = PrimaryDrawerItem().withIdentifier(3).withName("Export").withIcon(CommunityMaterial.Icon.cmd_export)
-        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings").withIcon(FontAwesome.Icon.faw_sliders)
+        val winTrack = PrimaryDrawerItem().withIdentifier(4).withName("Stat Tracker").withIcon(FontAwesome.Icon.faw_pie_chart)
+        val settings = SecondaryDrawerItem().withIdentifier(5).withName("Settings").withIcon(FontAwesome.Icon.faw_sliders)
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -95,13 +93,14 @@ class MainActivity : BaseActivity(), MainMvpContract {
                     router.handleBack()
                     true
                 })
-                .addDrawerItems(newDeck, deckSelect, export, DividerDrawerItem())
+                .addDrawerItems(newDeck, deckSelect, export, winTrack, DividerDrawerItem())
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
                         1 -> router.pushController(RouterTransaction.with(FactionSelectController()))
                         2 -> router.pushController(RouterTransaction.with(DeckSelectController()))
                         3 -> Toast.makeText(this, "Export not yet implemented.", Toast.LENGTH_LONG).show()
-                        4 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
+                        4 -> Toast.makeText(this, "Win tracking not yet implemented.", Toast.LENGTH_LONG).show()
+                        5 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
                         99 -> {
                             // Item is a recent deck so start a transaction to DeckbuildController
                             val deckId = (drawerItem as DeckDrawerItem).deckId
