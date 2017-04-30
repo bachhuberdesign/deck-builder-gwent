@@ -82,7 +82,7 @@ class MainActivity : BaseActivity(), MainMvpContract {
         val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck").withIcon(FontAwesome.Icon.faw_plus_circle)
         val deckSelect = PrimaryDrawerItem().withIdentifier(2).withName("Deck List").withIcon(CommunityMaterial.Icon.cmd_cards_outline)
         val export = PrimaryDrawerItem().withIdentifier(3).withName("Export").withIcon(CommunityMaterial.Icon.cmd_export)
-        val winTrack = PrimaryDrawerItem().withIdentifier(4).withName("Win Tracker").withIcon(FontAwesome.Icon.faw_line_chart)
+        val winTrack = PrimaryDrawerItem().withIdentifier(4).withName("Stat Tracker").withIcon(FontAwesome.Icon.faw_pie_chart)
         val settings = SecondaryDrawerItem().withIdentifier(5).withName("Settings").withIcon(FontAwesome.Icon.faw_sliders)
 
         result = DrawerBuilder()
