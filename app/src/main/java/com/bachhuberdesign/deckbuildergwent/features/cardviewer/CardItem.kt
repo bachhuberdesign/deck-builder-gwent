@@ -48,6 +48,9 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
 
+        holder.itemView.add_card_button.tag = "add"
+        holder.itemView.remove_card_button.tag = "remove"
+
         Glide.clear(holder.cardImage)
         Glide.with(holder.itemView.context)
                 .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))

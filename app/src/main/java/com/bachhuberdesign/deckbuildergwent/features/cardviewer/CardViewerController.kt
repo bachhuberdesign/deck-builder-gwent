@@ -22,6 +22,7 @@ import com.bluelinelabs.conductor.Controller
 import com.google.gson.Gson
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.fontawesome_typeface_library.FontAwesome
 import com.mikepenz.iconics.IconicsDrawable
@@ -60,6 +61,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     lateinit var adapter: FastItemAdapter<CardItem>
 
     var isAddCardButtonClickable = true
+    var isRemoveCardButtonClickable = true
     var filters: CardFilters? = null
     var deckId: Int = 0
 
@@ -173,15 +175,26 @@ class CardViewerController : Controller, CardViewerMvpContract {
         adapter = FastItemAdapter()
 
         adapter.withItemEvent(object : ClickEventHook<CardItem>() {
-            override fun onBind(holder: RecyclerView.ViewHolder): View? {
-                return (holder as CardItem.ViewHolder).addCardButton
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder): MutableList<View>? {
+                if (viewHolder is CardItem.ViewHolder) {
+                    return ClickListenerHelper.toList(viewHolder.removeCardButton, viewHolder.addCardButton)
+                } else {
+                    return super.onBindMany(viewHolder)
+                }
             }
 
             override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
-                // Check if clickable to prevent duplicate presenter calls
-                if (isAddCardButtonClickable) {
-                    isAddCardButtonClickable = false
-                    presenter.checkCardAddable(item.card, deckId)
+                if (v.tag == "add") {
+                    // Check if clickable to prevent duplicate presenter calls
+                    if (isAddCardButtonClickable) {
+                        isAddCardButtonClickable = false
+                        presenter.checkCardAddable(item.card, deckId)
+                    }
+                } else if (v.tag == "remove") {
+                    if (isRemoveCardButtonClickable) {
+                        isRemoveCardButtonClickable = false
+                        (parentController as DeckbuildController).removeCardFromDeck(item.card)
+                    }
                 }
             }
         })
