@@ -1,9 +1,10 @@
 package com.bachhuberdesign.deckbuildergwent.features.cardviewer
 
+import android.graphics.Color
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.bachhuberdesign.deckbuildergwent.R
@@ -14,7 +15,9 @@ import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
 import com.bachhuberdesign.deckbuildergwent.util.invisible
 import com.bachhuberdesign.deckbuildergwent.util.visible
 import com.bumptech.glide.Glide
+import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.item_card.view.*
 
 /**
@@ -62,9 +65,34 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
                 holder.countText.text = "$count / 1"
             }
 
+            holder.addCardButton.setImageDrawable(IconicsDrawable(holder.itemView.context)
+                    .icon(CommunityMaterial.Icon.cmd_plus)
+                    .color(Color.WHITE)
+                    .sizeDp(12))
+
+            holder.removeCardButton.setImageDrawable(IconicsDrawable(holder.itemView.context)
+                    .icon(CommunityMaterial.Icon.cmd_minus)
+                    .color(Color.WHITE)
+                    .sizeDp(12))
+
             holder.addCardButton.visible()
+            holder.removeCardButton.visible()
+
+            if (card.cardType == CardType.BRONZE) {
+                if (count >= 3) {
+                    holder.addCardButton.invisible()
+                }
+            } else if (count >= 1) {
+                holder.addCardButton.invisible()
+            }
+
+            if (count <= 0) {
+                holder.removeCardButton.invisible()
+            }
         } else {
+            // Not deckbuild mode, no need for add/remove buttons
             holder.addCardButton.invisible()
+            holder.removeCardButton.invisible()
         }
     }
 
@@ -81,7 +109,8 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         var power: TextView = view.card_power_text
         var cardImage: ImageView = view.card_image
         var countText: TextView = view.card_count_text
-        var addCardButton: Button = view.add_card_button
+        var addCardButton: ImageButton = view.add_card_button
+        var removeCardButton: ImageButton = view.remove_card_button
     }
 
     class CardNameComparator(val isSortAscending: Boolean) : Comparator<CardItem> {

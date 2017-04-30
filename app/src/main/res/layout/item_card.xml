@@ -128,14 +128,26 @@
                 tools:layout_editor_absoluteX="152dp"
                 tools:layout_editor_absoluteY="83dp"/>
 
-            <Button
-                android:id="@+id/add_card_button"
-                android:layout_width="15dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
+            <ImageButton
+                android:id="@+id/remove_card_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/add_card_button"
                 android:fontFamily="serif"
                 android:gravity="center"
-                android:text="+"
+                android:textAlignment="center"/>
+
+            <ImageButton
+                android:id="@+id/add_card_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="serif"
+                android:gravity="center"
                 android:textAlignment="center"/>
         </RelativeLayout>
 
