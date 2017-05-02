@@ -27,7 +27,8 @@ class DeckbuildPresenter
     }
 
     var cardSubscription: Subscription? = null
-    var cardsToAnimate: MutableList<Card> = ArrayList()
+    var addedCardsAnimationCache: MutableList<Card> = ArrayList()
+    var removedCardsAnimationCache: MutableList<Card> = ArrayList()
 
     override fun detach() {
         super.detach()
@@ -35,23 +36,36 @@ class DeckbuildPresenter
             cardSubscription!!.unsubscribe()
         }
 
-        if (cardsToAnimate.isNotEmpty()) {
-            cardsToAnimate.clear()
-        }
+        addedCardsAnimationCache.clear()
+        removedCardsAnimationCache.clear()
     }
 
     /**
      *
      */
     fun subscribeToCardUpdates(deckId: Int) {
+        var previousCards: MutableList<Card> = deckRepository.getCardsForDeck(deckId)
+
         cardSubscription = deckRepository.observeCardUpdates(deckId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cards ->
-                    if (cards.isNotEmpty() && isViewAttached()) {
-                        Log.d(TAG, "Adding card to animation cache: ${cards.last().name}, lane: ${cards.last().lane}, selectedLane: ${cards.last().selectedLane}")
-                        cardsToAnimate.add(cards.last())
+                    if (cards.isNotEmpty() && isViewAttached() && cards.size > previousCards.size) {
+                        Log.d(TAG, "Adding ${cards.last().name} to animationCache")
+                        addedCardsAnimationCache.add(cards.last())
+                    } else if (cards.size < previousCards.size) {
+                        cards.forEach { card ->
+                            previousCards.remove(card)
+                        }
+
+                        if (previousCards.firstOrNull() != null) {
+                            Log.d(TAG, "Adding ${previousCards.first().name} to removedCardsAnimationCache")
+                            removedCardsAnimationCache.add(previousCards.first())
+                        }
                     }
+
+                    previousCards.clear()
+                    previousCards.addAll(cards)
                 }, { error ->
                     Log.e(TAG, "Error querying cards for deck $deckId", error)
                 })
@@ -61,12 +75,16 @@ class DeckbuildPresenter
      *
      */
     fun loadCardsToAnimate() {
-        if (cardsToAnimate.isEmpty()) {
+        removedCardsAnimationCache.forEach { addedCardsAnimationCache.remove(it) }
+
+        if (addedCardsAnimationCache.isEmpty()) {
             Log.d(TAG, "loadCardsToAnimate(): No cards need to be added to view.")
         } else if (isViewAttached()) {
-            view!!.animateCards(cardsToAnimate)
-            cardsToAnimate.clear()
+            view!!.animateCards(addedCardsAnimationCache)
         }
+
+        addedCardsAnimationCache.clear()
+        removedCardsAnimationCache.clear()
     }
 
     /**
