@@ -106,6 +106,15 @@ class DeckbuildPresenter
     /**
      *
      */
+    fun removeCardFromDeck(card: Card, deckId: Int) {
+        deckRepository.removeCardFromDeck(card, deckId)
+
+        refreshTotals(deckId)
+    }
+
+    /**
+     *
+     */
     fun deleteDeck(deckId: Int) {
         deckRepository.deleteDeck(deckId)
 

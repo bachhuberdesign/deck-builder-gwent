@@ -22,6 +22,7 @@ import com.bluelinelabs.conductor.Controller
 import com.google.gson.Gson
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.fontawesome_typeface_library.FontAwesome
 import com.mikepenz.iconics.IconicsDrawable
@@ -173,15 +174,26 @@ class CardViewerController : Controller, CardViewerMvpContract {
         adapter = FastItemAdapter()
 
         adapter.withItemEvent(object : ClickEventHook<CardItem>() {
-            override fun onBind(holder: RecyclerView.ViewHolder): View? {
-                return (holder as CardItem.ViewHolder).addCardButton
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder): MutableList<View>? {
+                if (viewHolder is CardItem.ViewHolder) {
+                    return ClickListenerHelper.toList(viewHolder.removeCardButton, viewHolder.addCardButton)
+                } else {
+                    return super.onBindMany(viewHolder)
+                }
             }
 
             override fun onClick(v: View, position: Int, adapter: FastAdapter<CardItem>, item: CardItem) {
-                // Check if clickable to prevent duplicate presenter calls
-                if (isAddCardButtonClickable) {
-                    isAddCardButtonClickable = false
-                    presenter.checkCardAddable(item.card, deckId)
+                if (v.tag == "add") {
+                    // Check if clickable to prevent duplicate presenter calls
+                    if (isAddCardButtonClickable) {
+                        isAddCardButtonClickable = false
+                        presenter.checkCardAddable(item.card, deckId)
+                    }
+                } else if (v.tag == "remove") {
+                    if (item.count > 0) {
+                        (parentController as DeckbuildController).removeCardFromDeck(item.card)
+                        updateCount(item.card, true)
+                    }
                 }
             }
         })
@@ -228,17 +240,22 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onCardChecked(card: Card, isCardAddable: Boolean) {
         if (isCardAddable) {
             (parentController as DeckbuildController).addCardToCurrentDeck(card)
-            updateCount(card)
+            updateCount(card, false)
         }
 
         isAddCardButtonClickable = true
     }
 
-    private fun updateCount(card: Card) {
+    private fun updateCount(card: Card, itemRemoved: Boolean) {
         val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
 
         val position = adapter.adapterItems.indexOf(item)
-        adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+
+        if (itemRemoved) {
+            adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count -= 1
+        } else {
+            adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+        }
 
         adapter.notifyAdapterItemChanged(position)
     }
@@ -264,7 +281,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                         }
                     }
                     (parentController as DeckbuildController).addCardToCurrentDeck(card)
-                    updateCount(card)
+                    updateCount(card, false)
 
                     isAddCardButtonClickable = true
 

@@ -184,6 +184,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     /**
      *
      */
+    fun removeCardFromDeck(card: Card) {
+        presenter.removeCardFromDeck(card, deckId)
+    }
+
+    /**
+     *
+     */
     fun closeCardViewerAndAnimate() {
         childRouters.forEach { router ->
             if (router.backstackSize > 0) {
