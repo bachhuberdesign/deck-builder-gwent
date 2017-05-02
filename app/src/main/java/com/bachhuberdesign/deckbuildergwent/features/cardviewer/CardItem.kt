@@ -2,6 +2,7 @@ package com.bachhuberdesign.deckbuildergwent.features.cardviewer
 
 import android.graphics.Color
 import android.net.Uri
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageButton
@@ -57,6 +58,17 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
                 .into(holder.cardImage)
 
         holder.name.text = card.name
+        holder.scrapCostText.text = card.scrap.toString()
+
+        // TODO: Show bottom gradients based on card type rather than changing text color
+
+        when (card.cardType) {
+            CardType.BRONZE -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentBronze))
+            CardType.SILVER -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentSilver))
+            CardType.GOLD -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentGold))
+            CardType.LEADER -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentGold))
+        }
+
         holder.faction.text = holder.itemView.context.getStringResourceByName(Faction.ID_TO_KEY.apply(card.faction))
         holder.description.text = card.description
         holder.power.text = card.power.toString()
@@ -114,6 +126,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         var countText: TextView = view.card_count_text
         var addCardButton: ImageButton = view.add_card_button
         var removeCardButton: ImageButton = view.remove_card_button
+        var scrapCostText: TextView = view.scrap_cost_text
     }
 
     class CardNameComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
