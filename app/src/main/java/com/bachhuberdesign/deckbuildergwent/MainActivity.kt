@@ -102,9 +102,14 @@ class MainActivity : BaseActivity(), MainMvpContract {
                         4 -> Toast.makeText(this, "Win tracking not yet implemented.", Toast.LENGTH_LONG).show()
                         5 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
                         99 -> {
-                            // Item is a recent deck so start a transaction to DeckbuildController
                             val deckId = (drawerItem as DeckDrawerItem).deckId
-                            router.pushController(RouterTransaction.with(DeckbuildController(deckId)))
+
+                            // Check that current controller is not DeckbuildController with same id before starting RouterTransaction
+                            if (router.getControllerWithTag("deckbuild$deckId") == null
+                                    || !router.getControllerWithTag("deckbuild$deckId")!!.isAttached) {
+                                // Item is a recent deck so start a transaction to DeckbuildController
+                                router.pushController(RouterTransaction.with(DeckbuildController(deckId)).tag("deckbuild$deckId"))
+                            }
                         }
                     }
                     false
