@@ -54,9 +54,7 @@ class DeckbuildPresenter
                         Log.d(TAG, "Adding ${cards.last().name} to animationCache")
                         addedCardsAnimationCache.add(cards.last())
                     } else if (cards.size < previousCards.size) {
-                        cards.forEach { card ->
-                            previousCards.remove(card)
-                        }
+                        cards.forEach { previousCards.remove(it) }
 
                         if (previousCards.firstOrNull() != null) {
                             Log.d(TAG, "Adding ${previousCards.first().name} to removedCardsAnimationCache")
@@ -64,8 +62,7 @@ class DeckbuildPresenter
                         }
                     }
 
-                    previousCards.clear()
-                    previousCards.addAll(cards)
+                    previousCards = cards
                 }, { error ->
                     Log.e(TAG, "Error querying cards for deck $deckId", error)
                 })
@@ -155,6 +152,7 @@ class DeckbuildPresenter
             val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal)
             view!!.deckTotalsUpdated(totals)
         }
+
     }
 
     /**

@@ -60,6 +60,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FastItemAdapter<CardItem>
 
+    var currentSortMethod: Int = 0
+    var isSortAscending = true
     var isAddCardButtonClickable = true
     var filters: CardFilters? = null
     var deckId: Int = 0
@@ -136,8 +138,10 @@ class CardViewerController : Controller, CardViewerMvpContract {
         MaterialDialog.Builder(activity!!)
                 .title(R.string.sort_title)
                 .items(items)
-                .itemsCallbackSingleChoice(0, { dialog, view, which, text ->
-                    val isSortAscending = dialog.isPromptCheckBoxChecked
+                .itemsCallbackSingleChoice(currentSortMethod, { dialog, view, which, text ->
+                    isSortAscending = dialog.isPromptCheckBoxChecked
+                    currentSortMethod = which
+
                     when (which) {
                         0 -> adapter.itemAdapter.withComparator(CardItem.CardNameComparator(isSortAscending))
                         1 -> adapter.itemAdapter.withComparator(CardItem.CardTypeComparator(isSortAscending))
@@ -145,11 +149,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
                         3 -> adapter.itemAdapter.withComparator(CardItem.CardFactionComparator(isSortAscending))
                         4 -> adapter.itemAdapter.withComparator(CardItem.CardLaneComparator(isSortAscending))
                     }
+
                     true
                 })
                 .positiveText(R.string.confirm)
                 .negativeText(android.R.string.cancel)
-                .checkBoxPromptRes(R.string.checkbox_sort_ascending, true, null)
+                .checkBoxPromptRes(R.string.checkbox_sort_ascending, isSortAscending, null)
                 .show()
     }
 
