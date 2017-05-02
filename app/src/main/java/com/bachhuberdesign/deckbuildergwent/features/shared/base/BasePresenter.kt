@@ -19,4 +19,12 @@ open class BasePresenter<T : MvpContract> : Presenter<T> {
 
     override fun isViewAttached(): Boolean = view != null
 
+    override fun getViewOrThrow(): T {
+        if (view == null) {
+            throw UnsupportedOperationException("Tried to get view for presenter but was null.")
+        } else {
+            return view!!
+        }
+    }
+
 }

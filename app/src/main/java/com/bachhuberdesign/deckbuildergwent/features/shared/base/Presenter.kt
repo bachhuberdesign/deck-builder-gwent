@@ -5,12 +5,14 @@ package com.bachhuberdesign.deckbuildergwent.features.shared.base
  * @version 1.0.0
  * @since 1.0.0
  */
-interface Presenter<in T : MvpContract> {
+interface Presenter<T : MvpContract> {
 
     fun attach(view: T)
 
     fun detach()
 
     fun isViewAttached(): Boolean
+
+    fun getViewOrThrow(): T
 
 }
