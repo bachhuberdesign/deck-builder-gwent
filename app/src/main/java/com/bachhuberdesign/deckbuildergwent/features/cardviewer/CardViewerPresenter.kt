@@ -55,11 +55,7 @@ class CardViewerPresenter
         return lanesToDisplay
     }
 
-    fun getAllCards() {
-        TODO("Method not yet implemented")
-    }
-
-    fun getCardsFiltered(filters: CardFilters, deckId: Int) {
+    fun getCards(filters: CardFilters, deckId: Int) {
         if (filters.filterByFactions.first) {
             val cursor = cardRepository.getAllFactionAndNeutralCards(filters.filterByFactions.second)
             val cards: MutableList<Card> = ArrayList()
@@ -77,9 +73,11 @@ class CardViewerPresenter
                 if (deck != null && isViewAttached()) {
                     view!!.onDeckbuildModeCardsLoaded(sortedCards.filterNot { it.cardType == CardType.LEADER }, deck)
                 }
-            } else if (isViewAttached()) {
-                view!!.onViewModeCardsLoaded(sortedCards)
             }
+            getViewOrThrow().onViewModeCardsLoaded(sortedCards)
+        } else {
+            val cards: List<Card> = cardRepository.getAllCards().sortedBy { card -> card.name }
+            getViewOrThrow().onViewModeCardsLoaded(cards)
         }
 
     }

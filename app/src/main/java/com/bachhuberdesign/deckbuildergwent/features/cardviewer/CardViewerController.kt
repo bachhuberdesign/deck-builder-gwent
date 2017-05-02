@@ -73,9 +73,6 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        (activity as MainActivity).displayHomeAsUp(true)
-        setHasOptionsMenu(true)
-
         if (filters == null) {
             filters = gson.fromJson(args.getString("filters"), CardFilters::class.java)
         }
@@ -84,6 +81,13 @@ class CardViewerController : Controller, CardViewerMvpContract {
             deckId = args.getInt("deckId", 0)
         }
 
+        if (deckId > 0) {
+            (activity as MainActivity).displayHomeAsUp(true)
+        } else {
+            activity?.title = "Card Database"
+        }
+
+        setHasOptionsMenu(true)
         initRecyclerView(view)
 
         return view
@@ -92,7 +96,9 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.getCardsFiltered(filters!!, deckId)
+
+        // TODO: Take getCards() call off UI thread
+        presenter.getCards(filters!!, deckId)
     }
 
     override fun onDetach(view: View) {
@@ -222,7 +228,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     private fun refreshFilters(filters: CardFilters) {
-        presenter.getCardsFiltered(filters, deckId)
+        presenter.getCards(filters, deckId)
     }
 
     override fun onDeckbuildModeCardsLoaded(cards: List<Card>, deck: Deck) {
@@ -298,12 +304,14 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun onViewModeCardsLoaded(cards: List<Card>) {
-        TODO("Not yet implemented.")
+        cards.forEach { card ->
+            val cardItem = CardItem(card, false)
+            adapter.add(cardItem)
+        }
     }
 
     override fun onListFiltered(filteredCards: List<Card>) {
-        TODO("Method not yet implemented")
+        Log.d(TAG, "onListFiltered()")
     }
-
 
 }
