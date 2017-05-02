@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import com.bachhuberdesign.MainMvpContract
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardFilters
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardViewerController
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildController
 import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectController
@@ -80,10 +82,11 @@ class MainActivity : BaseActivity(), MainMvpContract {
 
     private fun initNavigationDrawer() {
         val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck").withIcon(FontAwesome.Icon.faw_plus_circle)
-        val deckSelect = PrimaryDrawerItem().withIdentifier(2).withName("Deck List").withIcon(CommunityMaterial.Icon.cmd_cards_outline)
+        val deckList = PrimaryDrawerItem().withIdentifier(2).withName("Deck List").withIcon(CommunityMaterial.Icon.cmd_cards_outline)
         val export = PrimaryDrawerItem().withIdentifier(3).withName("Export").withIcon(CommunityMaterial.Icon.cmd_export)
-        val winTrack = PrimaryDrawerItem().withIdentifier(4).withName("Stat Tracker").withIcon(FontAwesome.Icon.faw_pie_chart)
+        val statTracker = PrimaryDrawerItem().withIdentifier(4).withName("Stat Tracker").withIcon(FontAwesome.Icon.faw_pie_chart)
         val settings = SecondaryDrawerItem().withIdentifier(5).withName("Settings").withIcon(FontAwesome.Icon.faw_sliders)
+        val cardDatabase = PrimaryDrawerItem().withIdentifier(6).withName("Card Database").withIcon(FontAwesome.Icon.faw_database)
 
         result = DrawerBuilder()
                 .withActivity(this)
@@ -93,7 +96,7 @@ class MainActivity : BaseActivity(), MainMvpContract {
                     router.handleBack()
                     true
                 })
-                .addDrawerItems(newDeck, deckSelect, export, winTrack, DividerDrawerItem())
+                .addDrawerItems(newDeck, deckList, cardDatabase, export, statTracker, DividerDrawerItem())
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
                         1 -> router.pushController(RouterTransaction.with(FactionSelectController()))
@@ -101,10 +104,16 @@ class MainActivity : BaseActivity(), MainMvpContract {
                         3 -> Toast.makeText(this, "Export not yet implemented.", Toast.LENGTH_LONG).show()
                         4 -> Toast.makeText(this, "Win tracking not yet implemented.", Toast.LENGTH_LONG).show()
                         5 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
+                        6 -> router.pushController(RouterTransaction.with(CardViewerController(CardFilters())))
                         99 -> {
-                            // Item is a recent deck so start a transaction to DeckbuildController
                             val deckId = (drawerItem as DeckDrawerItem).deckId
-                            router.pushController(RouterTransaction.with(DeckbuildController(deckId)))
+
+                            // Check that current controller is not DeckbuildController with same id before starting RouterTransaction
+                            if (router.getControllerWithTag("deckbuild$deckId") == null
+                                    || !router.getControllerWithTag("deckbuild$deckId")!!.isAttached) {
+                                // Item is a recent deck so start a transaction to DeckbuildController
+                                router.pushController(RouterTransaction.with(DeckbuildController(deckId)).tag("deckbuild$deckId"))
+                            }
                         }
                     }
                     false

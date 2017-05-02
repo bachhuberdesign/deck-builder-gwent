@@ -84,7 +84,10 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.loadFactions()
+
+        if (adapter?.adapterItems?.size == 0) {
+            presenter.loadFactions()
+        }
     }
 
     override fun onDetach(view: View) {

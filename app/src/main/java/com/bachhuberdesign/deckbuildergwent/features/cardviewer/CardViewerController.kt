@@ -60,6 +60,8 @@ class CardViewerController : Controller, CardViewerMvpContract {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FastItemAdapter<CardItem>
 
+    var currentSortMethod: Int = 0
+    var isSortAscending = true
     var isAddCardButtonClickable = true
     var filters: CardFilters? = null
     var deckId: Int = 0
@@ -71,9 +73,6 @@ class CardViewerController : Controller, CardViewerMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        (activity as MainActivity).displayHomeAsUp(true)
-        setHasOptionsMenu(true)
-
         if (filters == null) {
             filters = gson.fromJson(args.getString("filters"), CardFilters::class.java)
         }
@@ -82,6 +81,13 @@ class CardViewerController : Controller, CardViewerMvpContract {
             deckId = args.getInt("deckId", 0)
         }
 
+        if (deckId > 0) {
+            (activity as MainActivity).displayHomeAsUp(true)
+        } else {
+            activity?.title = "Card Database"
+        }
+
+        setHasOptionsMenu(true)
         initRecyclerView(view)
 
         return view
@@ -90,7 +96,9 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.getCardsFiltered(filters!!, deckId)
+
+        // TODO: Take getCards() call off UI thread
+        presenter.getCards(filters!!, deckId)
     }
 
     override fun onDetach(view: View) {
@@ -136,8 +144,10 @@ class CardViewerController : Controller, CardViewerMvpContract {
         MaterialDialog.Builder(activity!!)
                 .title(R.string.sort_title)
                 .items(items)
-                .itemsCallbackSingleChoice(0, { dialog, view, which, text ->
-                    val isSortAscending = dialog.isPromptCheckBoxChecked
+                .itemsCallbackSingleChoice(currentSortMethod, { dialog, view, which, text ->
+                    isSortAscending = dialog.isPromptCheckBoxChecked
+                    currentSortMethod = which
+
                     when (which) {
                         0 -> adapter.itemAdapter.withComparator(CardItem.CardNameComparator(isSortAscending))
                         1 -> adapter.itemAdapter.withComparator(CardItem.CardTypeComparator(isSortAscending))
@@ -145,11 +155,12 @@ class CardViewerController : Controller, CardViewerMvpContract {
                         3 -> adapter.itemAdapter.withComparator(CardItem.CardFactionComparator(isSortAscending))
                         4 -> adapter.itemAdapter.withComparator(CardItem.CardLaneComparator(isSortAscending))
                     }
+
                     true
                 })
                 .positiveText(R.string.confirm)
                 .negativeText(android.R.string.cancel)
-                .checkBoxPromptRes(R.string.checkbox_sort_ascending, true, null)
+                .checkBoxPromptRes(R.string.checkbox_sort_ascending, isSortAscending, null)
                 .show()
     }
 
@@ -217,7 +228,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     private fun refreshFilters(filters: CardFilters) {
-        presenter.getCardsFiltered(filters, deckId)
+        presenter.getCards(filters, deckId)
     }
 
     override fun onDeckbuildModeCardsLoaded(cards: List<Card>, deck: Deck) {
@@ -293,12 +304,14 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun onViewModeCardsLoaded(cards: List<Card>) {
-        TODO("Not yet implemented.")
+        cards.forEach { card ->
+            val cardItem = CardItem(card, false)
+            adapter.add(cardItem)
+        }
     }
 
     override fun onListFiltered(filteredCards: List<Card>) {
-        TODO("Method not yet implemented")
+        Log.d(TAG, "onListFiltered()")
     }
-
 
 }

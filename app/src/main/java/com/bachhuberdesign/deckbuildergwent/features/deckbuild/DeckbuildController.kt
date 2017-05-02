@@ -261,8 +261,12 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 .zipWith(Observable.interval(225, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
                 .subscribe { card ->
-                    val layout: LinearLayout?
+                    if (view == null){
+                        return@subscribe
+                    }
 
+                    val layout: LinearLayout?
+                    
                     when (card.selectedLane) {
                         Lane.MELEE -> layout = view!!.melee_image_holder
                         Lane.RANGED -> layout = view!!.ranged_image_holder
