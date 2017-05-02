@@ -2,17 +2,18 @@ package com.bachhuberdesign.deckbuildergwent.features.cardviewer
 
 import android.graphics.Color
 import android.net.Uri
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
 import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
+import com.bachhuberdesign.deckbuildergwent.util.gone
 import com.bachhuberdesign.deckbuildergwent.util.invisible
 import com.bachhuberdesign.deckbuildergwent.util.visible
 import com.bumptech.glide.Glide
@@ -60,13 +61,11 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         holder.name.text = card.name
         holder.scrapCostText.text = card.scrap.toString()
 
-        // TODO: Show bottom gradients based on card type rather than changing text color
-
         when (card.cardType) {
-            CardType.BRONZE -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentBronze))
-            CardType.SILVER -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentSilver))
-            CardType.GOLD -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentGold))
-            CardType.LEADER -> holder.name.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.gwentGold))
+            CardType.BRONZE -> holder.bottomBar.setBackgroundResource(R.drawable.background_bronze_gradient)
+            CardType.SILVER -> holder.bottomBar.setBackgroundResource(R.drawable.background_silver_gradient)
+            CardType.GOLD -> holder.bottomBar.setBackgroundResource(R.drawable.background_gold_gradient)
+            CardType.LEADER -> holder.bottomBar.setBackgroundResource(R.drawable.background_gold_gradient)
         }
 
         holder.faction.text = holder.itemView.context.getStringResourceByName(Faction.ID_TO_KEY.apply(card.faction))
@@ -105,6 +104,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
                 holder.removeCardButton.invisible()
             }
         } else {
+            holder.countText.gone()
             // Not deckbuild mode, no need for add/remove buttons
             holder.addCardButton.invisible()
             holder.removeCardButton.invisible()
@@ -118,6 +118,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var bottomBar: RelativeLayout = view.bottom_bar_relative_layout
         var name: TextView = view.card_name_text
         var faction: TextView = view.faction_name_text
         var description: TextView = view.card_description_text

@@ -32,7 +32,6 @@
                 android:id="@+id/card_name_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="serif"
@@ -40,10 +39,10 @@
                 android:textColor="@color/md_grey_800"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/card_count_text"
+                android:layout_marginEnd="8dp"/>
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline"
@@ -52,13 +51,6 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_begin="72dp"/>
 
-
-            <android.support.constraint.Guideline
-                android:id="@+id/guideline5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="36dp"/>
 
             <TextView
                 android:id="@+id/card_description_text"
@@ -92,29 +84,27 @@
 
             <TextView
                 android:id="@+id/card_count_text"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="serif"
                 android:gravity="center"
-                android:text="0 / 0"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toTopOf="@+id/card_description_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toTopOf="parent"/>
 
         </android.support.constraint.ConstraintLayout>
 
         <RelativeLayout
-            android:id="@+id/relativeLayout"
+            android:id="@+id/bottom_bar_relative_layout"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="6dp"
-            android:background="@drawable/green_gradient_background">
+            android:background="@drawable/background_leader_gradient">
 
             <TextView
                 android:id="@+id/faction_name_text"
