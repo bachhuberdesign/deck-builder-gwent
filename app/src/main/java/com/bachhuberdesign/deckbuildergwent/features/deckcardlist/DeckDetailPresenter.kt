@@ -35,7 +35,7 @@ class DeckDetailPresenter
     fun removeCardFromDeck(card: Card?, deckId: Int) {
         Log.d(TAG, "Removing card ${card?.cardId} from deck with selectedLane: ${card?.selectedLane}")
         if (card != null) {
-            deckRepository.deleteCardFromDeck(card, deckId)
+            deckRepository.removeCardFromDeck(card, deckId)
         }
     }
 

@@ -181,8 +181,11 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         presenter.addCardToDeck(card, deckId)
     }
 
+    /**
+     *
+     */
     fun removeCardFromDeck(card: Card) {
-        // TODO:
+        presenter.removeCardFromDeck(card, deckId)
     }
 
     /**

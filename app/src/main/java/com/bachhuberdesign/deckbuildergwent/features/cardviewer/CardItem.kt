@@ -176,5 +176,4 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         }
     }
 
-
 }

@@ -61,7 +61,6 @@ class CardViewerController : Controller, CardViewerMvpContract {
     lateinit var adapter: FastItemAdapter<CardItem>
 
     var isAddCardButtonClickable = true
-    var isRemoveCardButtonClickable = true
     var filters: CardFilters? = null
     var deckId: Int = 0
 
@@ -191,9 +190,9 @@ class CardViewerController : Controller, CardViewerMvpContract {
                         presenter.checkCardAddable(item.card, deckId)
                     }
                 } else if (v.tag == "remove") {
-                    if (isRemoveCardButtonClickable) {
-                        isRemoveCardButtonClickable = false
+                    if (item.count > 0) {
                         (parentController as DeckbuildController).removeCardFromDeck(item.card)
+                        updateCount(item.card, true)
                     }
                 }
             }
@@ -241,17 +240,22 @@ class CardViewerController : Controller, CardViewerMvpContract {
     override fun onCardChecked(card: Card, isCardAddable: Boolean) {
         if (isCardAddable) {
             (parentController as DeckbuildController).addCardToCurrentDeck(card)
-            updateCount(card)
+            updateCount(card, false)
         }
 
         isAddCardButtonClickable = true
     }
 
-    private fun updateCount(card: Card) {
+    private fun updateCount(card: Card, itemRemoved: Boolean) {
         val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
 
         val position = adapter.adapterItems.indexOf(item)
-        adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+
+        if (itemRemoved) {
+            adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count -= 1
+        } else {
+            adapter.adapterItems.find { it.card.cardId == card.cardId }!!.count += 1
+        }
 
         adapter.notifyAdapterItemChanged(position)
     }
@@ -277,7 +281,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                         }
                     }
                     (parentController as DeckbuildController).addCardToCurrentDeck(card)
-                    updateCount(card)
+                    updateCount(card, false)
 
                     isAddCardButtonClickable = true
 

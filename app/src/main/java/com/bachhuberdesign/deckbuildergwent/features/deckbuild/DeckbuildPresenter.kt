@@ -107,9 +107,9 @@ class DeckbuildPresenter
      *
      */
     fun removeCardFromDeck(card: Card, deckId: Int) {
-        Log.d(TAG, "Removing card from deck $deckId. Card: $card")
+        deckRepository.removeCardFromDeck(card, deckId)
 
-        // TODO:
+        refreshTotals(deckId)
     }
 
     /**
