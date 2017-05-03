@@ -12,6 +12,7 @@ import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
+import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
 import com.bachhuberdesign.deckbuildergwent.util.gone
 import com.bachhuberdesign.deckbuildergwent.util.invisible
@@ -66,6 +67,14 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
             CardType.SILVER -> holder.bottomBar.setBackgroundResource(R.drawable.background_silver_gradient)
             CardType.GOLD -> holder.bottomBar.setBackgroundResource(R.drawable.background_gold_gradient)
             CardType.LEADER -> holder.bottomBar.setBackgroundResource(R.drawable.background_gold_gradient)
+        }
+
+        when (card.lane) {
+            Lane.MELEE -> holder.laneIcon.setImageResource(R.drawable.lane_melee_icon)
+            Lane.RANGED -> holder.laneIcon.setImageResource(R.drawable.lane_ranged_icon)
+            Lane.SIEGE -> holder.laneIcon.setImageResource(R.drawable.lane_siege_icon)
+            Lane.EVENT -> holder.laneIcon.setImageResource(R.drawable.lane_event_icon)
+            Lane.ALL -> holder.laneIcon.setImageResource(R.drawable.lane_melee_icon)
         }
 
         holder.faction.text = holder.itemView.context.getStringResourceByName(Faction.ID_TO_KEY.apply(card.faction))
@@ -128,6 +137,7 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         var addCardButton: ImageButton = view.add_card_button
         var removeCardButton: ImageButton = view.remove_card_button
         var scrapCostText: TextView = view.scrap_cost_text
+        var laneIcon: ImageView = view.lane_icon_image
     }
 
     class CardNameComparator(val isSortAscending: Boolean) : Comparator<CardItem> {
