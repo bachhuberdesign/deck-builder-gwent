@@ -32,6 +32,7 @@
                 android:id="@+id/card_name_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="serif"
@@ -39,10 +40,9 @@
                 android:textColor="@color/md_grey_800"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/card_count_text"
-                android:layout_marginEnd="8dp"/>
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline"
@@ -115,6 +115,7 @@
                 android:text="Faction"
                 android:textAlignment="center"
                 android:textColor="@color/md_grey_800"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="152dp"
                 tools:layout_editor_absoluteY="83dp"/>
@@ -150,7 +151,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:text="50"
                 android:textColor="@color/md_grey_800"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"/>
 
             <ImageView
@@ -160,6 +161,15 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="8dp"
                 android:padding="3dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/scrap"/>
+
+            <ImageView
+                android:id="@+id/lane_icon_image"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/scrap"/>
 
