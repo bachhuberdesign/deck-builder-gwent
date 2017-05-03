@@ -17,7 +17,9 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp">
 
             <ImageView
                 android:id="@+id/card_image"
@@ -134,7 +136,6 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/scrap_icon_image"
                 android:fontFamily="sans-serif-condensed"
-                android:text="50"
                 android:textColor="@color/md_grey_800"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
@@ -153,7 +154,7 @@
                 android:id="@+id/lane_icon_image"
                 android:layout_width="25dp"
                 android:layout_height="match_parent"
-                android:layout_toStartOf="@id/card_power_text"
+                android:layout_toEndOf="@id/scrap_cost_text"
                 android:padding="3dp"
                 android:scaleType="centerInside"/>
 
@@ -163,9 +164,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
+                android:layout_toEndOf="@id/lane_icon_image"
                 android:fontFamily="sans-serif-condensed"
-                android:text="50"
                 android:textColor="@color/md_grey_800"
                 android:textSize="15sp"
                 android:textStyle="bold"/>

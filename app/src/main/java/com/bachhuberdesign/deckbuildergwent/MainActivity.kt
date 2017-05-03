@@ -13,6 +13,7 @@ import com.bachhuberdesign.deckbuildergwent.features.factionselect.FactionSelect
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BaseActivity
 import com.bachhuberdesign.deckbuildergwent.util.DeckDrawerItem
 import com.bluelinelabs.conductor.Conductor
+import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
@@ -99,21 +100,15 @@ class MainActivity : BaseActivity(), MainMvpContract {
                 .addDrawerItems(newDeck, deckList, cardDatabase, export, statTracker, DividerDrawerItem())
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
-                        1 -> router.pushController(RouterTransaction.with(FactionSelectController()))
-                        2 -> router.pushController(RouterTransaction.with(DeckSelectController()))
+                        1 -> showController(FactionSelectController(), FactionSelectController.TAG)
+                        2 -> showController(DeckSelectController(), DeckSelectController.TAG)
                         3 -> Toast.makeText(this, "Export not yet implemented.", Toast.LENGTH_LONG).show()
                         4 -> Toast.makeText(this, "Win tracking not yet implemented.", Toast.LENGTH_LONG).show()
                         5 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
-                        6 -> router.pushController(RouterTransaction.with(CardViewerController(CardFilters())))
+                        6 -> showController(CardViewerController(CardFilters()), CardViewerController.TAG)
                         99 -> {
                             val deckId = (drawerItem as DeckDrawerItem).deckId
-
-                            // Check that current controller is not DeckbuildController with same id before starting RouterTransaction
-                            if (router.getControllerWithTag("deckbuild$deckId") == null
-                                    || !router.getControllerWithTag("deckbuild$deckId")!!.isAttached) {
-                                // Item is a recent deck so start a transaction to DeckbuildController
-                                router.pushController(RouterTransaction.with(DeckbuildController(deckId)).tag("deckbuild$deckId"))
-                            }
+                            showController(DeckbuildController(deckId), deckId.toString())
                         }
                     }
                     false
@@ -133,6 +128,12 @@ class MainActivity : BaseActivity(), MainMvpContract {
         } else {
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             result?.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
+        }
+    }
+
+    private fun showController(controller: Controller, tag: String) {
+        if (!router.popToTag(tag)) {
+            router.pushController(RouterTransaction.with(controller).tag(tag))
         }
     }
 

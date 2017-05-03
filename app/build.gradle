@@ -123,6 +123,7 @@ dependencies {
 
     // Workaround for source downloading issue in Android Studio
     // https://issuetracker.google.com/issues/37125917
+    compile "com.bluelinelabs:conductor:$conductor_version:sources@jar"
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2:sources@jar'
     compile 'com.squareup.sqlbrite:sqlbrite:1.1.1:sources@jar'
 }
