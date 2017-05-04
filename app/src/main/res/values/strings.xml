@@ -26,4 +26,5 @@
     <string name="sort_scrap_cost">Scrap Cost</string>
     <string name="sort_faction">Faction</string>
     <string name="sort_title">Sort Card List</string>
+    <string name="select_leader_title">Select a new leader</string>
 </resources>

@@ -41,6 +41,10 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun getDeckById(deckId: Int): Deck? {
+        if (deckId <= 0) {
+            throw DeckException("Expected a valid deck id but received $deckId.")
+        }
+
         val deckCursor = database.query("SELECT * FROM ${Deck.TABLE} WHERE ${Deck.ID} = $deckId")
         var deck: Deck? = null
 
@@ -147,6 +151,21 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         return database.query("SELECT * FROM ${Card.TABLE} WHERE ${Card.TYPE} = ${CardType.LEADER}")
     }
 
+    fun getLeadersForFaction(factionId: Int): List<Card> {
+        val cursor = database.query("SELECT * FROM ${Card.TABLE} " +
+                "WHERE ${Card.TYPE} = ${CardType.LEADER} " +
+                "AND ${Card.FACTION} = $factionId")
+        val leaders: MutableList<Card> = ArrayList()
+
+        cursor.use {
+            while (cursor.moveToNext()) {
+                leaders.add(Card.MAPPER.apply(cursor))
+            }
+        }
+
+        return leaders
+    }
+
     fun saveDeck(deck: Deck): Int {
         val currentTime = Date().time
         val deckValues = ContentValues()
@@ -166,6 +185,13 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         }
 
         return deck.id
+    }
+
+    fun updateLeaderForDeck(deckId: Int, leaderId: Int) {
+        val deckValues = ContentValues()
+        deckValues.put(Deck.LEADER_ID, leaderId)
+
+        database.update(Deck.TABLE, deckValues, "${Deck.ID} = $deckId")
     }
 
     fun addCardToDeck(card: Card, deckId: Int) {

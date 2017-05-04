@@ -11,10 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectController
+import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
@@ -29,6 +31,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import kotlinx.android.synthetic.main.controller_deck_select.view.*
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * @author Eric Bachhuber
@@ -53,6 +56,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
     var recyclerView: RecyclerView? = null
     var fastItemAdapter: FastItemAdapter<AbstractItem<*, *>>? = null
     var deckId: Int = 0
+    var deck: Deck? = null
     val items: MutableList<AbstractItem<*, *>> = LinkedList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -89,6 +93,12 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
 
     private fun initRecyclerView(v: View) {
         fastItemAdapter = FastItemAdapter()
+        fastItemAdapter!!.withOnClickListener { v, adapter, item, position ->
+            if (item is SlimCardItem && item.card?.cardType == CardType.LEADER) {
+                presenter.getLeadersForFaction(deck!!.faction)
+            }
+            true
+        }
 
         val layoutManager = LinearLayoutManager(activity)
         recyclerView = v.recycler_view
@@ -107,10 +117,35 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         touchHelper.attachToRecyclerView(recyclerView)
     }
 
+    private fun showChangeLeaderDialog(leaders: List<Card>, currentLeaderId: Int) {
+        val leaderIds: MutableList<Int> = ArrayList()
+        val leaderNames: MutableList<String> = ArrayList()
+
+        leaders.forEachIndexed { i, leader ->
+            leaderIds.add(i, leader.cardId)
+            leaderNames.add(i, leader.name)
+        }
+
+        val currentLeaderPosition = leaderIds.indexOf(currentLeaderId)
+
+        MaterialDialog.Builder(activity!!)
+                .title(R.string.select_leader_title)
+                .items(leaderNames)
+                .itemsCallbackSingleChoice(currentLeaderPosition, { dialog, view, which, text ->
+                    presenter.updateLeaderForDeck(deckId, leaderIds[which])
+
+                    true
+                })
+                .positiveText(R.string.confirm)
+                .negativeText(android.R.string.cancel)
+                .show()
+    }
+
     private fun buildItemList(deck: Deck) {
         if (items.size > 0) {
             items.clear()
         }
+
         addHeaderItems(deck)
         addLaneItems(Lane.MELEE, deck)
         addLaneItems(Lane.RANGED, deck)
@@ -165,7 +200,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
     }
 
     override fun onDeckLoaded(deck: Deck) {
-        Log.d(TAG, "Deck loaded $deck")
+        this.deck = deck
 
         if (fastItemAdapter != null && fastItemAdapter!!.adapterItems.size > 0) {
             fastItemAdapter?.clear()
@@ -173,6 +208,14 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
 
         buildItemList(deck)
         fastItemAdapter?.add(items)
+    }
+
+    override fun onLeadersLoaded(leaders: List<Card>) {
+        showChangeLeaderDialog(leaders, deck!!.leaderId)
+    }
+
+    override fun showDeckNameChangeDialog() {
+        // TODO:
     }
 
     override fun showErrorMessage(message: String) {
