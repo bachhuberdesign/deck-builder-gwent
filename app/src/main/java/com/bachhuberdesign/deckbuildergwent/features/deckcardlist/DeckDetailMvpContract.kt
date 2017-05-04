@@ -13,6 +13,10 @@ interface DeckDetailMvpContract : MvpContract {
 
     fun onDeckLoaded(deck: Deck)
 
+    fun onLeadersLoaded(leaders: List<Card>)
+
     fun showErrorMessage(message: String)
+
+    fun showDeckNameChangeDialog()
 
 }
