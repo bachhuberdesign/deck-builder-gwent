@@ -17,4 +17,4 @@ Any contributions to this project are welcome. All new code should be in Kotlin.
 ## Legal
 This software comes bundled with data and assets extracted from GWENT®: The Witcher Card Game. All extracted assets are property of CD Projekt Red and are protected by various copyrights and trademarks. The author believes that the use of this intellectual property for a fan reference is covered by fair use and that the software is significantly impaired without said property included. This app is not affiliated with or in any ways associated with CD Projekt Red. Any use of CD Projekt Red's intellectual property is at your own legal risk.
 
-Please see **LICENSE.md** for license details.
+Please see **LICENSE.txt** for license details.
