@@ -126,10 +126,12 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
             leaderNames.add(i, leader.name)
         }
 
+        val currentLeaderPosition = leaderIds.indexOf(currentLeaderId)
+
         MaterialDialog.Builder(activity!!)
                 .title(R.string.select_leader_title)
                 .items(leaderNames)
-                .itemsCallbackSingleChoice(-1, { dialog, view, which, text ->
+                .itemsCallbackSingleChoice(currentLeaderPosition, { dialog, view, which, text ->
                     presenter.updateLeaderForDeck(deckId, leaderIds[which])
 
                     true
@@ -209,8 +211,6 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
     }
 
     override fun onLeadersLoaded(leaders: List<Card>) {
-        Log.d(TAG, "onLeadersLoaded(): $leaders")
-
         showChangeLeaderDialog(leaders, deck!!.leaderId)
     }
 

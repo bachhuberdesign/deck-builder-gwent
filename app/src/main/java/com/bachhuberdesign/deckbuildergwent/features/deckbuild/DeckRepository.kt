@@ -41,6 +41,10 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun getDeckById(deckId: Int): Deck? {
+        if (deckId <= 0) {
+            throw DeckException("Expected a valid deck id but received $deckId.")
+        }
+
         val deckCursor = database.query("SELECT * FROM ${Deck.TABLE} WHERE ${Deck.ID} = $deckId")
         var deck: Deck? = null
 
