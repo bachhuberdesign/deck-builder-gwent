@@ -107,8 +107,9 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
             }
 
             override fun onAnimationEnd(animation: Animation) {
+                leader.faction
                 Glide.with(activity)
-                        .load(Uri.parse("file:///android_asset/card_backs_1_new.png"))
+                        .load(Uri.parse("file:///android_asset/faction_back_${leader.faction}_thumbnail_padded.png"))
                         .fitCenter()
                         .dontAnimate()
                         .into(imageView)

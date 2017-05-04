@@ -85,12 +85,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             deckId = args.getInt("deckId")
         }
 
-        Glide.with(activity!!)
-                .load(Uri.parse("file:///android_asset/card_backs_1_thumbnail.png"))
-                .fitCenter()
-                .dontAnimate()
-                .into(view.show_card_viewer_button)
-
         view.show_card_viewer_button.background = null
         view.show_card_viewer_button.setOnClickListener {
             showCardPicker()
@@ -214,6 +208,12 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         factionId = deck.faction
 
+        Glide.with(activity!!)
+                .load(Uri.parse("file:///android_asset/faction_back_${deck.faction}_thumbnail.png"))
+                .fitCenter()
+                .dontAnimate()
+                .into(view?.show_card_viewer_button)
+
         view!!.faction_name_text.text = activity!!.getStringResourceByName(Faction.ID_TO_KEY.apply(deck.faction))
         view!!.leader_name_text.text = deck.leader?.name
     }
@@ -261,12 +261,12 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 .zipWith(Observable.interval(225, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
                 .subscribe { card ->
-                    if (view == null){
+                    if (view == null) {
                         return@subscribe
                     }
 
                     val layout: LinearLayout?
-                    
+
                     when (card.selectedLane) {
                         Lane.MELEE -> layout = view!!.melee_image_holder
                         Lane.RANGED -> layout = view!!.ranged_image_holder
