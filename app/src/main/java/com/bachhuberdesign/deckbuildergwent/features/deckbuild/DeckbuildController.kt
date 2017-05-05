@@ -61,11 +61,9 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     @Inject
     lateinit var presenter: DeckbuildPresenter
 
-    var animationDisposable: Disposable? = null
+    private lateinit var childRouter: Router
 
-
-    lateinit var childRouter: Router
-
+    private var animationDisposable: Disposable? = null
     private var deckId: Int = 0
     private var factionId: Int = 0
 
@@ -248,6 +246,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         }
 
         if (layout.childCount == 0) {
+            cards.forEach { it.animationType = Card.ANIMATION_ADD }
             animateCards(cards)
         } else {
             Log.d(TAG, "Lane $lane already loaded.")
@@ -256,10 +255,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun animateCards(cardsToAnimate: List<Card>) {
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
-        animationDisposable = Observable.fromArray(cardsToAnimate)
+
+        Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
                 .zipWith(Observable.interval(225, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
-                .doOnComplete { Log.d(TAG, "Animated ${cardsToAnimate.size} cards.") }
+                .doOnComplete {
+                    Log.d(TAG, "Added ${cardsToAnimate.size} cards.")
+                }
                 .subscribe { card ->
                     if (view == null) {
                         return@subscribe
@@ -276,28 +278,47 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                                 "${Lane.SIEGE}, or ${Lane.EVENT}. Actual value received: ${card.selectedLane}.")
                     }
 
-                    val imageView: ImageView = ImageView(activity)
-                    imageView.id = View.generateViewId()
+                    if (card.animationType == Card.ANIMATION_REMOVE) {
+                        val viewToAnimate = layout?.findViewWithTag(card.cardId.toString())
+                        viewToAnimate?.tag = "removing"
 
-                    val imageViewParams = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
+                        activity!!.runOnUiThread {
+                            layout?.removeView(viewToAnimate)
 
-                    if (layout.childCount > 0) {
-                        imageViewParams.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
-                    }
+                            if (layout.childCount > 0) {
+                                Log.d(TAG, "Updating params")
+                                val imageViewParams = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
+                                imageViewParams.setMargins(activity!!.dpToPx(0).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
+                                val ree = layout?.getChildAt(0)
+                                ree?.layoutParams = imageViewParams
+                            }
 
-                    // Load image and animate
-                    activity!!.runOnUiThread {
-                        layout!!.addView(imageView, imageViewParams)
+                        }
+                    } else if (card.animationType == Card.ANIMATION_ADD) {
+                        val imageView: ImageView = ImageView(activity)
+                        imageView.id = View.generateViewId()
+                        imageView.tag = card.cardId.toString()
 
-                        Glide.with(activity)
-                                .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))
-                                .animate(object : ViewAnimationFactory<GlideDrawable>(activity!!, R.anim.slide_right) {
-                                    override fun build(isFromMemoryCache: Boolean, isFirstResource: Boolean): GlideAnimation<GlideDrawable> {
-                                        return super.build(false, isFirstResource)
-                                    }
-                                })
-                                .fitCenter()
-                                .into(imageView)
+                        val imageViewParams = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
+
+                        if (layout.childCount > 0) {
+                            imageViewParams.setMargins(activity!!.dpToPx(-28).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
+                        }
+
+                        // Load image and animate
+                        activity!!.runOnUiThread {
+                            layout!!.addView(imageView, imageViewParams)
+
+                            Glide.with(activity)
+                                    .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))
+                                    .animate(object : ViewAnimationFactory<GlideDrawable>(activity!!, R.anim.slide_right) {
+                                        override fun build(isFromMemoryCache: Boolean, isFirstResource: Boolean): GlideAnimation<GlideDrawable> {
+                                            return super.build(false, isFirstResource)
+                                        }
+                                    })
+                                    .fitCenter()
+                                    .into(imageView)
+                        }
                     }
                 }
     }

@@ -26,7 +26,8 @@ data class Card(var cardId: Int = 0,
                 var loyalty: Int = 0,
                 var rarity: Int = 0,
                 var cardType: Int = 0,
-                var selectedLane: Int = 0) {
+                var selectedLane: Int = 0,
+                var animationType: Int = 0) {
 
     companion object {
         const val TABLE = "cards"
@@ -46,6 +47,8 @@ data class Card(var cardId: Int = 0,
         const val RARITY = "rarity"
         const val TYPE = "type"
         const val SELECTED_LANE = "selected_lane"
+        const val ANIMATION_REMOVE = 0
+        const val ANIMATION_ADD = 1
 
         val MAP1 = Func1<Cursor, Card> { cursor ->
             val card = Card()

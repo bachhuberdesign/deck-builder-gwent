@@ -51,14 +51,20 @@ class DeckbuildPresenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cards ->
                     if (cards.isNotEmpty() && isViewAttached() && cards.size > previousCards.size) {
-                        Log.d(TAG, "Adding ${cards.last().name} to animationCache")
-                        addedCardsAnimationCache.add(cards.last())
+                        val cardToAdd = cards.last()
+                        cardToAdd.animationType = Card.ANIMATION_ADD
+
+                        addedCardsAnimationCache.add(cardToAdd)
+                        Log.d(TAG, "Added $cardToAdd to addedCardsAnimationCache")
                     } else if (cards.size < previousCards.size) {
                         cards.forEach { previousCards.remove(it) }
 
                         if (previousCards.firstOrNull() != null) {
-                            Log.d(TAG, "Adding ${previousCards.first().name} to removedCardsAnimationCache")
+                            val cardToRemove = previousCards.first()
+                            cardToRemove.animationType = Card.ANIMATION_REMOVE
+
                             removedCardsAnimationCache.add(previousCards.first())
+                            Log.d(TAG, "Added $cardToRemove to removedCardsAnimationCache")
                         }
                     }
 
@@ -74,11 +80,10 @@ class DeckbuildPresenter
     fun loadCardsToAnimate() {
         removedCardsAnimationCache.forEach { addedCardsAnimationCache.remove(it) }
 
-        if (addedCardsAnimationCache.isEmpty()) {
-            Log.d(TAG, "loadCardsToAnimate(): No cards need to be added to view.")
-        } else if (isViewAttached()) {
-            view!!.animateCards(addedCardsAnimationCache)
-        }
+        val cardsToAnimate = addedCardsAnimationCache
+        cardsToAnimate.addAll(removedCardsAnimationCache)
+
+        getViewOrThrow().animateCards(cardsToAnimate)
 
         addedCardsAnimationCache.clear()
         removedCardsAnimationCache.clear()
