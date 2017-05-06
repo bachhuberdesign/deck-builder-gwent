@@ -95,23 +95,18 @@ class DeckbuildPresenter
     fun loadUserDeck(deckId: Int) {
         val deck: Deck? = deckRepository.getDeckById(deckId)
 
-        if (deck != null && isViewAttached()) {
-            view!!.onDeckLoaded(deck)
-            view!!.showCardsByLane(filterCardsByLane(deck, Lane.MELEE), Lane.MELEE)
-            view!!.showCardsByLane(filterCardsByLane(deck, Lane.RANGED), Lane.RANGED)
-            view!!.showCardsByLane(filterCardsByLane(deck, Lane.SIEGE), Lane.SIEGE)
-            view!!.showCardsByLane(filterCardsByLane(deck, Lane.EVENT), Lane.EVENT)
+        if (deck != null) {
+            getViewOrThrow().onDeckLoaded(deck)
             refreshTotals(deckId)
-        }
-    }
 
-    /**
-     *
-     */
-    private fun filterCardsByLane(deck: Deck, lane: Int): List<Card> {
-        return deck.cards
-                .filterNot { it.cardType == CardType.LEADER }
-                .filter { it.selectedLane == lane }
+            deck.cards.forEach { it.animationType = Card.ANIMATION_ADD }
+
+            // Filter out leader card and animate all lanes simultaneously
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.MELEE })
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.RANGED })
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.SIEGE })
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.EVENT })
+        }
     }
 
     /**

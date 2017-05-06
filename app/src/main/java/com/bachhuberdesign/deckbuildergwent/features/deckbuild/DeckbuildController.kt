@@ -228,41 +228,14 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun showCardsByLane(cards: List<Card>, lane: Int) {
-        if (cards.isEmpty()) {
-            Log.d(TAG, "No cards available for lane $lane.")
-            return
-        }
-
-        val layout: LinearLayout?
-
-        when (lane) {
-            Lane.MELEE -> layout = view!!.melee_image_holder
-            Lane.RANGED -> layout = view!!.ranged_image_holder
-            Lane.SIEGE -> layout = view!!.siege_image_holder
-            Lane.EVENT -> layout = view!!.event_image_holder
-            else -> throw IndexOutOfBoundsException("Expected ${Lane.MELEE}, ${Lane.RANGED}, " +
-                    "${Lane.SIEGE}, or ${Lane.EVENT}. Actual value received: $lane.")
-        }
-
-        if (layout.childCount == 0) {
-            cards.forEach { it.animationType = Card.ANIMATION_ADD }
-            animateCards(cards)
-        } else {
-            Log.d(TAG, "Lane $lane already loaded.")
-        }
-    }
-
     override fun animateCards(cardsToAnimate: List<Card>) {
-        // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with a delay for iteration
-
+        // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with
+        // Observable.interval for a delay between iterations
         Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
                 .zipWith(Observable.interval(225, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
-                .doOnComplete {
-                    Log.d(TAG, "Added ${cardsToAnimate.size} cards.")
-                }
                 .subscribe { card ->
+                    // TODO: Simplify and document
                     if (view == null) {
                         return@subscribe
                     }

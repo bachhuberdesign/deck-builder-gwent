@@ -16,8 +16,6 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun onErrorLoadingDeck(message: String)
 
-    fun showCardsByLane(cards: List<Card>, lane: Int)
-
     fun animateCards(cardsToAnimate: List<Card>)
 
     fun deckTotalsUpdated(totals: LaneTotals)
