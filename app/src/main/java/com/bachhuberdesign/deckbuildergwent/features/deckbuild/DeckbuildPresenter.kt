@@ -150,7 +150,7 @@ class DeckbuildPresenter
 
         if (isViewAttached()) {
             val totals = LaneTotals(meleeTotal = meleeTotal, rangedTotal = rangedTotal, siegeTotal = siegeTotal)
-            view!!.deckTotalsUpdated(totals)
+            view!!.onLaneTotalsUpdated(totals)
         }
 
     }

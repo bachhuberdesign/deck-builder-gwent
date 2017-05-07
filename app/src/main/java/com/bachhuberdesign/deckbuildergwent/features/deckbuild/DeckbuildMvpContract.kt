@@ -16,12 +16,12 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun onErrorLoadingDeck(message: String)
 
+    fun onDeckRenamed(newDeckName: String)
+
+    fun onLaneTotalsUpdated(totals: LaneTotals)
+
     fun animateCards(cardsToAnimate: List<Card>)
 
-    fun deckTotalsUpdated(totals: LaneTotals)
-
     fun showDeckRenameDialog(currentDeckName: String)
-
-    fun onDeckRenamed(newDeckName: String)
 
 }

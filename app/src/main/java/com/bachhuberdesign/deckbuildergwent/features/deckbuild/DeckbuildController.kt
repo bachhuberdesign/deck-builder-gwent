@@ -296,8 +296,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 }
     }
 
-    override fun deckTotalsUpdated(totals: LaneTotals) {
-        Log.d(TAG, "deckTotalsUpdated(): $totals")
+    override fun onLaneTotalsUpdated(totals: LaneTotals) {
+        Log.d(TAG, "onLaneTotalsUpdated(): $totals")
         view!!.melee_lane_power_text.text = totals.meleeTotal.toString()
         view!!.ranged_lane_power_text.text = totals.rangedTotal.toString()
         view!!.siege_lane_power_text.text = totals.siegeTotal.toString()
