@@ -118,9 +118,6 @@ class MainActivity : BaseActivity(), MainMvpContract {
         result?.addStickyFooterItem(settings)
     }
 
-    /**
-     *
-     */
     fun displayHomeAsUp(isEnabled: Boolean) {
         if (isEnabled) {
             result?.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false

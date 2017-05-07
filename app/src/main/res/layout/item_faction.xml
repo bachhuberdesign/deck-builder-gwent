@@ -40,12 +40,14 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="serif"
+            android:fontFamily="sans-serif-condensed"
             android:gravity="center"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
             android:text="Description"
             android:textAlignment="center"
             android:textColor="@color/colorSecondaryText"
-            android:textSize="15sp"/>
+            android:textSize="16sp"/>
 
         <RelativeLayout
             android:layout_width="300dp"
@@ -92,6 +94,7 @@
                 android:focusableInTouchMode="true"
                 android:tag="2"
                 android:translationZ="100dp"/>
+
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
