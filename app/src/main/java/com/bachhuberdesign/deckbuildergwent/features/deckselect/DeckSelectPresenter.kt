@@ -1,5 +1,6 @@
 package com.bachhuberdesign.deckbuildergwent.features.deckselect
 
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
@@ -12,7 +13,8 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckSelectPresenter
-@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckSelectMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository,
+                    private val cardRepository: CardRepository) : BasePresenter<DeckSelectMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = DeckSelectPresenter::class.java.name
@@ -21,10 +23,14 @@ class DeckSelectPresenter
     fun loadDeckList() {
         val decks = deckRepository.getAllUserCreatedDecks()
 
-        if (decks.isNotEmpty() && isViewAttached()) {
-            view!!.onDecksLoaded(decks)
-        } else if (isViewAttached()) {
-            view!!.onNoDecksAvailable()
+        decks.forEach { deck ->
+            deck.leader = cardRepository.getCardById(deck.leaderId)
+        }
+
+        if (decks.isNotEmpty()) {
+            getViewOrThrow().onDecksLoaded(decks)
+        } else {
+            getViewOrThrow().onNoDecksAvailable()
         }
     }
 
