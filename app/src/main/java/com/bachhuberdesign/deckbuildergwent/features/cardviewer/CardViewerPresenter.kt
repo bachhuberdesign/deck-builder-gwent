@@ -73,13 +73,13 @@ class CardViewerPresenter
                 if (deck != null && isViewAttached()) {
                     view!!.onDeckbuildModeCardsLoaded(sortedCards.filterNot { it.cardType == CardType.LEADER }, deck)
                 }
+            } else {
+                getViewOrThrow().onViewModeCardsLoaded(sortedCards)
             }
-            getViewOrThrow().onViewModeCardsLoaded(sortedCards)
         } else {
             val cards: List<Card> = cardRepository.getAllCards().sortedBy { card -> card.name }
             getViewOrThrow().onViewModeCardsLoaded(cards)
         }
-
     }
 
 }

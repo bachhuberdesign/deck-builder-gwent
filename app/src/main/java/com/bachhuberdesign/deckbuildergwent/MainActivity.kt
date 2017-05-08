@@ -3,7 +3,6 @@ package com.bachhuberdesign.deckbuildergwent
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
-import com.bachhuberdesign.MainMvpContract
 import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardFilters
 import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardViewerController
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck

@@ -1,7 +1,6 @@
 package com.bachhuberdesign.deckbuildergwent
 
 import android.util.Log
-import com.bachhuberdesign.MainMvpContract
 import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
