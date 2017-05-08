@@ -1,6 +1,8 @@
 package com.bachhuberdesign.deckbuildergwent.util
 
 import android.net.Uri
+import android.support.annotation.ColorRes
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -24,6 +26,7 @@ class DeckDrawerItem : AbstractDrawerItem<DeckDrawerItem, DeckDrawerItem.ViewHol
     var deckName: String = ""
     var deckId: Int = 0
     var backgroundUrl: String = ""
+    var backgroundColor: Int = 0
 
     fun withDeckName(deckName: String): DeckDrawerItem {
         this.deckName = deckName
@@ -37,6 +40,11 @@ class DeckDrawerItem : AbstractDrawerItem<DeckDrawerItem, DeckDrawerItem.ViewHol
 
     fun withBackgroundUrl(backgroundUrl: String): DeckDrawerItem {
         this.backgroundUrl = backgroundUrl
+        return this
+    }
+
+    fun withBackgroundColor(@ColorRes backgroundColor: Int): DeckDrawerItem {
+        this.backgroundColor = backgroundColor
         return this
     }
 
@@ -57,6 +65,10 @@ class DeckDrawerItem : AbstractDrawerItem<DeckDrawerItem, DeckDrawerItem.ViewHol
 
         holder.nameText.text = deckName
 
+        if (backgroundColor > 0) {
+            holder.constraintLayout.setBackgroundResource(backgroundColor)
+        }
+
         if (backgroundUrl.isNotEmpty()) {
             Glide.with(holder.itemView.context)
                     .load(Uri.parse(backgroundUrl))
@@ -73,6 +85,7 @@ class DeckDrawerItem : AbstractDrawerItem<DeckDrawerItem, DeckDrawerItem.ViewHol
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var nameText: TextView = view.card_name_text
         var background: ImageView = view.slim_card_background
+        var constraintLayout: ConstraintLayout = view.constraint_layout
     }
 
 }

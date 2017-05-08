@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
-import com.bachhuberdesign.deckbuildergwent.features.shared.exception.CardException
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildController
-import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
+import com.bachhuberdesign.deckbuildergwent.features.shared.exception.CardException
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
+import com.bachhuberdesign.deckbuildergwent.util.DeckDrawerItem
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
@@ -35,7 +35,7 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
     lateinit var presenter: DeckSelectPresenter
 
     var recyclerView: RecyclerView? = null
-    var adapter: FastItemAdapter<DeckItem>? = null
+    var adapter: FastItemAdapter<DeckDrawerItem>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deck_select)
@@ -46,22 +46,7 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        adapter = FastItemAdapter()
-        adapter!!.withOnClickListener({ view, adapter, item, position ->
-            if (item.deckId == 0) {
-                CardException("Deck ID not set")
-            } else {
-                router.pushController(RouterTransaction.with(DeckbuildController(item.deckId)))
-            }
-            true
-        })
-
-        val layoutManager = LinearLayoutManager(activity)
-
-        recyclerView = view.recycler_view
-        recyclerView?.setHasFixedSize(true)
-        recyclerView?.layoutManager = layoutManager
-        recyclerView?.adapter = adapter
+        initRecyclerView(view)
 
         return view
     }
@@ -77,21 +62,32 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
         presenter.detach()
     }
 
+    private fun initRecyclerView(v: View) {
+        adapter = FastItemAdapter()
+        adapter!!.withOnClickListener({ view, adapter, item, position ->
+            if (item.deckId == 0) {
+                CardException("Deck ID not set")
+            } else {
+                router.pushController(RouterTransaction.with(DeckbuildController(item.deckId)))
+            }
+            true
+        })
+
+        val layoutManager = LinearLayoutManager(activity)
+
+        recyclerView = v.recycler_view
+        recyclerView?.setHasFixedSize(true)
+        recyclerView?.layoutManager = layoutManager
+        recyclerView?.adapter = adapter
+    }
+
     override fun onDecksLoaded(decks: List<Deck>) {
         decks.forEach { deck ->
-            Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
-                    "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
-
-            val item: DeckItem = DeckItem()
-            item.deckName = deck.name
-            item.factionId = deck.faction
-            item.deckId = deck.id
-
-            deck.cards.forEach { card ->
-                if (card.cardType == CardType.LEADER) {
-                    item.leaderName = card.name
-                }
-            }
+            val item = DeckDrawerItem()
+                    .withDeckName(deck.name)
+                    .withDeckId(deck.id)
+                    .withBackgroundUrl("file:///android_asset/slim/${deck.leader?.iconUrl}")
+                    .withBackgroundColor(R.color.primary_dark)
 
             adapter?.add(item)
         }
@@ -101,6 +97,8 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
 
     override fun onNoDecksAvailable() {
         Log.d(TAG, "onNoDecksAvailable()")
+
+        // TODO: Show UI for no available decks
     }
 
 }
