@@ -94,6 +94,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun onAttach(view: View) {
+        Log.d(TAG, "onAttach()")
         super.onAttach(view)
         presenter.attach(this)
 
@@ -102,6 +103,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun onDetach(view: View) {
+        Log.d(TAG, "onDetach()")
         super.onDetach(view)
         presenter.detach()
     }
