@@ -66,6 +66,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     private var animationDisposable: Disposable? = null
     private var deckId: Int = 0
     private var factionId: Int = 0
+    private var reloadDeck: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
@@ -95,7 +96,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         super.onAttach(view)
 
         presenter.attach(this)
-        presenter.loadUserDeck(deckId)
+
+        if (reloadDeck) {
+            // First attach or view was destroyed so deck should be re-loaded
+            reloadDeck = false
+            presenter.loadUserDeck(deckId)
+        }
+
         presenter.subscribeToCardUpdates(deckId)
     }
 
@@ -108,6 +115,11 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt("deckId", deckId)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroyView(view: View) {
+        reloadDeck = true
+        super.onDestroyView(view)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
