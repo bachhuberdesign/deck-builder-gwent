@@ -10,6 +10,8 @@ import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -33,7 +35,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.animation.ViewAnimationFactory
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
@@ -119,6 +120,12 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onDestroyView(view: View) {
         reloadDeck = true
+
+        childRouters.forEach { router ->
+            if (router.backstackSize > 0) {
+                router.popCurrentController()
+            }
+        }
         super.onDestroyView(view)
     }
 
@@ -138,6 +145,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     private fun showDeckDetails(deckId: Int) {
         router.pushController(RouterTransaction.with(DeckDetailController(deckId))
+                .tag(DeckDetailController.TAG)
                 .pushChangeHandler(FlipChangeHandler())
                 .popChangeHandler(FlipChangeHandler()))
     }
@@ -154,8 +162,9 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             override fun onAnimationEnd(animation: Animator) {
                 if (!childRouter.hasRootController()) {
                     childRouter.setRoot(RouterTransaction.with(CardViewerController(filters, deckId))
+                            .tag(CardViewerController.TAG)
                             .pushChangeHandler(SlideInChangeHandler(350, true))
-                            .popChangeHandler(SlideInChangeHandler(350, true)))
+                            .popChangeHandler(SlideInChangeHandler(350, false)))
                 }
                 Handler().postDelayed({
                     view!!.show_card_viewer_button.rotationY = 0.0f
@@ -198,19 +207,22 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     fun closeCardViewerAndAnimate() {
         childRouters.forEach { router ->
             if (router.backstackSize > 0) {
-                router.popCurrentController()
+                val cardViewer = router.getControllerWithTag(CardViewerController.TAG)
+                val animation = AnimationUtils.loadAnimation(activity, R.anim.slide_out)
+
+                animation.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationRepeat(animation: Animation?) {}
+
+                    override fun onAnimationEnd(animation: Animation?) {
+                        router.popCurrentController()
+                        (activity as MainActivity).displayHomeAsUp(false)
+                        presenter.loadCardsToAnimate()
+                    }
+                })
+                cardViewer?.view?.startAnimation(animation)
             }
         }
-
-        (activity as MainActivity).displayHomeAsUp(false)
-
-        // Delay to wait for pop animation to finish
-        Maybe.empty<Any>()
-                .delay(150, MILLISECONDS)
-                .doOnComplete {
-                    presenter.loadCardsToAnimate()
-                }
-                .subscribe()
     }
 
     override fun onDeckLoaded(deck: Deck) {
