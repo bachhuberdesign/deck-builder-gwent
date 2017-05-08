@@ -3,6 +3,9 @@ package com.bachhuberdesign.deckbuildergwent.features.deckbuild
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -163,8 +166,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 if (!childRouter.hasRootController()) {
                     childRouter.setRoot(RouterTransaction.with(CardViewerController(filters, deckId))
                             .tag(CardViewerController.TAG)
-                            .pushChangeHandler(SlideInChangeHandler(350, true))
-                            .popChangeHandler(SlideInChangeHandler(350, false)))
+                            .pushChangeHandler(SlideInChangeHandler(350, true)))
                 }
                 Handler().postDelayed({
                     view!!.show_card_viewer_button.rotationY = 0.0f
@@ -328,6 +330,14 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal
         view!!.deck_power_total_text.text = totalPower.toString()
+
+        val goldShader: Shader = LinearGradient(0f, 0f, 0f, 100f, Color.parseColor("#f1c248"), Color.parseColor("#f08c0b"), Shader.TileMode.CLAMP)
+        val silverShader: Shader = LinearGradient(0f, 0f, 0f, 100f, Color.WHITE, Color.parseColor("#bcbcbc"), Shader.TileMode.CLAMP)
+        view!!.melee_lane_power_text.paint.shader = silverShader
+        view!!.ranged_lane_power_text.paint.shader = silverShader
+        view!!.siege_lane_power_text.paint.shader = silverShader
+
+        view!!.deck_power_total_text.paint.shader = goldShader
     }
 
     override fun showDeckRenameDialog(currentDeckName: String) {
