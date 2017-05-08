@@ -16,6 +16,7 @@ import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.fontawesome_typeface_library.FontAwesome
 import com.mikepenz.materialdrawer.Drawer
@@ -55,7 +56,10 @@ class MainActivity : BaseActivity(), MainMvpContract {
 
         router = Conductor.attachRouter(this, container, savedInstanceState)
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(FactionSelectController()))
+            router.setRoot(RouterTransaction.with(FactionSelectController())
+                    .tag(FactionSelectController.TAG)
+                    .pushChangeHandler(FadeChangeHandler())
+                    .popChangeHandler(FadeChangeHandler()))
         }
 
         initNavigationDrawer()
@@ -129,8 +133,11 @@ class MainActivity : BaseActivity(), MainMvpContract {
     }
 
     private fun showController(controller: Controller, tag: String) {
-        if (!router.popToTag(tag)) {
-            router.pushController(RouterTransaction.with(controller).tag(tag))
+        if (!router.popToTag(tag) && router.getControllerWithTag(tag) == null) {
+            router.pushController(RouterTransaction.with(controller)
+                    .tag(tag)
+                    .pushChangeHandler(FadeChangeHandler())
+                    .popChangeHandler(FadeChangeHandler()))
         }
     }
 

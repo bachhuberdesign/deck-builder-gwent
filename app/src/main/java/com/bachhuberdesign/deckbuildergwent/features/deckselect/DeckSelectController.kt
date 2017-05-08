@@ -46,22 +46,7 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        adapter = FastItemAdapter()
-        adapter!!.withOnClickListener({ view, adapter, item, position ->
-            if (item.deckId == 0) {
-                CardException("Deck ID not set")
-            } else {
-                router.pushController(RouterTransaction.with(DeckbuildController(item.deckId)))
-            }
-            true
-        })
-
-        val layoutManager = LinearLayoutManager(activity)
-
-        recyclerView = view.recycler_view
-        recyclerView?.setHasFixedSize(true)
-        recyclerView?.layoutManager = layoutManager
-        recyclerView?.adapter = adapter
+        initRecyclerView(view)
 
         return view
     }
@@ -77,16 +62,32 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
         presenter.detach()
     }
 
+    private fun initRecyclerView(v: View) {
+        adapter = FastItemAdapter()
+        adapter!!.withOnClickListener({ view, adapter, item, position ->
+            if (item.deckId == 0) {
+                CardException("Deck ID not set")
+            } else {
+                router.pushController(RouterTransaction.with(DeckbuildController(item.deckId)))
+            }
+            true
+        })
+
+        val layoutManager = LinearLayoutManager(activity)
+
+        recyclerView = v.recycler_view
+        recyclerView?.setHasFixedSize(true)
+        recyclerView?.layoutManager = layoutManager
+        recyclerView?.adapter = adapter
+    }
+
     override fun onDecksLoaded(decks: List<Deck>) {
         decks.forEach { deck ->
-            Log.d(TAG, "Deck: ${deck.name}, id: ${deck.id}, favorited: ${deck.isFavorited}, " +
-                    "created on: ${deck.createdDate}, last updated: ${deck.lastUpdate}")
-
             val item = DeckDrawerItem()
                     .withDeckName(deck.name)
                     .withDeckId(deck.id)
                     .withBackgroundUrl("file:///android_asset/slim/${deck.leader?.iconUrl}")
-                    .withBackgroundColor(R.color.md_grey_800)
+                    .withBackgroundColor(R.color.primary_dark)
 
             adapter?.add(item)
         }
@@ -96,6 +97,8 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
 
     override fun onNoDecksAvailable() {
         Log.d(TAG, "onNoDecksAvailable()")
+
+        // TODO: Show UI for no available decks
     }
 
 }

@@ -83,7 +83,9 @@ class DeckbuildPresenter
         val cardsToAnimate = addedCardsAnimationCache
         cardsToAnimate.addAll(removedCardsAnimationCache)
 
-        getViewOrThrow().animateCards(cardsToAnimate)
+        if (isViewAttached()) {
+            view!!.animateCards(cardsToAnimate)
+        }
 
         addedCardsAnimationCache.clear()
         removedCardsAnimationCache.clear()
