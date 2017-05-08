@@ -106,10 +106,6 @@ dependencies {
     // Dialog
     compile 'com.afollestad.material-dialogs:core:0.9.4.4'
 
-    // Stetho
-    compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-
     // Iconics
     compile "com.mikepenz:iconics-core:2.8.3@aar"
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
