@@ -19,6 +19,7 @@ import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.controller_leader_confirm.view.*
@@ -110,11 +111,14 @@ class LeaderConfirmController : Controller, LeaderConfirmMvpContract {
     }
 
     override fun onDeckSaved(deckId: Int) {
-        router.setRoot(RouterTransaction.with(DeckbuildController(deckId))
-                .tag(DeckbuildController.TAG)
-                .pushChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
-                .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT)))
-        router.popToRoot()
+        router.setBackstack(arrayListOf(
+                RouterTransaction.with(FactionSelectController())
+                        .pushChangeHandler(FadeChangeHandler())
+                        .popChangeHandler(FadeChangeHandler()),
+                RouterTransaction.with(DeckbuildController(deckId))
+                        .tag(DeckbuildController.TAG)
+                        .popChangeHandler(FlipChangeHandler(FlipChangeHandler.FlipDirection.LEFT))),
+                FlipChangeHandler(FlipChangeHandler.FlipDirection.RIGHT))
     }
 
     override fun displayError(messageToDisplay: String) {

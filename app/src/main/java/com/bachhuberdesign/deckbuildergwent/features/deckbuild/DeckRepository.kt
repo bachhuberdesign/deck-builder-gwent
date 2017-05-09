@@ -2,7 +2,6 @@ package com.bachhuberdesign.deckbuildergwent.features.deckbuild
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.util.Log
 import com.bachhuberdesign.deckbuildergwent.features.shared.exception.CardException
 import com.bachhuberdesign.deckbuildergwent.features.shared.exception.DeckException
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
@@ -20,12 +19,16 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 /**
+ * Helper class which contains functions that pertain to SQLite [Deck] queries and persistence.
+ *
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
 @PersistedScope
-class DeckRepository @Inject constructor(var gson: Gson, val database: BriteDatabase) {
+class DeckRepository
+@Inject constructor(var gson: Gson,
+                    val database: BriteDatabase) {
 
     companion object {
         @JvmStatic val TAG: String = DeckRepository::class.java.name
@@ -106,8 +109,8 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     private fun getLeaderCardForDeck(leaderCardId: Int): Card {
-        Log.d(TAG, "getLeaderCardForDeck(): leaderCardId $leaderCardId")
         val cursor = database.query("SELECT * FROM ${Card.TABLE} WHERE ${Card.ID} =  $leaderCardId")
+
         cursor.use { cursor ->
             while (cursor.moveToNext()) {
                 return Card.MAPPER.apply(cursor)
@@ -206,6 +209,8 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         }
 
         database.insert(Deck.JOIN_CARD_TABLE, values)
+
+        saveDeckLastUpdateTime(deckId)
     }
 
     fun renameDeck(newDeckName: String, deckId: Int) {
@@ -216,8 +221,6 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
     }
 
     fun removeCardFromDeck(card: Card, deckId: Int) {
-        Log.d(TAG, "removeCardFromDeck(): deckId: $deckId card: $card")
-
         val query: String
 
         if (card.selectedLane == 0) {
@@ -236,11 +239,20 @@ class DeckRepository @Inject constructor(var gson: Gson, val database: BriteData
         }
 
         database.delete(Deck.JOIN_CARD_TABLE, query)
+
+        saveDeckLastUpdateTime(deckId)
     }
 
     fun deleteDeck(deckId: Int) {
         database.delete(Deck.JOIN_CARD_TABLE, "deck_id = $deckId")
         database.delete(Deck.TABLE, "${Deck.ID} = $deckId")
+    }
+
+    private fun saveDeckLastUpdateTime(deckId: Int) {
+        val deckValues = ContentValues()
+        deckValues.put(Deck.LAST_UPDATE, Date().time)
+
+        database.update(Deck.TABLE, deckValues, "${Deck.ID} = $deckId")
     }
 
 }

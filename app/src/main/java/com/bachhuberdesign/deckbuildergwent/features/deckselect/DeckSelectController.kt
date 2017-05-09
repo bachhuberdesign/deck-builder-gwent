@@ -16,6 +16,7 @@ import com.bachhuberdesign.deckbuildergwent.util.DeckDrawerItem
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import kotlinx.android.synthetic.main.controller_deck_select.view.*
 import javax.inject.Inject
@@ -68,7 +69,10 @@ class DeckSelectController : Controller(), DeckSelectMvpContract {
             if (item.deckId == 0) {
                 CardException("Deck ID not set")
             } else {
-                router.pushController(RouterTransaction.with(DeckbuildController(item.deckId)))
+                router.pushController(RouterTransaction.with(DeckbuildController(item.deckId))
+                        .tag(DeckbuildController.TAG)
+                        .pushChangeHandler(FadeChangeHandler())
+                        .popChangeHandler(FadeChangeHandler()))
             }
             true
         })
