@@ -40,9 +40,9 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
     @Inject
     lateinit var presenter: FactionSelectPresenter
 
-    var recyclerView: RecyclerView? = null
-    var adapter: FastItemAdapter<FactionItem>? = null
-    var isLeaderClickable: Boolean = true
+    private var recyclerView: RecyclerView? = null
+    private var adapter: FastItemAdapter<FactionItem>? = null
+    private var isLeaderClickable: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_faction_select)
@@ -52,31 +52,7 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        adapter = FastItemAdapter()
-        adapter!!.withItemEvent(object : ClickEventHook<FactionItem>() {
-            override fun onBindMany(viewHolder: RecyclerView.ViewHolder): MutableList<View>? {
-                if (viewHolder is FactionItem.ViewHolder) {
-                    return ClickListenerHelper.toList(viewHolder.leader1, viewHolder.leader2, viewHolder.leader3)
-                } else {
-                    return super.onBindMany(viewHolder)
-                }
-            }
-
-            override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionItem>, item: FactionItem) {
-                if (isLeaderClickable) {
-                    isLeaderClickable = false
-                    val index = Integer.valueOf(view.tag as String)
-                    beginCardExpandAnimation(view as ImageView, item.leaders!![index])
-                }
-            }
-        })
-
-        val layoutManager = LinearLayoutManager(activity)
-
-        recyclerView = view.recycler_view
-        recyclerView?.setHasFixedSize(true)
-        recyclerView?.layoutManager = layoutManager
-        recyclerView?.adapter = adapter
+        initRecyclerView(view)
 
         return view
     }
@@ -95,19 +71,42 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         presenter.detach()
     }
 
-    private fun beginCardExpandAnimation(imageView: ImageView, leader: Card) {
+    private fun initRecyclerView(v: View) {
+        adapter = FastItemAdapter()
+        adapter!!.withItemEvent(object : ClickEventHook<FactionItem>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder): MutableList<View>? {
+                if (viewHolder is FactionItem.ViewHolder) {
+                    return ClickListenerHelper.toList(viewHolder.leader1, viewHolder.leader2, viewHolder.leader3)
+                } else {
+                    return super.onBindMany(viewHolder)
+                }
+            }
+
+            override fun onClick(view: View, i: Int, fastAdapter: FastAdapter<FactionItem>, item: FactionItem) {
+                if (isLeaderClickable) {
+                    isLeaderClickable = false
+                    val index = Integer.valueOf(view.tag as String)
+                    beginCardFlipAnimation(view as ImageView, item.leaders!![index])
+                }
+            }
+        })
+
+        val layoutManager = LinearLayoutManager(activity)
+
+        recyclerView = v.recycler_view
+        recyclerView?.setHasFixedSize(true)
+        recyclerView?.layoutManager = layoutManager
+        recyclerView?.adapter = adapter
+    }
+
+    private fun beginCardFlipAnimation(imageView: ImageView, leader: Card) {
         val flip1 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_1)
         val flip2 = AnimationUtils.loadAnimation(activity, R.anim.card_flip_2)
 
         flip1.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-            }
-
-            override fun onAnimationRepeat(animation: Animation) {
-            }
-
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationRepeat(animation: Animation) {}
             override fun onAnimationEnd(animation: Animation) {
-                leader.faction
                 Glide.with(activity)
                         .load(Uri.parse("file:///android_asset/faction_back_${leader.faction}_thumbnail_padded.png"))
                         .fitCenter()
@@ -119,12 +118,8 @@ class FactionSelectController : Controller(), FactionSelectMvpContract {
         })
 
         flip2.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-            }
-
-            override fun onAnimationRepeat(animation: Animation) {
-            }
-
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationRepeat(animation: Animation) {}
             override fun onAnimationEnd(animation: Animation) {
                 onLeaderSelected(leader)
             }
