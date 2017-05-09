@@ -331,12 +331,14 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         val totalPower: Int = totals.meleeTotal + totals.rangedTotal + totals.siegeTotal
         view!!.deck_power_total_text.text = totalPower.toString()
 
+        // Create linear gradients for our lane power TextViews
         val goldShader: Shader = LinearGradient(0f, 0f, 0f, 100f, Color.parseColor("#f1c248"), Color.parseColor("#f08c0b"), Shader.TileMode.CLAMP)
-        val silverShader: Shader = LinearGradient(0f, 0f, 0f, 100f, Color.WHITE, Color.parseColor("#bcbcbc"), Shader.TileMode.CLAMP)
+        val silverShader: Shader = LinearGradient(0f, 0f, 0f, 100f, Color.parseColor("#bcbcbc"), Color.DKGRAY, Shader.TileMode.CLAMP)
+
+        // Set the shader (overrides any other shader including drop-shadow)
         view!!.melee_lane_power_text.paint.shader = silverShader
         view!!.ranged_lane_power_text.paint.shader = silverShader
         view!!.siege_lane_power_text.paint.shader = silverShader
-
         view!!.deck_power_total_text.paint.shader = goldShader
     }
 
