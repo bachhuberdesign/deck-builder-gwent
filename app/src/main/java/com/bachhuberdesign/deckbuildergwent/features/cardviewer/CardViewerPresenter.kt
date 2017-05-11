@@ -41,6 +41,29 @@ class CardViewerPresenter
 
     }
 
+    /**
+     * @param deckId
+     * @param card
+     */
+    fun addCardToDeck(deckId: Int, card: Card) {
+        deckRepository.addCardToDeck(card, deckId)
+
+        getViewOrThrow().updateCount(card, itemRemoved = false)
+    }
+
+    /**
+     * @param deckId
+     * @param card
+     */
+    fun removeCardFromDeck(deckId: Int, card: Card) {
+        deckRepository.removeCardFromDeck(card, deckId)
+
+        getViewOrThrow().updateCount(card, itemRemoved = true)
+    }
+
+    /**
+     *
+     */
     fun displayMultiLaneSelection(card: Card): List<Int> {
         val lanesToDisplay: MutableList<Int> = LinkedList()
 

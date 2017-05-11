@@ -30,8 +30,9 @@ class DeckbuildPresenter
     var addedCardsAnimationCache: MutableList<Card> = ArrayList()
     var removedCardsAnimationCache: MutableList<Card> = ArrayList()
 
-    override fun detach() {
-        super.detach()
+    fun unsubscribeToCardUpdates() {
+        Log.d(TAG, "unsubscribeToCardUpdates()")
+
         if (cardSubscription != null) {
             cardSubscription!!.unsubscribe()
         }
@@ -44,6 +45,8 @@ class DeckbuildPresenter
      *
      */
     fun subscribeToCardUpdates(deckId: Int) {
+        Log.d(TAG, "subscribeToCardUpdates()")
+
         var previousCards: MutableList<Card> = deckRepository.getCardsForDeck(deckId)
 
         cardSubscription = deckRepository.observeCardUpdates(deckId)
@@ -55,7 +58,7 @@ class DeckbuildPresenter
                         cardToAdd.animationType = Card.ANIMATION_ADD
 
                         addedCardsAnimationCache.add(cardToAdd)
-                        Log.d(TAG, "Added $cardToAdd to addedCardsAnimationCache")
+                        Log.d(TAG, "Added ${cardToAdd.name} to addedCardsAnimationCache")
                     } else if (cards.size < previousCards.size) {
                         cards.forEach { previousCards.remove(it) }
 
@@ -64,7 +67,7 @@ class DeckbuildPresenter
                             cardToRemove.animationType = Card.ANIMATION_REMOVE
 
                             removedCardsAnimationCache.add(previousCards.first())
-                            Log.d(TAG, "Added $cardToRemove to removedCardsAnimationCache")
+                            Log.d(TAG, "Added ${cardToRemove.name} to removedCardsAnimationCache")
                         }
                     }
 
@@ -109,24 +112,6 @@ class DeckbuildPresenter
             getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.SIEGE })
             getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.EVENT })
         }
-    }
-
-    /**
-     *
-     */
-    fun addCardToDeck(card: Card, deckId: Int) {
-        deckRepository.addCardToDeck(card, deckId)
-
-        refreshTotals(deckId)
-    }
-
-    /**
-     *
-     */
-    fun removeCardFromDeck(card: Card, deckId: Int) {
-        deckRepository.removeCardFromDeck(card, deckId)
-
-        refreshTotals(deckId)
     }
 
     /**

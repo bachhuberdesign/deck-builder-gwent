@@ -21,4 +21,6 @@ interface CardViewerMvpContract : MvpContract {
 
     fun showLaneSelection(lanesToDisplay: List<Int>, card: Card)
 
+    fun updateCount(card: Card, itemRemoved: Boolean)
+
 }

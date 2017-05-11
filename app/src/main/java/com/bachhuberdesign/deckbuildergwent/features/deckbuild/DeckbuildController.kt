@@ -8,13 +8,10 @@ import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -32,7 +29,6 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.*
 import com.bluelinelabs.conductor.Controller
-import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
@@ -65,8 +61,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     @Inject
     lateinit var presenter: DeckbuildPresenter
 
-    private lateinit var childRouter: Router
-
     private var animationDisposable: Disposable? = null
     private var deckId: Int = 0
     private var factionId: Int = 0
@@ -77,8 +71,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
         activity?.title = "Deckbuild Controller"
         setHasOptionsMenu(true)
-
-        childRouter = getChildRouter(container).setPopsLastView(true)
 
         (activity as MainActivity).persistedComponent
                 .activitySubcomponent(ActivityModule(activity!!))
@@ -92,6 +84,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         view.show_card_viewer_button.setOnClickListener {
             showCardPicker()
         }
+
+        retainViewMode = RetainViewMode.RETAIN_DETACH
 
         return view
     }
@@ -123,12 +117,9 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onDestroyView(view: View) {
         reloadDeck = true
+        presenter.unsubscribeToCardUpdates()
+        animationDisposable?.dispose()
 
-        childRouters.forEach { router ->
-            if (router.backstackSize > 0) {
-                router.popCurrentController()
-            }
-        }
         super.onDestroyView(view)
     }
 
@@ -163,14 +154,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         cardFlip.duration = 725
         cardFlip.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
-                if (!childRouter.hasRootController()) {
-                    childRouter.setRoot(RouterTransaction.with(CardViewerController(filters, deckId))
-                            .tag(CardViewerController.TAG)
-                            .pushChangeHandler(SlideInChangeHandler(350, true)))
-                }
-                Handler().postDelayed({
-                    view!!.show_card_viewer_button.rotationY = 0.0f
-                }, 500)
+                router.pushController(RouterTransaction.with(CardViewerController(filters, deckId))
+                        .tag(CardViewerController.TAG)
+                        .popChangeHandler(SlideInChangeHandler(300, false))
+                        .pushChangeHandler(SlideInChangeHandler(300, true)))
             }
         })
 
@@ -185,46 +172,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                 .onPositive({ dialog, action -> presenter.deleteDeck(deckId) })
                 .negativeText(android.R.string.cancel)
                 .show()
-    }
-
-    /**
-     * Wrapper function which calls [DeckbuildController]'s presenter.addCardToDeck(int).
-     *
-     * Callback function onCardAdded() will be called by the presenter if the card is persisted successfully.
-     */
-    fun addCardToCurrentDeck(card: Card) {
-        presenter.addCardToDeck(card, deckId)
-    }
-
-    /**
-     *
-     */
-    fun removeCardFromDeck(card: Card) {
-        presenter.removeCardFromDeck(card, deckId)
-    }
-
-    /**
-     *
-     */
-    fun closeCardViewerAndAnimate() {
-        childRouters.forEach { router ->
-            if (router.backstackSize > 0) {
-                val cardViewer = router.getControllerWithTag(CardViewerController.TAG)
-                val animation = AnimationUtils.loadAnimation(activity, R.anim.slide_out)
-
-                animation.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation?) {}
-                    override fun onAnimationRepeat(animation: Animation?) {}
-
-                    override fun onAnimationEnd(animation: Animation?) {
-                        router.popCurrentController()
-                        (activity as MainActivity).displayHomeAsUp(false)
-                        presenter.loadCardsToAnimate()
-                    }
-                })
-                cardViewer?.view?.startAnimation(animation)
-            }
-        }
     }
 
     override fun onDeckLoaded(deck: Deck) {
@@ -257,7 +204,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     override fun animateCards(cardsToAnimate: List<Card>) {
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with
         // Observable.interval for a delay between iterations
-        Observable.fromArray(cardsToAnimate)
+        animationDisposable = Observable.fromArray(cardsToAnimate)
                 .flatMapIterable { cards -> cards }
                 .zipWith(Observable.interval(225, MILLISECONDS), BiFunction<Card, Long, Card> { card, delay -> card })
                 .subscribe { card ->
@@ -285,7 +232,6 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                             layout?.removeView(viewToAnimate)
 
                             if (layout.childCount > 0) {
-                                Log.d(TAG, "Updating params")
                                 val imageViewParams = LinearLayout.LayoutParams(activity!!.dpToPx(75).toInt(), WRAP_CONTENT)
                                 imageViewParams.setMargins(activity!!.dpToPx(0).toInt(), 0, activity!!.dpToPx(0).toInt(), 0)
                                 val ree = layout?.getChildAt(0)
