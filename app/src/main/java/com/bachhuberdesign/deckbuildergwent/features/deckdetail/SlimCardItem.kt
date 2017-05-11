@@ -1,4 +1,4 @@
-package com.bachhuberdesign.deckbuildergwent.features.deckcardlist
+package com.bachhuberdesign.deckbuildergwent.features.deckdetail
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

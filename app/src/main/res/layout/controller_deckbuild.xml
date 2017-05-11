@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/event_top_guideline"/>
 
-    <TextView
+    <com.bachhuberdesign.deckbuildergwent.util.GradientOutlineTextView
         android:id="@+id/deck_power_total_text"
         fontPath="fonts/numbers.otf"
         android:layout_width="wrap_content"
@@ -276,7 +276,7 @@
             android:paddingEnd="15dp"/>
     </HorizontalScrollView>
 
-    <TextView
+    <com.bachhuberdesign.deckbuildergwent.util.GradientOutlineTextView
         android:id="@+id/melee_lane_power_text"
         fontPath="fonts/numbers.otf"
         android:layout_width="wrap_content"
@@ -296,7 +296,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/melee_top_guideline"/>
 
-    <TextView
+    <com.bachhuberdesign.deckbuildergwent.util.GradientOutlineTextView
         android:id="@+id/ranged_lane_power_text"
         fontPath="fonts/numbers.otf"
         android:layout_width="wrap_content"
@@ -316,20 +316,22 @@
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/ranged_top_guideline"/>
 
-    <TextView
+    <com.bachhuberdesign.deckbuildergwent.util.GradientOutlineTextView
         android:id="@+id/siege_lane_power_text"
         fontPath="fonts/numbers.otf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:paddingBottom="3dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="3dp"
         android:shadowColor="@color/md_grey_400"
         android:shadowDx="2.5"
         android:shadowDy="2.5"
         android:shadowRadius="2"
         android:text="0"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="50dp"
+        android:textSize="55dp"
         app:layout_constraintBottom_toTopOf="@+id/siege_lane_icon"
         app:layout_constraintEnd_toStartOf="@+id/card_images_start_guideline"
         app:layout_constraintHorizontal_bias="0.5"

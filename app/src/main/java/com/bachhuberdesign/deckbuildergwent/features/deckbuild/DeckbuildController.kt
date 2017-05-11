@@ -24,7 +24,7 @@ import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardFilters
 import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardViewerController
-import com.bachhuberdesign.deckbuildergwent.features.deckcardlist.DeckDetailController
+import com.bachhuberdesign.deckbuildergwent.features.deckdetail.DeckDetailController
 import com.bachhuberdesign.deckbuildergwent.features.factionselect.FactionSelectController
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
