@@ -1,9 +1,10 @@
 package com.bachhuberdesign.deckbuildergwent.inject
 
 import com.bachhuberdesign.deckbuildergwent.MainActivity
+import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardDetailController
 import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardViewerController
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildController
-import com.bachhuberdesign.deckbuildergwent.features.deckcardlist.DeckDetailController
+import com.bachhuberdesign.deckbuildergwent.features.deckdetail.DeckDetailController
 import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectController
 import com.bachhuberdesign.deckbuildergwent.features.factionselect.FactionSelectController
 import com.bachhuberdesign.deckbuildergwent.features.factionselect.LeaderConfirmController
@@ -36,5 +37,7 @@ interface ActivityComponent {
     fun inject(deckSelectController: DeckSelectController)
 
     fun inject(deckDetailController: DeckDetailController)
+
+    fun inject(cardDetailController: CardDetailController)
 
 }

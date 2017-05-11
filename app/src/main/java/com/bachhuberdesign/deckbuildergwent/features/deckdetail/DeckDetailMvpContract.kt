@@ -1,4 +1,4 @@
-package com.bachhuberdesign.deckbuildergwent.features.deckcardlist
+package com.bachhuberdesign.deckbuildergwent.features.deckdetail
 
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.MvpContract

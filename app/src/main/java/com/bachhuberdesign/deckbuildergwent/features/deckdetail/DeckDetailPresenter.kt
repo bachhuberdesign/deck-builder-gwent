@@ -1,4 +1,4 @@
-package com.bachhuberdesign.deckbuildergwent.features.deckcardlist
+package com.bachhuberdesign.deckbuildergwent.features.deckdetail
 
 import android.util.Log
 import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
