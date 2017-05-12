@@ -67,10 +67,12 @@ data class Card(var cardId: Int = 0,
             card.cardType = cursor.getIntFromColumn(Card.TYPE)
             card.power = cursor.getIntFromColumn(Card.POWER)
 
-            try {
-                card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
-            } catch (e: Exception) {
-                card.selectedLane = 0
+            if (cursor.columnNames.contains(Card.SELECTED_LANE)) {
+                try {
+                    card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
+                } catch (e: Exception) {
+                    card.selectedLane = 0
+                }
             }
 
             card
@@ -93,10 +95,12 @@ data class Card(var cardId: Int = 0,
             card.cardType = cursor.getIntFromColumn(Card.TYPE)
             card.power = cursor.getIntFromColumn(Card.POWER)
 
-            try {
-                card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
-            } catch (e: Exception) {
-                card.selectedLane = 0
+            if (cursor.columnNames.contains(Card.SELECTED_LANE)) {
+                try {
+                    card.selectedLane = cursor.getIntFromColumn(Card.SELECTED_LANE)
+                } catch (e: Exception) {
+                    card.selectedLane = 0
+                }
             }
 
             card

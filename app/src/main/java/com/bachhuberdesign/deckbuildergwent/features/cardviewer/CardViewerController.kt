@@ -16,9 +16,13 @@ import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildControll
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
+import com.bachhuberdesign.deckbuildergwent.util.SharedElementDelayingChangeHandler
 import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
+import com.bluelinelabs.conductor.changehandler.TransitionChangeHandlerCompat
 import com.google.gson.Gson
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
@@ -185,6 +189,20 @@ class CardViewerController : Controller, CardViewerMvpContract {
 
     private fun initRecyclerView(v: View) {
         adapter = FastItemAdapter()
+        adapter.withOnClickListener({ view, adapter, item, position ->
+            val imageTransitionName = "imageTransition${item.card.cardId}"
+            val nameTransitionName = "nameTransition${item.card.cardId}"
+
+            val transitionNames = java.util.ArrayList<String>()
+            transitionNames.add(imageTransitionName)
+            transitionNames.add(nameTransitionName)
+
+            router.pushController(RouterTransaction.with(CardDetailController(item.card.cardId))
+                    .tag(DeckbuildController.TAG)
+                    .pushChangeHandler(TransitionChangeHandlerCompat(SharedElementDelayingChangeHandler(transitionNames), FadeChangeHandler()))
+                    .popChangeHandler(TransitionChangeHandlerCompat(SharedElementDelayingChangeHandler(transitionNames), FadeChangeHandler())))
+            true
+        })
 
         adapter.withItemEvent(object : ClickEventHook<CardItem>() {
             override fun onBindMany(viewHolder: RecyclerView.ViewHolder): MutableList<View>? {
@@ -204,8 +222,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                     }
                 } else if (v.tag == "remove") {
                     if (item.count > 0) {
-                        (parentController as DeckbuildController).removeCardFromDeck(item.card)
-                        updateCount(item.card, true)
+                        presenter.removeCardFromDeck(deckId, item.card)
                     }
                 }
             }
@@ -242,24 +259,19 @@ class CardViewerController : Controller, CardViewerMvpContract {
     }
 
     override fun handleBack(): Boolean {
-        if (deckId > 0) {
-            (parentController as DeckbuildController).closeCardViewerAndAnimate()
-            return true
-        } else {
-            return super.handleBack()
-        }
+        return super.handleBack()
     }
 
     override fun onCardChecked(card: Card, isCardAddable: Boolean) {
         if (isCardAddable) {
-            (parentController as DeckbuildController).addCardToCurrentDeck(card)
-            updateCount(card, false)
+            presenter.addCardToDeck(deckId, card)
         }
 
         isAddCardButtonClickable = true
     }
 
-    private fun updateCount(card: Card, itemRemoved: Boolean) {
+    override fun updateCount(card: Card, itemRemoved: Boolean) {
+        Log.d(TAG, "updateCount()")
         val item = adapter.adapterItems.find { it.card.cardId == card.cardId }
 
         val position = adapter.adapterItems.indexOf(item)
@@ -293,8 +305,7 @@ class CardViewerController : Controller, CardViewerMvpContract {
                             throw UnsupportedOperationException("Selected lane does not match Event/Melee/Ranged/Siege. Lane text: $text")
                         }
                     }
-                    (parentController as DeckbuildController).addCardToCurrentDeck(card)
-                    updateCount(card, false)
+                    presenter.addCardToDeck(deckId, card)
 
                     isAddCardButtonClickable = true
 

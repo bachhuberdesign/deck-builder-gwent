@@ -1,7 +1,7 @@
 package com.bachhuberdesign.deckbuildergwent.features.cardviewer
 
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +11,8 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.controller_card_detail.view.*
 import javax.inject.Inject
 
 /**
@@ -42,6 +44,9 @@ class CardDetailController : Controller, CardDetailMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
+        view.card_image.transitionName = "imageTransition$cardId"
+        view.card_name_text.transitionName = "nameTransition$cardId"
+
         return view
     }
 
@@ -63,9 +68,23 @@ class CardDetailController : Controller, CardDetailMvpContract {
     }
 
     override fun onCardLoaded(card: Card) {
-        Log.d(TAG, "onCardLoaded(): $card")
+        activity?.title = card.name
 
-        // TODO: Set views
+        Glide.with(activity!!)
+                .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))
+                .fitCenter()
+                .dontAnimate()
+                .into(view!!.card_image)
+
+        view!!.card_name_text.text = card.name
+        view!!.card_description_text.text = card.description
+        view!!.card_flavor_text.text = card.flavorText
+        view!!.card_group_text.text = card.cardType.toString()
+        view!!.card_faction_text.text = card.faction.toString()
+        view!!.card_rarity_text.text = card.rarity.toString()
+        view!!.card_lane_text.text = card.lane.toString()
+        view!!.card_craft_text.text = "${card.scrap} / ${card.scrapPremium}"
+        view!!.card_mill_text.text = "${card.mill} / ${card.millPremium}"
     }
 
 }
