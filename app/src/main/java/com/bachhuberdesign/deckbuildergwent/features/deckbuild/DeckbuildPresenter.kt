@@ -47,34 +47,36 @@ class DeckbuildPresenter
     fun subscribeToCardUpdates(deckId: Int) {
         Log.d(TAG, "subscribeToCardUpdates()")
 
-        var previousCards: MutableList<Card> = deckRepository.getCardsForDeck(deckId)
+        if (cardSubscription == null) {
+            var previousCards: MutableList<Card> = deckRepository.getCardsForDeck(deckId)
 
-        cardSubscription = deckRepository.observeCardUpdates(deckId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ cards ->
-                    if (cards.isNotEmpty() && isViewAttached() && cards.size > previousCards.size) {
-                        val cardToAdd = cards.last()
-                        cardToAdd.animationType = Card.ANIMATION_ADD
+            cardSubscription = deckRepository.observeCardUpdates(deckId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ cards ->
+                        if (cards.isNotEmpty() && isViewAttached() && cards.size > previousCards.size) {
+                            val cardToAdd = cards.last()
+                            cardToAdd.animationType = Card.ANIMATION_ADD
 
-                        addedCardsAnimationCache.add(cardToAdd)
-                        Log.d(TAG, "Added ${cardToAdd.name} to addedCardsAnimationCache")
-                    } else if (cards.size < previousCards.size) {
-                        cards.forEach { previousCards.remove(it) }
+                            addedCardsAnimationCache.add(cardToAdd)
+                            Log.d(TAG, "Added ${cardToAdd.name} to addedCardsAnimationCache")
+                        } else if (cards.size < previousCards.size) {
+                            cards.forEach { previousCards.remove(it) }
 
-                        if (previousCards.firstOrNull() != null) {
-                            val cardToRemove = previousCards.first()
-                            cardToRemove.animationType = Card.ANIMATION_REMOVE
+                            if (previousCards.firstOrNull() != null) {
+                                val cardToRemove = previousCards.first()
+                                cardToRemove.animationType = Card.ANIMATION_REMOVE
 
-                            removedCardsAnimationCache.add(previousCards.first())
-                            Log.d(TAG, "Added ${cardToRemove.name} to removedCardsAnimationCache")
+                                removedCardsAnimationCache.add(previousCards.first())
+                                Log.d(TAG, "Added ${cardToRemove.name} to removedCardsAnimationCache")
+                            }
                         }
-                    }
 
-                    previousCards = cards
-                }, { error ->
-                    Log.e(TAG, "Error querying cards for deck $deckId", error)
-                })
+                        previousCards = cards
+                    }, { error ->
+                        Log.e(TAG, "Error querying cards for deck $deckId", error)
+                    })
+        }
     }
 
     /**

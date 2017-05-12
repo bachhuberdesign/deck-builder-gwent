@@ -99,6 +99,8 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
             // First attach or view was destroyed so deck should be re-loaded
             reloadDeck = false
             presenter.loadUserDeck(deckId)
+        } else {
+            presenter.loadCardsToAnimate()
         }
 
         presenter.subscribeToCardUpdates(deckId)
