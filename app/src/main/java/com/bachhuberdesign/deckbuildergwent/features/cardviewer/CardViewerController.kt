@@ -16,11 +16,13 @@ import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildControll
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
+import com.bachhuberdesign.deckbuildergwent.util.SharedElementDelayingChangeHandler
 import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
+import com.bluelinelabs.conductor.changehandler.TransitionChangeHandlerCompat
 import com.google.gson.Gson
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
@@ -188,10 +190,17 @@ class CardViewerController : Controller, CardViewerMvpContract {
     private fun initRecyclerView(v: View) {
         adapter = FastItemAdapter()
         adapter.withOnClickListener({ view, adapter, item, position ->
+            val imageTransitionName = "imageTransition${item.card.cardId}"
+            val nameTransitionName = "nameTransition${item.card.cardId}"
+
+            val transitionNames = java.util.ArrayList<String>()
+            transitionNames.add(imageTransitionName)
+            transitionNames.add(nameTransitionName)
+
             router.pushController(RouterTransaction.with(CardDetailController(item.card.cardId))
                     .tag(DeckbuildController.TAG)
-                    .pushChangeHandler(FadeChangeHandler())
-                    .popChangeHandler(FadeChangeHandler()))
+                    .pushChangeHandler(TransitionChangeHandlerCompat(SharedElementDelayingChangeHandler(transitionNames), FadeChangeHandler()))
+                    .popChangeHandler(TransitionChangeHandlerCompat(SharedElementDelayingChangeHandler(transitionNames), FadeChangeHandler())))
             true
         })
 

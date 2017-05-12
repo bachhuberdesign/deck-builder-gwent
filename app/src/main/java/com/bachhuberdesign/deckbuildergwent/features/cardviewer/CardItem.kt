@@ -57,9 +57,13 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
         Glide.clear(holder.cardImage)
         Glide.with(holder.itemView.context)
                 .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))
+                .dontAnimate()
                 .into(holder.cardImage)
+        holder.cardImage.transitionName = "imageTransition${card.cardId}"
 
         holder.name.text = card.name
+        holder.name.transitionName = "nameTransition${card.cardId}"
+
         holder.scrapCostText.text = card.scrap.toString()
 
         when (card.cardType) {

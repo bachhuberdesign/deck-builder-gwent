@@ -44,6 +44,9 @@ class CardDetailController : Controller, CardDetailMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
+        view.card_image.transitionName = "imageTransition$cardId"
+        view.card_name_text.transitionName = "nameTransition$cardId"
+
         return view
     }
 
@@ -70,6 +73,7 @@ class CardDetailController : Controller, CardDetailMvpContract {
         Glide.with(activity!!)
                 .load(Uri.parse("file:///android_asset/cards/${card.iconUrl}"))
                 .fitCenter()
+                .dontAnimate()
                 .into(view!!.card_image)
 
         view!!.card_name_text.text = card.name
