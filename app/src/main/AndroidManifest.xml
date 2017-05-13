@@ -15,7 +15,7 @@
 
         <activity
             android:name="com.bachhuberdesign.deckbuildergwent.MainActivity"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

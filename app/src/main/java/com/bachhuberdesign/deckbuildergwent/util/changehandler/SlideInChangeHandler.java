@@ -1,4 +1,4 @@
-package com.bachhuberdesign.deckbuildergwent.util;
+package com.bachhuberdesign.deckbuildergwent.util.changehandler;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;

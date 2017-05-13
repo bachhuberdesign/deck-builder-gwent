@@ -7,6 +7,7 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
+    <color name="immersiveBackground">#88000000</color>
     <color name="gwentBronze">#6d4c41</color>
     <color name="gwentSilver">#9e9e9e</color>
     <color name="gwentGold">#ffc400</color>

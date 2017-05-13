@@ -9,6 +9,7 @@ import android.util.Log
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
+import com.bachhuberdesign.deckbuildergwent.features.stattrack.Match
 import com.google.gson.Gson
 
 /**
@@ -64,6 +65,19 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                         "${Faction.EFFECT} TEXT NOT NULL," +
                         "${Faction.ICON_URL} TEXT NOT NULL" +
                         ")"
+
+        const val CREATE_TABLE_MATCHES: String =
+                "CREATE TABLE ${Match.TABLE} (" +
+                        "${Match.ID} INTEGER NOT NULL PRIMARY KEY " +
+                        "${Match.DECK_ID} INTEGER NOT NULL " +
+                        "${Match.WIN_TYPE} INTEGER NOT NULL " +
+                        "${Match.OPPONENT_FACTION} INTEGER NOT NULL " +
+                        "${Match.OPPONENT_LEADER} INTEGER DEFAULT 0 " +
+                        "${Match.NOTES} TEXT " +
+                        "${Match.PLAYED_DATE} INTEGER " +
+                        "${Match.CREATED_DATE} INTEGER " +
+                        "${Match.LAST_UPDATE} INTEGER" +
+                        ")"
     }
 
     override fun onCreate(database: SQLiteDatabase) {
@@ -71,6 +85,7 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
         database.execSQL(CREATE_TABLE_USER_DECKS)
         database.execSQL(CREATE_TABLE_USER_DECKS_CARDS)
         database.execSQL(CREATE_TABLE_FACTIONS)
+        database.execSQL(CREATE_TABLE_MATCHES)
 
         val cards = Gson().fromJson(loadJsonFromAssets("card_list.json"), Array<Card>::class.java)
         val factions = Gson().fromJson(loadJsonFromAssets("faction_list.json"), Array<Faction>::class.java)
@@ -112,9 +127,8 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
     private fun loadJsonFromAssets(fileName: String): String {
         val stream = context.assets.open(fileName)
         val buffer = ByteArray(stream.available())
-        stream.use { stream ->
-            stream.read(buffer)
-        }
+
+        stream.use { stream.read(buffer) }
 
         return String(buffer).format("UTF-8")
     }
