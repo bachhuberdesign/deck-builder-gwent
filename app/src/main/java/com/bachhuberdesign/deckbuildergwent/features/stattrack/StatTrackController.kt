@@ -6,8 +6,11 @@ import android.view.ViewGroup
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
+import com.bachhuberdesign.deckbuildergwent.util.changehandler.FabToDialogTransitionChangeHandler
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
+import kotlinx.android.synthetic.main.controller_stat_track.view.*
 import javax.inject.Inject
 
 /**
@@ -15,7 +18,7 @@ import javax.inject.Inject
  * @version 1.0.0
  * @since 1.0.0
  */
-class StatTrackController : Controller(), StatTrackMvpContract {
+class StatTrackController : Controller(), AddMatchDialogMvpContract {
 
     companion object {
         @JvmStatic val TAG: String = StatTrackController::class.java.name
@@ -31,8 +34,17 @@ class StatTrackController : Controller(), StatTrackMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
+        activity!!.title = "Stat Tracker"
+
+        view.fab.setOnClickListener {
+            router.pushController(RouterTransaction.with(AddMatchDialogController())
+                    .pushChangeHandler(FabToDialogTransitionChangeHandler())
+                    .popChangeHandler(FabToDialogTransitionChangeHandler()))
+        }
+
         return view
     }
+
 
     override fun onAttach(view: View) {
         super.onAttach(view)

@@ -10,10 +10,10 @@ import javax.inject.Inject
  * @since 1.0.0
  */
 @PersistedScope
-class StatRepository @Inject constructor(val database: BriteDatabase) {
+class StatTrackRepository @Inject constructor(val database: BriteDatabase) {
 
     companion object {
-        @JvmStatic val TAG: String = StatRepository::class.java.name
+        @JvmStatic val TAG: String = StatTrackRepository::class.java.name
     }
 
 }

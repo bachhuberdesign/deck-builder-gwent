@@ -7,8 +7,6 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.base.MvpContract
  * @version 1.0.0
  * @since 1.0.0
  */
-interface StatTrackMvpContract : MvpContract {
-
-
+interface StatTrackDialogMvpContract : MvpContract {
 
 }

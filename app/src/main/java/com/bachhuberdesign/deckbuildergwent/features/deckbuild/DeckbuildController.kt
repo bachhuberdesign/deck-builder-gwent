@@ -28,6 +28,8 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.*
+import com.bachhuberdesign.deckbuildergwent.util.changehandler.FlipChangeHandler
+import com.bachhuberdesign.deckbuildergwent.util.changehandler.SlideInChangeHandler
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide

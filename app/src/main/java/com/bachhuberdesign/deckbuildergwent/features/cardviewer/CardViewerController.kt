@@ -16,7 +16,7 @@ import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildControll
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
-import com.bachhuberdesign.deckbuildergwent.util.SharedElementDelayingChangeHandler
+import com.bachhuberdesign.deckbuildergwent.util.changehandler.SharedElementDelayingChangeHandler
 import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller

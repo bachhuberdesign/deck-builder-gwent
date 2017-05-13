@@ -10,6 +10,7 @@ import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckbuildControll
 import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectController
 import com.bachhuberdesign.deckbuildergwent.features.factionselect.FactionSelectController
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BaseActivity
+import com.bachhuberdesign.deckbuildergwent.features.stattrack.StatTrackController
 import com.bachhuberdesign.deckbuildergwent.util.DeckDrawerItem
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
@@ -87,7 +88,7 @@ class MainActivity : BaseActivity(), MainMvpContract {
     private fun initNavigationDrawer() {
         val newDeck = PrimaryDrawerItem().withIdentifier(1).withName("New Deck").withIcon(FontAwesome.Icon.faw_plus_circle)
         val deckList = PrimaryDrawerItem().withIdentifier(2).withName("Deck List").withIcon(CommunityMaterial.Icon.cmd_cards_outline)
-        val export = PrimaryDrawerItem().withIdentifier(3).withName("Export").withIcon(CommunityMaterial.Icon.cmd_export)
+        val export = PrimaryDrawerItem().withIdentifier(3).withName("Share and Export").withIcon(CommunityMaterial.Icon.cmd_export)
         val statTracker = PrimaryDrawerItem().withIdentifier(4).withName("Stat Tracker").withIcon(FontAwesome.Icon.faw_pie_chart)
         val settings = SecondaryDrawerItem().withIdentifier(5).withName("Settings").withIcon(FontAwesome.Icon.faw_sliders)
         val cardDatabase = PrimaryDrawerItem().withIdentifier(6).withName("Card Database").withIcon(FontAwesome.Icon.faw_database)
@@ -100,13 +101,13 @@ class MainActivity : BaseActivity(), MainMvpContract {
                     router.handleBack()
                     true
                 })
-                .addDrawerItems(newDeck, deckList, cardDatabase, export, statTracker, DividerDrawerItem())
+                .addDrawerItems(newDeck, deckList, cardDatabase, statTracker, export, DividerDrawerItem())
                 .withOnDrawerItemClickListener { view, position, drawerItem ->
                     when (drawerItem.identifier.toInt()) {
                         1 -> showController(FactionSelectController(), FactionSelectController.TAG)
                         2 -> showController(DeckSelectController(), DeckSelectController.TAG)
                         3 -> Toast.makeText(this, "Export not yet implemented.", Toast.LENGTH_LONG).show()
-                        4 -> Toast.makeText(this, "Win tracking not yet implemented.", Toast.LENGTH_LONG).show()
+                        4 -> showController(StatTrackController(), StatTrackController.TAG)
                         5 -> Toast.makeText(this, "Settings not yet implemented.", Toast.LENGTH_LONG).show()
                         6 -> showController(CardViewerController(CardFilters()), CardViewerController.TAG)
                         99 -> {
