@@ -3,7 +3,9 @@ package com.bachhuberdesign.deckbuildergwent.features.stattrack
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
+import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import javax.inject.Inject
@@ -24,6 +26,10 @@ class StatTrackController : Controller(), StatTrackMvpContract {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_stat_track)
+
+        (activity as MainActivity).persistedComponent
+                .activitySubcomponent(ActivityModule(activity!!))
+                .inject(this)
 
         return view
     }
