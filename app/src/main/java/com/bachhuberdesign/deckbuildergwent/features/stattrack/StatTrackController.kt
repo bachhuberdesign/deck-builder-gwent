@@ -1,5 +1,6 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +11,21 @@ import com.bachhuberdesign.deckbuildergwent.util.changehandler.FabToDialogTransi
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
 import kotlinx.android.synthetic.main.controller_stat_track.view.*
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
  * @since 1.0.0
  */
-class StatTrackController : Controller(), AddMatchDialogMvpContract {
+class StatTrackController : Controller(), StatTrackMvpContract {
 
     companion object {
         @JvmStatic val TAG: String = StatTrackController::class.java.name
@@ -34,7 +41,7 @@ class StatTrackController : Controller(), AddMatchDialogMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        activity!!.title = "Stat Tracker"
+        activity!!.title = "Deck Stats"
 
         view.fab.setOnClickListener {
             router.pushController(RouterTransaction.with(AddMatchDialogController())
@@ -49,11 +56,43 @@ class StatTrackController : Controller(), AddMatchDialogMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
+        presenter.loadStats()
     }
 
     override fun onDetach(view: View) {
         super.onDetach(view)
         presenter.detach()
+    }
+
+    override fun showWinLossChart(entries: List<PieEntry>) {
+        val pieChart = view!!.win_loss_pie_chart
+        pieChart.setUsePercentValues(true)
+
+        pieChart.dragDecelerationFrictionCoef = 0.95f
+
+        pieChart.isDrawHoleEnabled = true
+        pieChart.setHoleColor(Color.WHITE)
+
+        pieChart.setTransparentCircleColor(Color.WHITE)
+        pieChart.setTransparentCircleAlpha(110)
+
+        pieChart.holeRadius = 58f
+        pieChart.transparentCircleRadius = 61f
+
+        pieChart.setDrawCenterText(true)
+
+        pieChart.rotationAngle = 0f
+        pieChart.isRotationEnabled = true
+        pieChart.isHighlightPerTapEnabled = true
+
+        val pieDataSet = PieDataSet(entries, "Election Results")
+        val pieData = PieData(pieDataSet)
+        pieData.setValueFormatter(PercentFormatter())
+        pieData.setValueTextSize(11f)
+        pieData.setValueTextColor(Color.WHITE)
+        pieChart.data = pieData
+
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad)
     }
 
 }
