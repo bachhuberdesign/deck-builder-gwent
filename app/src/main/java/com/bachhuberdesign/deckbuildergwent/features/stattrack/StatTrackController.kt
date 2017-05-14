@@ -6,16 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
+import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.changehandler.FabToDialogTransitionChangeHandler
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.controller_stat_track.view.*
 import javax.inject.Inject
 
@@ -64,32 +65,57 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         presenter.detach()
     }
 
-    override fun showWinLossChart(entries: List<PieEntry>) {
+    override fun onDeckLoaded(deck: Deck) {
+
+    }
+
+    override fun showWinsTrendLineChart(entries: List<Entry>) {
+    }
+
+    override fun showStatsPerFactionsStackedBarChart(entries: List<BarEntry>) {
+        val barChart = view!!.wins_per_faction_bar_chart
+
+        barChart.description.isEnabled = true
+        barChart.setPinchZoom(false)
+
+        val barDataSet = BarDataSet(entries, "label here")
+        barDataSet.stackLabels = arrayOf("Skellige")
+
+        val dataSets = ArrayList<IBarDataSet>()
+        dataSets.add(barDataSet)
+
+        val barData = BarData(dataSets)
+        barData.setValueFormatter(PercentFormatter())
+
+        barChart.data = barData
+    }
+
+    override fun showOverallWinPieChart(entries: List<PieEntry>) {
         val pieChart = view!!.win_loss_pie_chart
         pieChart.setUsePercentValues(true)
 
         pieChart.dragDecelerationFrictionCoef = 0.95f
 
         pieChart.isDrawHoleEnabled = true
+        pieChart.holeRadius = 45f
         pieChart.setHoleColor(Color.WHITE)
-
-        pieChart.setTransparentCircleColor(Color.WHITE)
-        pieChart.setTransparentCircleAlpha(110)
-
-        pieChart.holeRadius = 58f
-        pieChart.transparentCircleRadius = 61f
+        pieChart.setTransparentCircleAlpha(0)
 
         pieChart.setDrawCenterText(true)
+        pieChart.centerText = "All"
+        pieChart.setCenterTextSize(18f)
 
         pieChart.rotationAngle = 0f
         pieChart.isRotationEnabled = true
         pieChart.isHighlightPerTapEnabled = true
 
-        val pieDataSet = PieDataSet(entries, "Election Results")
+        val pieDataSet = PieDataSet(entries, "Match Results")
+        pieDataSet.colors = ColorTemplate.LIBERTY_COLORS.toList()
+
         val pieData = PieData(pieDataSet)
         pieData.setValueFormatter(PercentFormatter())
-        pieData.setValueTextSize(11f)
-        pieData.setValueTextColor(Color.WHITE)
+        pieData.setValueTextSize(13f)
+        pieData.setValueTextColor(Color.DKGRAY)
         pieChart.data = pieData
 
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad)
