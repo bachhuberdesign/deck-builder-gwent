@@ -113,11 +113,11 @@ class StatTrackPresenter
 
         view!!.showOverallWinPieChart(entries)
 
-        val stackedEntry = createStackedBarEntryForFaction(Faction.SKELLIGE, 320, 244, 35)
-        val stackedEntry2 = createStackedBarEntryForFaction(Faction.MONSTERS, 65, 34, 0)
-        val stackedEntry3 = createStackedBarEntryForFaction(Faction.NILFGAARD, 105, 195, 0)
-        val stackedEntry4 = createStackedBarEntryForFaction(Faction.NORTHERN_REALMS, 105, 195, 0)
-        val stackedEntry5 = createStackedBarEntryForFaction(Faction.SCOIATAEL, 105, 195, 0)
+        val stackedEntry = createStackedBarEntryForFaction(Faction.NORTHERN_REALMS, 100, 0, 0)
+        val stackedEntry2 = createStackedBarEntryForFaction(Faction.SCOIATAEL, 65, 34, 0)
+        val stackedEntry3 = createStackedBarEntryForFaction(Faction.MONSTERS, 185, 195, 0)
+        val stackedEntry4 = createStackedBarEntryForFaction(Faction.SKELLIGE, 105, 195, 0)
+        val stackedEntry5 = createStackedBarEntryForFaction(Faction.NILFGAARD, 1035, 195, 0)
 
         view!!.showStatsPerFactionsStackedBarChart(arrayListOf(stackedEntry, stackedEntry2, stackedEntry3,
                 stackedEntry4, stackedEntry5))

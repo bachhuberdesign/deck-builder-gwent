@@ -1,7 +1,6 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
 import android.graphics.Color
-import android.support.v4.graphics.ColorUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -121,6 +120,7 @@ class StatTrackController : Controller(), StatTrackMvpContract {
             dataSet.valueFormatter = PercentFormatter()
             dataSet.setDrawIcons(false)
             dataSet.color = Constants.FLAT_UI_COLORS.toList()[i]
+
             dataSets.add(dataSet)
         }
 
@@ -137,7 +137,7 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         legend.orientation = Legend.LegendOrientation.HORIZONTAL
         legend.setDrawInside(false)
         legend.formSize = 8f
-        legend.isWordWrapEnabled = true
+        legend.isWordWrapEnabled = false
         legend.xEntrySpace = 4f
 
         barChart.setFitBars(true)
@@ -147,22 +147,18 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     override fun showOverallWinPieChart(entries: List<PieEntry>) {
         val pieChart = view!!.win_loss_pie_chart
         pieChart.setUsePercentValues(true)
-
         pieChart.dragDecelerationFrictionCoef = 0.95f
-
         pieChart.isDrawHoleEnabled = true
-        pieChart.holeRadius = 45f
-
+        pieChart.holeRadius = 37.5f
         pieChart.setHoleColor(Color.WHITE)
         pieChart.setTransparentCircleAlpha(0)
-
         pieChart.setDrawCenterText(true)
-        pieChart.centerText = "All"
         pieChart.setCenterTextSize(18f)
-
         pieChart.rotationAngle = 0f
         pieChart.isRotationEnabled = true
         pieChart.isHighlightPerTapEnabled = false
+        pieChart.legend.isEnabled = false
+        pieChart.description.isEnabled = false
 
         val pieDataSet = PieDataSet(entries, "Match Results")
         pieDataSet.colors = Constants.FLAT_UI_COLORS.toList()
