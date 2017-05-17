@@ -65,17 +65,16 @@ class DatabaseHelper(var context: Context) : SQLiteOpenHelper(context, DB_NAME, 
                         "${Faction.EFFECT} TEXT NOT NULL," +
                         "${Faction.ICON_URL} TEXT NOT NULL" +
                         ")"
-
         const val CREATE_TABLE_MATCHES: String =
                 "CREATE TABLE ${Match.TABLE} (" +
-                        "${Match.ID} INTEGER NOT NULL PRIMARY KEY " +
-                        "${Match.DECK_ID} INTEGER NOT NULL " +
-                        "${Match.WIN_TYPE} INTEGER NOT NULL " +
-                        "${Match.OPPONENT_FACTION} INTEGER NOT NULL " +
-                        "${Match.OPPONENT_LEADER} INTEGER DEFAULT 0 " +
-                        "${Match.NOTES} TEXT " +
-                        "${Match.PLAYED_DATE} INTEGER " +
-                        "${Match.CREATED_DATE} INTEGER " +
+                        "${Match.ID} INTEGER NOT NULL PRIMARY KEY, " +
+                        "${Match.DECK_ID} INTEGER NOT NULL, " +
+                        "${Match.OUTCOME} INTEGER NOT NULL, " +
+                        "${Match.OPPONENT_FACTION} INTEGER NOT NULL, " +
+                        "${Match.OPPONENT_LEADER} INTEGER DEFAULT 0, " +
+                        "${Match.NOTES} TEXT, " +
+                        "${Match.PLAYED_DATE} INTEGER, " +
+                        "${Match.CREATED_DATE} INTEGER, " +
                         "${Match.LAST_UPDATE} INTEGER" +
                         ")"
     }

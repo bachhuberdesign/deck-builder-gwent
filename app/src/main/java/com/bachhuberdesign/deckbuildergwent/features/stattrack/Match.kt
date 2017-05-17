@@ -14,7 +14,7 @@ import java.util.*
  */
 data class Match(var id: Int = 0,
                  var deckId: Int = 0,
-                 var winType: Int = 0,
+                 var outcome: Int = 0,
                  var opponentFaction: Int = 0,
                  var opponentLeader: Int = 0,
                  var notes: String = "",
@@ -27,7 +27,7 @@ data class Match(var id: Int = 0,
         const val TABLE = "matches"
         const val ID = "_id"
         const val DECK_ID = "deck_id"
-        const val WIN_TYPE = "win_type"
+        const val OUTCOME = "outcome"
         const val OPPONENT_FACTION = "opponent_faction"
         const val OPPONENT_LEADER = "opponent_leader"
         const val NOTES = "notes"
@@ -40,7 +40,7 @@ data class Match(var id: Int = 0,
 
             match.id = cursor.getIntFromColumn(Match.ID)
             match.deckId = cursor.getIntFromColumn(Match.DECK_ID)
-            match.winType = cursor.getIntFromColumn(Match.WIN_TYPE)
+            match.outcome = cursor.getIntFromColumn(Match.OUTCOME)
             match.opponentFaction = cursor.getIntFromColumn(Match.OPPONENT_FACTION)
             match.opponentLeader = cursor.getIntFromColumn(Match.OPPONENT_LEADER)
             match.notes = cursor.getStringFromColumn(Match.NOTES)
