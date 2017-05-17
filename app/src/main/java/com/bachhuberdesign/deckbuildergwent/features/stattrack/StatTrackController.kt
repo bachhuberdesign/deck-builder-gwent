@@ -1,6 +1,7 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
 import android.graphics.Color
+import android.support.v4.graphics.ColorUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,17 +10,20 @@ import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
+import com.bachhuberdesign.deckbuildergwent.util.Constants
 import com.bachhuberdesign.deckbuildergwent.util.changehandler.FabToDialogTransitionChangeHandler
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.controller_stat_track.view.*
 import javax.inject.Inject
+
 
 /**
  * @author Eric Bachhuber
@@ -78,27 +82,66 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     }
 
     override fun showStatsPerFactionsStackedBarChart(entries: List<BarEntry>) {
-
-        // TODO: Switch to negative bar chart (stacked?)
-
         val barChart = view!!.wins_per_faction_bar_chart
 
+        barChart.setDrawGridBackground(false)
         barChart.description.isEnabled = true
         barChart.setPinchZoom(false)
+        barChart.isDoubleTapToZoomEnabled = false
+        barChart.setDrawBarShadow(false)
+        barChart.setDrawValueAboveBar(true)
+        barChart.setDrawGridBackground(false)
+        barChart.setDrawValueAboveBar(false)
+        barChart.description.isEnabled = false
 
-        val sets: MutableList<IBarDataSet> = ArrayList()
+        val xAxis = barChart.xAxis
+        xAxis.position = XAxisPosition.BOTTOM
+        xAxis.setDrawAxisLine(true)
+        xAxis.setDrawLabels(false)
+        xAxis.setDrawGridLines(true)
+        xAxis.granularity = 10f
 
-        entries.forEach { entry ->
-            val barDataSet = BarDataSet(listOf(entry), "Skellige")
-            barDataSet.stackLabels = arrayOf("Win %", "Loss %", "Tie %")
-            barDataSet.colors = ColorTemplate.LIBERTY_COLORS.toList()
-            sets.add(barDataSet)
+        val yAxisLeft = barChart.axisLeft
+        yAxisLeft.setDrawAxisLine(false)
+        yAxisLeft.setDrawGridLines(true)
+        yAxisLeft.setDrawLabels(true)
+        yAxisLeft.axisMinimum = 0f
+
+        val yAxisRight = barChart.axisRight
+        yAxisRight.setDrawAxisLine(true)
+        yAxisRight.setDrawLabels(false)
+        yAxisRight.setDrawGridLines(false)
+        yAxisRight.axisMinimum = 0f
+
+        val dataSets = ArrayList<IBarDataSet>()
+        val dataSetNames = arrayOf("Northern Realms", "Scoia'tael", "Monsters", "Skellige", "Nilfgaard")
+
+        entries.forEachIndexed { i, entry ->
+            val dataSet = BarDataSet(listOf(entry), dataSetNames[i])
+            dataSet.valueFormatter = PercentFormatter()
+            dataSet.setDrawIcons(false)
+            dataSet.color = Constants.FLAT_UI_COLORS.toList()[i]
+            dataSets.add(dataSet)
         }
 
-        val barData = BarData(sets)
-        barData.setValueTextSize(12f)
-
+        val barData = BarData(dataSets)
+        barData.setValueTextSize(10f)
+        barData.barWidth = 0.65f
+        barData.setValueTextColor(Color.WHITE)
+        barData.setValueTextSize(13f)
         barChart.data = barData
+
+        val legend = barChart.legend
+        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        legend.setDrawInside(false)
+        legend.formSize = 8f
+        legend.isWordWrapEnabled = true
+        legend.xEntrySpace = 4f
+
+        barChart.setFitBars(true)
+        barChart.animateY(1400)
     }
 
     override fun showOverallWinPieChart(entries: List<PieEntry>) {
@@ -109,6 +152,7 @@ class StatTrackController : Controller(), StatTrackMvpContract {
 
         pieChart.isDrawHoleEnabled = true
         pieChart.holeRadius = 45f
+
         pieChart.setHoleColor(Color.WHITE)
         pieChart.setTransparentCircleAlpha(0)
 
@@ -118,10 +162,10 @@ class StatTrackController : Controller(), StatTrackMvpContract {
 
         pieChart.rotationAngle = 0f
         pieChart.isRotationEnabled = true
-        pieChart.isHighlightPerTapEnabled = true
+        pieChart.isHighlightPerTapEnabled = false
 
         val pieDataSet = PieDataSet(entries, "Match Results")
-        pieDataSet.colors = ColorTemplate.LIBERTY_COLORS.toList()
+        pieDataSet.colors = Constants.FLAT_UI_COLORS.toList()
 
         val pieData = PieData(pieDataSet)
         pieData.setValueFormatter(PercentFormatter())

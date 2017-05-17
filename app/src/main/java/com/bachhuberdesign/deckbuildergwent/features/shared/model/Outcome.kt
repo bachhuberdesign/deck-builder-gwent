@@ -8,9 +8,9 @@ package com.bachhuberdesign.deckbuildergwent.features.shared.model
 class Outcome {
 
     companion object {
-        const val LOSS = 0
         const val WIN = 1
-        const val TIE = 2
+        const val LOSS = 2
+        const val TIE = 3
     }
 
 }

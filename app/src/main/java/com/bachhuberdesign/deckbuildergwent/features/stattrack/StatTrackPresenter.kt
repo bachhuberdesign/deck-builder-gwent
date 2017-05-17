@@ -131,8 +131,8 @@ class StatTrackPresenter
     }
 
     private fun createStackedBarEntryForFaction(faction: Int, wins: Int, losses: Int, ties: Int): BarEntry {
-        val percents = calculateWinLossTiePercents(wins = wins, losses = losses, ties = ties)
-        val entry = BarEntry(faction.toFloat(), floatArrayOf(wins.toFloat(), losses.toFloat(), ties.toFloat()))
+        val percents = calculateWinLossTiePercents(wins = wins, losses = losses, ties = 0)
+        val entry = BarEntry(faction.toFloat(), floatArrayOf(percents.first * 100))
 
         return entry
     }
