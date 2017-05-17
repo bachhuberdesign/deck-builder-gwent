@@ -5,6 +5,7 @@ import com.bachhuberdesign.deckbuildergwent.util.getIntFromColumn
 import com.bachhuberdesign.deckbuildergwent.util.getLongFromColumn
 import com.bachhuberdesign.deckbuildergwent.util.getStringFromColumn
 import io.reactivex.functions.Function
+import rx.functions.Func1
 import java.util.*
 
 /**
@@ -50,6 +51,23 @@ data class Match(var id: Int = 0,
 
             match
         }
+
+        val MAP1 = Func1<Cursor, Match> { cursor ->
+            val match = Match()
+
+            match.id = cursor.getIntFromColumn(Match.ID)
+            match.deckId = cursor.getIntFromColumn(Match.DECK_ID)
+            match.outcome = cursor.getIntFromColumn(Match.OUTCOME)
+            match.opponentFaction = cursor.getIntFromColumn(Match.OPPONENT_FACTION)
+            match.opponentLeader = cursor.getIntFromColumn(Match.OPPONENT_LEADER)
+            match.notes = cursor.getStringFromColumn(Match.NOTES)
+            match.playedDate = Date(cursor.getLongFromColumn(Match.PLAYED_DATE))
+            match.createdDate = Date(cursor.getLongFromColumn(Match.CREATED_DATE))
+            match.lastUpdate = Date(cursor.getLongFromColumn(Match.LAST_UPDATE))
+
+            match
+        }
+
     }
 
 }
