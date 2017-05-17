@@ -113,11 +113,11 @@ class StatTrackPresenter
 
         view!!.showOverallWinPieChart(entries)
 
-        val stackedEntry = createStackedBarEntryForFaction(Faction.NORTHERN_REALMS, 100, 0, 0)
-        val stackedEntry2 = createStackedBarEntryForFaction(Faction.SCOIATAEL, 65, 34, 0)
-        val stackedEntry3 = createStackedBarEntryForFaction(Faction.MONSTERS, 185, 195, 0)
-        val stackedEntry4 = createStackedBarEntryForFaction(Faction.SKELLIGE, 105, 195, 0)
-        val stackedEntry5 = createStackedBarEntryForFaction(Faction.NILFGAARD, 1035, 195, 0)
+        val stackedEntry = createBarEntryForFaction(Faction.NORTHERN_REALMS, matches)
+        val stackedEntry2 = createBarEntryForFaction(Faction.SCOIATAEL, matches)
+        val stackedEntry3 = createBarEntryForFaction(Faction.MONSTERS, matches)
+        val stackedEntry4 = createBarEntryForFaction(Faction.SKELLIGE, matches)
+        val stackedEntry5 = createBarEntryForFaction(Faction.NILFGAARD, matches)
 
         view!!.showStatsPerFactionsStackedBarChart(arrayListOf(stackedEntry, stackedEntry2, stackedEntry3,
                 stackedEntry4, stackedEntry5))
@@ -130,8 +130,17 @@ class StatTrackPresenter
                 ties / (wins + losses + ties).toFloat())
     }
 
-    private fun createStackedBarEntryForFaction(faction: Int, wins: Int, losses: Int, ties: Int): BarEntry {
+    private fun createBarEntryForFaction(faction: Int, matches: List<Match>): BarEntry {
+        val wins = matches.filter { it.opponentFaction == faction }
+                .filter { it.outcome == Outcome.WIN }
+                .count()
+
+        val losses = matches.filter { it.opponentFaction == faction }
+                .filter { it.outcome == Outcome.LOSS }
+                .count()
+
         val percents = calculateWinLossTiePercents(wins = wins, losses = losses, ties = 0)
+
         val entry = BarEntry(faction.toFloat(), floatArrayOf(percents.first * 100))
 
         return entry
