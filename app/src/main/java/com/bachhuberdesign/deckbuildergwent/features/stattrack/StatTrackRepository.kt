@@ -3,6 +3,9 @@ package com.bachhuberdesign.deckbuildergwent.features.stattrack
 import android.content.ContentValues
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
 import com.squareup.sqlbrite.BriteDatabase
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -69,6 +72,19 @@ class StatTrackRepository @Inject constructor(val database: BriteDatabase) {
                 return null
             }
         }
+    }
+
+    /**
+     * @param deckId ID of the deck to observe.
+     */
+    fun observeMatchesForDeck(deckId: Int): Observable<MutableList<Match>> {
+        val query = "SELECT * FROM ${Match.TABLE} " +
+                "WHERE ${Match.DECK_ID} = $deckId"
+
+        return database.createQuery(Match.TABLE, query)
+                .mapToList(Match.MAP1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
 }

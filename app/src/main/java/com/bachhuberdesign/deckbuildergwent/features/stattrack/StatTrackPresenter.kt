@@ -1,12 +1,15 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
+import android.util.Log
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
+import com.bachhuberdesign.deckbuildergwent.features.shared.model.Outcome
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
+import rx.Subscription
 import javax.inject.Inject
 
 /**
@@ -21,6 +24,16 @@ class StatTrackPresenter
 
     companion object {
         @JvmStatic val TAG: String = StatTrackPresenter::class.java.name
+    }
+
+    private var subscription: Subscription? = null
+
+    override fun detach() {
+        if (subscription != null) {
+            subscription!!.unsubscribe()
+        }
+
+        super.detach()
     }
 
     /**
@@ -46,8 +59,13 @@ class StatTrackPresenter
     /**
      *
      */
-    fun observeStats(id: Int) {
-        // TODO:
+    fun observeStats(deckId: Int) {
+        subscription = statTrackRepository.observeMatchesForDeck(deckId)
+                .subscribe({ matches ->
+                    loadStats(matches)
+                }, { error ->
+                    Log.e(TAG, "Error querying matches for deckId $deckId.", error)
+                })
     }
 
     /**
@@ -73,10 +91,10 @@ class StatTrackPresenter
     /**
      *
      */
-    fun loadStats() {
-        val wins = 454
-        val losses = 395
-        val ties = 16
+    fun loadStats(matches: List<Match>) {
+        val wins = matches.filter { it.outcome == Outcome.WIN }.count()
+        val losses = matches.filter { it.outcome == Outcome.LOSS }.count()
+        val ties = matches.filter { it.outcome == Outcome.TIE }.count()
 
         val totalPercentages = calculateWinLossTiePercents(wins = wins, losses = losses, ties = ties)
         val entries: MutableList<PieEntry> = ArrayList()
