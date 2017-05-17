@@ -1,7 +1,9 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
+import android.util.Log
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
+import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
@@ -31,6 +33,12 @@ class StatTrackPresenter
         super.detach()
     }
 
+    fun addMatch(match: Match) {
+        val matchId = statTrackRepository.saveMatch(match)
+
+        Log.d(TAG, "addMatch() matchId: $matchId")
+    }
+
     fun loadStats() {
         val wins = 454
         val losses = 395
@@ -53,8 +61,14 @@ class StatTrackPresenter
 
         view!!.showOverallWinPieChart(entries)
 
-        val stackedEntry = createStackedBarEntryForFaction("Skellige", 57, 56, 3)
-        view!!.showStatsPerFactionsStackedBarChart(arrayListOf(stackedEntry))
+        val stackedEntry = createStackedBarEntryForFaction(Faction.SKELLIGE, 320, 244, 35)
+        val stackedEntry2 = createStackedBarEntryForFaction(Faction.MONSTERS, 65, 34, 0)
+        val stackedEntry3 = createStackedBarEntryForFaction(Faction.NILFGAARD, 105, 195, 0)
+        val stackedEntry4 = createStackedBarEntryForFaction(Faction.NORTHERN_REALMS, 105, 195, 0)
+        val stackedEntry5 = createStackedBarEntryForFaction(Faction.SCOIATAEL, 105, 195, 0)
+
+        view!!.showStatsPerFactionsStackedBarChart(arrayListOf(stackedEntry, stackedEntry2, stackedEntry3,
+                stackedEntry4, stackedEntry5))
     }
 
     private fun calculateWinLossTiePercents(wins: Int, losses: Int, ties: Int): Triple<Float, Float, Float> {
@@ -64,9 +78,9 @@ class StatTrackPresenter
                 ties / (wins + losses + ties).toFloat())
     }
 
-    private fun createStackedBarEntryForFaction(faction: String, wins: Int, losses: Int, ties: Int): BarEntry {
+    private fun createStackedBarEntryForFaction(faction: Int, wins: Int, losses: Int, ties: Int): BarEntry {
         val percents = calculateWinLossTiePercents(wins = wins, losses = losses, ties = ties)
-        val entry = BarEntry(0f, floatArrayOf(percents.first * 100, percents.second * 100, percents.third * 100))
+        val entry = BarEntry(faction.toFloat(), floatArrayOf(wins.toFloat(), losses.toFloat(), ties.toFloat()))
 
         return entry
     }

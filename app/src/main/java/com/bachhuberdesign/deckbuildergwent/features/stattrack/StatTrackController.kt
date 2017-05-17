@@ -46,6 +46,7 @@ class StatTrackController : Controller(), StatTrackMvpContract {
 
         view.fab.setOnClickListener {
             router.pushController(RouterTransaction.with(AddMatchDialogController())
+                    .tag(AddMatchDialogController.TAG)
                     .pushChangeHandler(FabToDialogTransitionChangeHandler())
                     .popChangeHandler(FabToDialogTransitionChangeHandler()))
         }
@@ -65,27 +66,42 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         presenter.detach()
     }
 
-    override fun onDeckLoaded(deck: Deck) {
+    /**
+     *
+     */
+    fun addMatch(match: Match) {
+        // TODO: Change to listener?
+        presenter.addMatch(match)
+    }
 
+    override fun onDeckLoaded(deck: Deck) {
+        // TODO:
     }
 
     override fun showWinsTrendLineChart(entries: List<Entry>) {
+        // TODO:
     }
 
     override fun showStatsPerFactionsStackedBarChart(entries: List<BarEntry>) {
+
+        // TODO: Switch to negative bar chart (stacked?)
+
         val barChart = view!!.wins_per_faction_bar_chart
 
         barChart.description.isEnabled = true
         barChart.setPinchZoom(false)
 
-        val barDataSet = BarDataSet(entries, "label here")
-        barDataSet.stackLabels = arrayOf("Skellige")
+        val sets: MutableList<IBarDataSet> = ArrayList()
 
-        val dataSets = ArrayList<IBarDataSet>()
-        dataSets.add(barDataSet)
+        entries.forEach { entry ->
+            val barDataSet = BarDataSet(listOf(entry), "Skellige")
+            barDataSet.stackLabels = arrayOf("Win %", "Loss %", "Tie %")
+            barDataSet.colors = ColorTemplate.LIBERTY_COLORS.toList()
+            sets.add(barDataSet)
+        }
 
-        val barData = BarData(dataSets)
-        barData.setValueFormatter(PercentFormatter())
+        val barData = BarData(sets)
+        barData.setValueTextSize(12f)
 
         barChart.data = barData
     }
