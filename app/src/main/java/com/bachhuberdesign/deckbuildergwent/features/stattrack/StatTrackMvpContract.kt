@@ -15,10 +15,14 @@ interface StatTrackMvpContract : MvpContract {
 
     fun onDeckLoaded(deck: Deck)
 
+    fun onNoDeckAvailable()
+
     fun showOverallWinPieChart(entries: List<PieEntry>)
 
     fun showWinsTrendLineChart(entries: List<Entry>)
 
     fun showStatsPerFactionsStackedBarChart(entries: List<BarEntry>)
+
+    fun onMatchAdded()
 
 }

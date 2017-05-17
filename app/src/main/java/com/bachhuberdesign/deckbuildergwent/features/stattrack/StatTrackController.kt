@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
@@ -19,7 +20,6 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.controller_stat_track.view.*
 import javax.inject.Inject
-
 
 /**
  * @author Eric Bachhuber
@@ -54,11 +54,10 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         return view
     }
 
-
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.loadStats()
+        presenter.loadRecentDeck()
     }
 
     override fun onDetach(view: View) {
@@ -66,16 +65,12 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         presenter.detach()
     }
 
-    /**
-     *
-     */
     fun addMatch(match: Match) {
-        // TODO: Change to listener?
         presenter.addMatch(match)
     }
 
     override fun onDeckLoaded(deck: Deck) {
-        // TODO:
+        presenter.observeStats(deck.id)
     }
 
     override fun showWinsTrendLineChart(entries: List<Entry>) {
@@ -135,6 +130,15 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         pieChart.data = pieData
 
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad)
+    }
+
+    override fun onMatchAdded() {
+        router.popController(router.getControllerWithTag(AddMatchDialogController.TAG)!!)
+        Toast.makeText(activity!!, "Match added successfully", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onNoDeckAvailable() {
+        // TODO:
     }
 
 }
