@@ -57,7 +57,7 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     override fun onAttach(view: View) {
         super.onAttach(view)
         presenter.attach(this)
-        presenter.loadStats()
+        presenter.loadRecentDeck()
     }
 
     override fun onDetach(view: View) {
@@ -70,7 +70,7 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     }
 
     override fun onDeckLoaded(deck: Deck) {
-        // TODO:
+        presenter.observeStats(deck.id)
     }
 
     override fun showWinsTrendLineChart(entries: List<Entry>) {
@@ -135,6 +135,10 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     override fun onMatchAdded() {
         router.popController(router.getControllerWithTag(AddMatchDialogController.TAG)!!)
         Toast.makeText(activity!!, "Match added successfully", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onNoDeckAvailable() {
+        // TODO:
     }
 
 }

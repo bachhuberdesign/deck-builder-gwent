@@ -53,4 +53,22 @@ class StatTrackRepository @Inject constructor(val database: BriteDatabase) {
         return database.delete(Match.TABLE, "${Match.ID} = $matchId") > 0
     }
 
+    /**
+     *
+     * @return [Match]
+     */
+    fun getMostRecentMatch(): Match? {
+        val cursor = database.query("SELECT * FROM ${Match.TABLE} " +
+                "ORDER BY ${Match.LAST_UPDATE} DESC " +
+                "LIMIT 1")
+
+        cursor.use { cursor ->
+            if (cursor.moveToNext()) {
+                return Match.MAPPER.apply(cursor)
+            } else {
+                return null
+            }
+        }
+    }
+
 }

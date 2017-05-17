@@ -75,6 +75,24 @@ class DeckRepository
 
     /**
      *
+     * @return [Deck]
+     */
+    fun getMostRecentDeck(): Deck? {
+        val cursor = database.query("SELECT * FROM ${Deck.TABLE} " +
+                "ORDER BY last_update DESC " +
+                "LIMIT 1")
+
+        cursor.use { cursor ->
+            if (cursor.moveToNext()) {
+                return Deck.MAPPER.apply(cursor)
+            } else {
+                return null
+            }
+        }
+    }
+
+    /**
+     *
      */
     fun observeRecentlyUpdatedDecks(): Observable<MutableList<Deck>> {
         val query = "SELECT * FROM ${Deck.TABLE} " +

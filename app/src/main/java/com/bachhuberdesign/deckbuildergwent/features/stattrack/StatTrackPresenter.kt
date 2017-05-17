@@ -1,5 +1,6 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
+import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
@@ -22,26 +23,56 @@ class StatTrackPresenter
         @JvmStatic val TAG: String = StatTrackPresenter::class.java.name
     }
 
-    override fun attach(view: StatTrackMvpContract) {
-        super.attach(view)
+    /**
+     *
+     */
+    fun loadRecentDeck() {
+        val match = statTrackRepository.getMostRecentMatch()
+        val deckToLoad: Deck?
 
-        // TODO: Observe here
+        if (match != null && match.deckId > 0) {
+            deckToLoad = deckRepository.getDeckById(match.deckId)
+        } else {
+            deckToLoad = deckRepository.getMostRecentDeck()
+        }
+
+        if (deckToLoad != null) {
+            getViewOrThrow().onDeckLoaded(deckToLoad)
+        } else {
+            getViewOrThrow().onNoDeckAvailable()
+        }
     }
 
-    override fun detach() {
-        super.detach()
+    /**
+     *
+     */
+    fun observeStats(id: Int) {
+        // TODO:
     }
 
+    /**
+     *
+     */
     fun addMatch(match: Match) {
+        if (match.deckId <= 0) {
+            throw MatchException("A valid deck ID must be set.")
+        }
+
         val matchId = statTrackRepository.saveMatch(match)
 
         getViewOrThrow().onMatchAdded()
     }
 
+    /**
+     *
+     */
     fun deleteMatch(match: Match) {
         statTrackRepository.deleteMatch(match.id)
     }
 
+    /**
+     *
+     */
     fun loadStats() {
         val wins = 454
         val losses = 395

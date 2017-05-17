@@ -64,6 +64,7 @@ class AddMatchDialogController : Controller(), AddMatchDialogMvpContract {
             match.outcome = outcomeIndex + 1
             match.notes = view.notes_edit_text.text.trim().toString()
             match.playedDate = formatter.parse(view.date_played_text.text.toString())
+            match.deckId = 1
 
             controller.addMatch(match)
         }
