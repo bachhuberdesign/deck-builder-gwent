@@ -21,4 +21,6 @@ interface StatTrackMvpContract : MvpContract {
 
     fun showStatsPerFactionsStackedBarChart(entries: List<BarEntry>)
 
+    fun onMatchAdded()
+
 }

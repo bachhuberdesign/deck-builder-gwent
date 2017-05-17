@@ -18,7 +18,9 @@ class StatTrackRepository @Inject constructor(val database: BriteDatabase) {
     }
 
     /**
+     * Inserts a new row into [Match.TABLE] *OR* updates the row if an id is already set.
      *
+     * @param match Match to persist
      */
     fun saveMatch(match: Match): Int {
         val values = ContentValues()
@@ -42,10 +44,13 @@ class StatTrackRepository @Inject constructor(val database: BriteDatabase) {
     }
 
     /**
+     * Deletes a row from [Match.TABLE].
      *
+     * @param matchId ID of the match to be deleted.
+     * @return [Boolean] True if match was successfully deleted, false if no row deleted.
      */
-    fun deleteMatch(matchId: Int) {
-        // TODO:
+    fun deleteMatch(matchId: Int): Boolean {
+        return database.delete(Match.TABLE, "${Match.ID} = $matchId") > 0
     }
 
 }

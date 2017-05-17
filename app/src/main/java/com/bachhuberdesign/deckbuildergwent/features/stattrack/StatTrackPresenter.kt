@@ -1,6 +1,5 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
-import android.util.Log
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.DeckRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
@@ -36,7 +35,11 @@ class StatTrackPresenter
     fun addMatch(match: Match) {
         val matchId = statTrackRepository.saveMatch(match)
 
-        Log.d(TAG, "addMatch() matchId: $matchId")
+        getViewOrThrow().onMatchAdded()
+    }
+
+    fun deleteMatch(match: Match) {
+        statTrackRepository.deleteMatch(match.id)
     }
 
     fun loadStats() {
