@@ -112,6 +112,11 @@ class CardViewerController : Controller, CardViewerMvpContract {
         presenter.detach()
     }
 
+    override fun onDestroyView(view: View) {
+        (activity as MainActivity).displayHomeAsUp(false)
+        super.onDestroyView(view)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("filters", gson.toJson(filters))
         outState.putInt("deckId", deckId)

@@ -8,6 +8,7 @@ import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
 import android.util.Log
 import android.view.*
@@ -27,9 +28,11 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
-import com.bachhuberdesign.deckbuildergwent.util.*
 import com.bachhuberdesign.deckbuildergwent.util.changehandler.FlipChangeHandler
 import com.bachhuberdesign.deckbuildergwent.util.changehandler.SlideInChangeHandler
+import com.bachhuberdesign.deckbuildergwent.util.dpToPx
+import com.bachhuberdesign.deckbuildergwent.util.getStringResourceByName
+import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bumptech.glide.Glide
@@ -162,6 +165,10 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
                         .tag(CardViewerController.TAG)
                         .popChangeHandler(SlideInChangeHandler(300, false))
                         .pushChangeHandler(SlideInChangeHandler(300, true)))
+
+                Handler().postDelayed({
+                    view!!.show_card_viewer_button.rotationY = 0.0f
+                }, 300)
             }
         })
 

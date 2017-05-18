@@ -26,7 +26,6 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.controller_stat_track.view.*
 import javax.inject.Inject
 
-
 /**
  * @author Eric Bachhuber
  * @version 1.0.0
