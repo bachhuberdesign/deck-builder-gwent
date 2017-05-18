@@ -1,17 +1,18 @@
-package com.bachhuberdesign.deckbuildergwent.features.stattrack
+package com.bachhuberdesign.deckbuildergwent.features.stattrack.addmatchdialog
 
 import android.app.DatePickerDialog
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
+import com.bachhuberdesign.deckbuildergwent.features.stattrack.Match
+import com.bachhuberdesign.deckbuildergwent.features.stattrack.StatTrackController
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
@@ -100,21 +101,21 @@ class AddMatchDialogController : Controller(), AddMatchDialogMvpContract {
     }
 
     override fun onDecksLoaded(decks: List<Deck>) {
-        val deckAdapter: ArrayAdapter<Deck> = ArrayAdapter(activity!!, android.R.layout.simple_spinner_item, decks)
+        val deckAdapter = DeckSpinnerArrayAdapter(activity!!, android.R.layout.simple_spinner_item, decks)
         deckAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         view!!.deck_spinner.adapter = deckAdapter
     }
 
     override fun onFactionsLoaded(factions: List<Faction>) {
-        val factionAdapter: ArrayAdapter<Faction> = ArrayAdapter(activity!!, android.R.layout.simple_spinner_item, factions)
+        val factionAdapter = FactionSpinnerArrayAdapter(activity!!, android.R.layout.simple_spinner_item, factions)
         factionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         view!!.enemy_faction_spinner.adapter = factionAdapter
 
         val leaders: MutableList<Card> = ArrayList()
         factions.forEach { leaders.addAll(it.leaders) }
-        val leadersAdapter: ArrayAdapter<Card> = ArrayAdapter(activity!!, android.R.layout.simple_spinner_item, leaders)
+        val leadersAdapter = CardSpinnerArrayAdapter(activity!!, android.R.layout.simple_spinner_item, leaders)
         leadersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         view!!.enemy_leader_spinner.adapter = leadersAdapter

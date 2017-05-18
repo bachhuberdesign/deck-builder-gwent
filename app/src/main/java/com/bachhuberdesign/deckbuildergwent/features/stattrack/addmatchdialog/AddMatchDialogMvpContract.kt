@@ -1,4 +1,4 @@
-package com.bachhuberdesign.deckbuildergwent.features.stattrack
+package com.bachhuberdesign.deckbuildergwent.features.stattrack.addmatchdialog
 
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.MvpContract
