@@ -179,7 +179,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView9"/>
 
         <Spinner
-            android:id="@+id/enemy_faction_spinner"
+            android:id="@+id/opponent_faction_spinner"
             style="@style/spinnerStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView4"/>
 
         <Spinner
-            android:id="@+id/enemy_leader_spinner"
+            android:id="@+id/opponent_leader_spinner"
             style="@style/spinnerStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

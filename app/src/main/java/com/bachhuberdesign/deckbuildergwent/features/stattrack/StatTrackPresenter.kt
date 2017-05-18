@@ -72,6 +72,8 @@ class StatTrackPresenter
      *
      */
     fun addMatch(match: Match) {
+        Log.d(TAG, "addMatch() $match")
+
         if (match.deckId <= 0) {
             throw MatchException("A valid deck ID must be set.")
         }
@@ -141,6 +143,7 @@ class StatTrackPresenter
 
         val percents = calculateWinLossTiePercents(wins = wins, losses = losses, ties = 0)
 
+        Log.d(TAG, "Percents for faction $faction : $percents")
         val entry = BarEntry(faction.toFloat(), floatArrayOf(percents.first * 100))
 
         return entry
