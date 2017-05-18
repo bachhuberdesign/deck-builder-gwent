@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
+import com.bachhuberdesign.deckbuildergwent.features.stattrack.addmatchdialog.AddMatchDialogController
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.Constants
 import com.bachhuberdesign.deckbuildergwent.util.changehandler.FabToDialogTransitionChangeHandler
@@ -35,8 +36,8 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         @JvmStatic val TAG: String = StatTrackController::class.java.name
     }
 
-    @Inject
-    lateinit var presenter: StatTrackPresenter
+        @Inject
+        lateinit var presenter: StatTrackPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_stat_track)

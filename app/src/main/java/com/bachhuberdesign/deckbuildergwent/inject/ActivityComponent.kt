@@ -9,6 +9,7 @@ import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectContro
 import com.bachhuberdesign.deckbuildergwent.features.factionselect.FactionSelectController
 import com.bachhuberdesign.deckbuildergwent.features.factionselect.LeaderConfirmController
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BaseActivity
+import com.bachhuberdesign.deckbuildergwent.features.stattrack.addmatchdialog.AddMatchDialogController
 import com.bachhuberdesign.deckbuildergwent.features.stattrack.StatTrackController
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.ActivityScope
 import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
@@ -42,5 +43,7 @@ interface ActivityComponent {
     fun inject(cardDetailController: CardDetailController)
 
     fun inject(statTrackController: StatTrackController)
+
+    fun inject(addMatchDialogController: AddMatchDialogController)
 
 }
