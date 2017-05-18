@@ -6,6 +6,7 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.exception.DeckExcept
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
+import com.bachhuberdesign.deckbuildergwent.features.stattrack.Match
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
 import com.google.gson.Gson
 import com.squareup.sqlbrite.BriteDatabase
@@ -321,6 +322,7 @@ class DeckRepository
     fun deleteDeck(deckId: Int) {
         database.delete(Deck.JOIN_CARD_TABLE, "deck_id = $deckId")
         database.delete(Deck.TABLE, "${Deck.ID} = $deckId")
+        database.delete(Match.TABLE, "${Match.DECK_ID} = $deckId")
     }
 
     private fun saveDeckLastUpdateTime(deckId: Int) {
