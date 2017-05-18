@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_window"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-
-    <View
-        android:id="@+id/dialog_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/immersiveBackground"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/dialog_container"
@@ -46,7 +41,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView6"/>
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/deck_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -183,6 +178,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView9"/>
 
+        <Spinner
+            android:id="@+id/enemy_faction_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView4"/>
+
+        <Spinner
+            android:id="@+id/enemy_leader_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView5"/>
+
     </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/dialog_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/immersiveBackground"/>
 
 </FrameLayout>

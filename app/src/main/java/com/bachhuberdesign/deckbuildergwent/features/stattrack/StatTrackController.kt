@@ -35,8 +35,8 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         @JvmStatic val TAG: String = StatTrackController::class.java.name
     }
 
-    @Inject
-    lateinit var presenter: StatTrackPresenter
+        @Inject
+        lateinit var presenter: StatTrackPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_stat_track)

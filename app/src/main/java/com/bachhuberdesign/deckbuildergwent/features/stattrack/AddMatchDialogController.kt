@@ -5,13 +5,20 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
+import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
+import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
+import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
+import com.bachhuberdesign.deckbuildergwent.inject.module.ActivityModule
 import com.bachhuberdesign.deckbuildergwent.util.inflate
 import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_add_match_dialog.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 /**
  * @author Eric Bachhuber
@@ -24,11 +31,19 @@ class AddMatchDialogController : Controller(), AddMatchDialogMvpContract {
         @JvmStatic val TAG: String = AddMatchDialogController::class.java.name
     }
 
+    @Inject
+    lateinit var presenter: AddMatchDialogPresenter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_add_match_dialog)
 
+        (activity as MainActivity).persistedComponent
+                .activitySubcomponent(ActivityModule(activity!!))
+                .inject(this)
+
+
         val datePickerDialog = DatePickerDialog(activity!!,
-                DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                DatePickerDialog.OnDateSetListener { v, year, month, dayOfMonth ->
                     val calendar = Calendar.getInstance()
                     calendar.set(Calendar.MONTH, month)
                     calendar.set(Calendar.YEAR, year)
@@ -70,6 +85,39 @@ class AddMatchDialogController : Controller(), AddMatchDialogMvpContract {
         }
 
         return view
+    }
+
+    override fun onAttach(view: View) {
+        super.onAttach(view)
+        presenter.attach(this)
+        presenter.loadDecks()
+        presenter.loadFactions()
+    }
+
+    override fun onDetach(view: View) {
+        presenter.detach()
+        super.onDetach(view)
+    }
+
+    override fun onDecksLoaded(decks: List<Deck>) {
+        val deckAdapter: ArrayAdapter<Deck> = ArrayAdapter(activity!!, android.R.layout.simple_spinner_item, decks)
+        deckAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        view!!.deck_spinner.adapter = deckAdapter
+    }
+
+    override fun onFactionsLoaded(factions: List<Faction>) {
+        val factionAdapter: ArrayAdapter<Faction> = ArrayAdapter(activity!!, android.R.layout.simple_spinner_item, factions)
+        factionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        view!!.enemy_faction_spinner.adapter = factionAdapter
+
+        val leaders: MutableList<Card> = ArrayList()
+        factions.forEach { leaders.addAll(it.leaders) }
+        val leadersAdapter: ArrayAdapter<Card> = ArrayAdapter(activity!!, android.R.layout.simple_spinner_item, leaders)
+        leadersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        view!!.enemy_leader_spinner.adapter = leadersAdapter
     }
 
 }
