@@ -8,6 +8,7 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Outcome
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieEntry
 import rx.Subscription
 import javax.inject.Inject
@@ -123,6 +124,22 @@ class StatTrackPresenter
 
         view!!.showStatsPerFactionsStackedBarChart(arrayListOf(stackedEntry, stackedEntry2, stackedEntry3,
                 stackedEntry4, stackedEntry5))
+
+        val trendLineEntries: MutableList<Entry> = ArrayList()
+        val calculatedMatches: MutableList<Match> = ArrayList()
+
+        matches.sortedBy { it.playedDate }.forEach { match ->
+            calculatedMatches.add(match)
+
+            val w = calculatedMatches.filter { it.outcome == Outcome.WIN }.count()
+            val l = calculatedMatches.filter { it.outcome == Outcome.LOSS }.count()
+            val t = calculatedMatches.filter { it.outcome == Outcome.TIE }.count()
+
+            val entry = Entry((trendLineEntries.size + 1).toFloat(), calculateWinLossTiePercents(w, l, t).first)
+            trendLineEntries.add(entry)
+        }
+
+        view!!.showWinsTrendLineChart(trendLineEntries)
     }
 
     private fun calculateWinLossTiePercents(wins: Int, losses: Int, ties: Int): Triple<Float, Float, Float> {

@@ -18,9 +18,11 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
+import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.controller_stat_track.view.*
 import javax.inject.Inject
 
@@ -36,8 +38,8 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         @JvmStatic val TAG: String = StatTrackController::class.java.name
     }
 
-        @Inject
-        lateinit var presenter: StatTrackPresenter
+    @Inject
+    lateinit var presenter: StatTrackPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_stat_track)
@@ -78,7 +80,29 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     }
 
     override fun showWinsTrendLineChart(entries: List<Entry>) {
-        // TODO:
+        val trendChart = view!!.win_percents_trend_chart
+
+        trendChart.description.isEnabled = false
+        trendChart.setTouchEnabled(false)
+
+        val set1 = LineDataSet(entries, "DataSet 1")
+        set1.axisDependency = AxisDependency.LEFT
+        set1.color = ColorTemplate.getHoloBlue()
+        set1.valueTextColor = ColorTemplate.getHoloBlue()
+        set1.lineWidth = 1.5f
+        set1.setDrawCircles(false)
+        set1.setDrawValues(false)
+        set1.fillAlpha = 65
+        set1.fillColor = ColorTemplate.getHoloBlue()
+        set1.highLightColor = Color.rgb(244, 117, 117)
+        set1.setDrawCircleHole(false)
+
+        val data = LineData(set1)
+        data.setValueTextColor(Color.WHITE)
+        data.setValueTextSize(9f)
+
+        trendChart.data = data
+        trendChart.invalidate()
     }
 
     override fun showStatsPerFactionsStackedBarChart(entries: List<BarEntry>) {
@@ -179,7 +203,7 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     }
 
     override fun onNoDeckAvailable() {
-        // TODO:
+        Toast.makeText(activity!!, "No decks available for stat tracking. Go make one!", Toast.LENGTH_LONG).show()
     }
 
 }
