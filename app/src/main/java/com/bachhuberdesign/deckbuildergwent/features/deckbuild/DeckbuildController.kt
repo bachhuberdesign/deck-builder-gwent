@@ -100,20 +100,15 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         super.onAttach(view)
         presenter.attach(this)
 
-        if (reloadDeck) {
-            // First attach or view was destroyed so deck should be re-loaded
-            reloadDeck = false
+        if (deck == null) {
             presenter.loadUserDeck(deckId)
         } else {
             presenter.loadCardsToAnimate(deck!!)
         }
-
-        presenter.subscribeToCardUpdates(deckId)
     }
 
     override fun onDetach(view: View) {
         super.onDetach(view)
-
         animationDisposable?.dispose()
         presenter.detach()
     }
@@ -124,10 +119,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun onDestroyView(view: View) {
-        reloadDeck = true
-        presenter.unsubscribeToCardUpdates()
         animationDisposable?.dispose()
-
         super.onDestroyView(view)
     }
 

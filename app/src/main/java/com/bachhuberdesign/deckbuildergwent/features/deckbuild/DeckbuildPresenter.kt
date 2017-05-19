@@ -26,59 +26,6 @@ class DeckbuildPresenter
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
     }
 
-    var cardSubscription: Subscription? = null
-    var addedCardsAnimationCache: MutableList<Card> = ArrayList()
-    var removedCardsAnimationCache: MutableList<Card> = ArrayList()
-
-    fun unsubscribeToCardUpdates() {
-        Log.d(TAG, "unsubscribeToCardUpdates()")
-
-        if (cardSubscription != null) {
-            cardSubscription!!.unsubscribe()
-        }
-
-        addedCardsAnimationCache.clear()
-        removedCardsAnimationCache.clear()
-    }
-
-    /**
-     *
-     */
-    fun subscribeToCardUpdates(deckId: Int) {
-        Log.d(TAG, "subscribeToCardUpdates()")
-
-        if (cardSubscription == null) {
-            var previousCards: MutableList<Card> = deckRepository.getCardsForDeck(deckId)
-
-            cardSubscription = deckRepository.observeCardUpdates(deckId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ cards ->
-                        if (cards.isNotEmpty() && cards.size > previousCards.size) {
-                            val cardToAdd = cards.last()
-                            cardToAdd.animationType = Card.ANIMATION_ADD
-
-                            addedCardsAnimationCache.add(cardToAdd)
-                            Log.d(TAG, "Added ${cardToAdd.name} to addedCardsAnimationCache")
-                        } else if (cards.size < previousCards.size) {
-                            cards.forEach { previousCards.remove(it) }
-
-                            if (previousCards.firstOrNull() != null) {
-                                val cardToRemove = previousCards.first()
-                                cardToRemove.animationType = Card.ANIMATION_REMOVE
-
-                                removedCardsAnimationCache.add(previousCards.first())
-                                Log.d(TAG, "Added ${cardToRemove.name} to removedCardsAnimationCache")
-                            }
-                        }
-
-                        previousCards = cards
-                    }, { error ->
-                        Log.e(TAG, "Error querying cards for deck $deckId", error)
-                    })
-        }
-    }
-
     /**
      *
      */
@@ -137,13 +84,6 @@ class DeckbuildPresenter
             }
             view!!.animateCards(cardsToAnimate, newDeck)
         }
-    }
-
-    private fun getCardListByIds(removedCardIds: List<Int>): List<Card> {
-        val cards: MutableList<Card> = ArrayList()
-        removedCardIds.forEach { cards.add(cardRepository.getCardById(it)) }
-
-        return cards
     }
 
     /**
