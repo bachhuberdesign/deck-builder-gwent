@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GradientOutlineTextView">
+        <attr name="gradientColor" format="enum">
+            <enum name="silver" value="0"/>
+            <enum name="gold" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

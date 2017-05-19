@@ -13,4 +13,5 @@
     <item name="menu_search_cards" type="id"/>
     <item name="menu_filter_cards" type="id"/>
     <item name="deck_drawer_item" type="id"/>
+    <item name="leader_item" type="id"/>
 </resources>

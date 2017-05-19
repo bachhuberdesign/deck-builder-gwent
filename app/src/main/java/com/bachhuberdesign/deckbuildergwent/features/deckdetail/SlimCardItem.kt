@@ -1,10 +1,13 @@
 package com.bachhuberdesign.deckbuildergwent.features.deckdetail
 
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
+import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ISwipeable
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -56,6 +59,12 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
         } else {
             holder.countText.text = ""
         }
+
+        Glide.clear(holder.cardImage)
+        Glide.with(holder.itemView.context)
+                .load(Uri.parse("file:///android_asset/cards/${card?.iconUrl}"))
+                .dontAnimate()
+                .into(holder.cardImage)
     }
 
     override fun unbindView(holder: ViewHolder) {
@@ -65,6 +74,7 @@ class SlimCardItem : AbstractItem<SlimCardItem, SlimCardItem.ViewHolder>(), ISwi
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var nameText: TextView = view.card_name_text
         var countText: TextView = view.card_count_text
+        var cardImage: ImageView = view.card_image
     }
 
 }
