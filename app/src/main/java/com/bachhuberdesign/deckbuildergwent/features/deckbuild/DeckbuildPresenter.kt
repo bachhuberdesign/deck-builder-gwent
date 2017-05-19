@@ -54,7 +54,7 @@ class DeckbuildPresenter
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ cards ->
-                        if (cards.isNotEmpty() && isViewAttached() && cards.size > previousCards.size) {
+                        if (cards.isNotEmpty() && cards.size > previousCards.size) {
                             val cardToAdd = cards.last()
                             cardToAdd.animationType = Card.ANIMATION_ADD
 
@@ -82,18 +82,68 @@ class DeckbuildPresenter
     /**
      *
      */
-    fun loadCardsToAnimate() {
-        removedCardsAnimationCache.forEach { addedCardsAnimationCache.remove(it) }
+    fun loadCardsToAnimate(oldDeck: Deck) {
+        // TODO: Sloppy code but works
+        // TODO: Clean up and document code
+        val newDeck = deckRepository.getDeckById(oldDeck.id)
+        val addedCardIds = ArrayList(newDeck!!.cards.map { card -> card.cardId }.toMutableList())
 
-        val cardsToAnimate = addedCardsAnimationCache
-        cardsToAnimate.addAll(removedCardsAnimationCache)
+        oldDeck.cards.forEach { addedCardIds.remove(it.cardId) }
 
-        if (isViewAttached()) {
-            view!!.animateCards(cardsToAnimate)
+        // Removed Cards
+        val newCardIds = newDeck.cards.map { card -> card.cardId }.toMutableList()
+        val removedCardIds: MutableList<Int> = ArrayList()
+
+        oldDeck.cards.forEach { card ->
+            if (!newCardIds.remove(card.cardId)) {
+                removedCardIds.add(card.cardId)
+            }
         }
 
-        addedCardsAnimationCache.clear()
-        removedCardsAnimationCache.clear()
+        val removedCards: MutableList<Card> = ArrayList()
+
+        oldDeck.cards.forEach outer@ { card ->
+            removedCardIds.forEach { cardId ->
+                if (card.cardId == cardId) {
+                    removedCards.add(card)
+                    return@outer
+                }
+            }
+        }
+
+        val addedCards: MutableList<Card> = ArrayList()
+
+        newDeck.cards.forEach outer@ { card ->
+            addedCardIds.forEach inner@ { id ->
+                if (card.cardId == id) {
+                    addedCards.add(card)
+                    return@outer
+                }
+            }
+        }
+
+        addedCards.forEach { it.animationType = Card.ANIMATION_ADD }
+        removedCards.forEach { it.animationType = Card.ANIMATION_REMOVE }
+
+        val cardsToAnimate: MutableList<Card> = ArrayList()
+        cardsToAnimate.addAll(removedCards)
+        cardsToAnimate.addAll(addedCards)
+
+        if (isViewAttached()) {
+            cardsToAnimate.forEach {
+                if (it.selectedLane == 0) {
+                    it.selectedLane = it.lane
+                }
+            }
+            view!!.animateCards(cardsToAnimate, newDeck)
+        }
+    }
+
+    private fun getCardListByIds(removedCardIds: List<Int>): List<Card> {
+        val cards: MutableList<Card> = ArrayList()
+        removedCardIds.forEach { cards.add(cardRepository.getCardById(it)) }
+
+        return cards
     }
 
     /**
@@ -109,10 +159,10 @@ class DeckbuildPresenter
             deck.cards.forEach { it.animationType = Card.ANIMATION_ADD }
 
             // Filter out leader card and animate all lanes simultaneously
-            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.MELEE })
-            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.RANGED })
-            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.SIEGE })
-            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.EVENT })
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.MELEE }, deck)
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.RANGED }, deck)
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.SIEGE }, deck)
+            getViewOrThrow().animateCards(deck.cards.filterNot { it.cardType == CardType.LEADER }.filter { it.selectedLane == Lane.EVENT }, deck)
         }
     }
 

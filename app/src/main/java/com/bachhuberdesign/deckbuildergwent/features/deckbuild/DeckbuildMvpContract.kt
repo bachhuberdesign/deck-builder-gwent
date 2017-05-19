@@ -20,7 +20,7 @@ interface DeckbuildMvpContract : MvpContract {
 
     fun onLaneTotalsUpdated(totals: LaneTotals)
 
-    fun animateCards(cardsToAnimate: List<Card>)
+    fun animateCards(cardsToAnimate: List<Card>, deck: Deck)
 
     fun showDeckRenameDialog(currentDeckName: String)
 
