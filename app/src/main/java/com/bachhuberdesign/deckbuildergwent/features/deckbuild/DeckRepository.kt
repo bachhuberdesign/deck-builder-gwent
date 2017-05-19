@@ -8,7 +8,6 @@ import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Faction
 import com.bachhuberdesign.deckbuildergwent.features.stattrack.Match
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
-import com.google.gson.Gson
 import com.squareup.sqlbrite.BriteDatabase
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -27,7 +26,7 @@ import kotlin.collections.ArrayList
  */
 @PersistedScope
 class DeckRepository
-@Inject constructor(var gson: Gson, val database: BriteDatabase) {
+@Inject constructor(val database: BriteDatabase) {
 
     companion object {
         @JvmStatic val TAG: String = DeckRepository::class.java.name

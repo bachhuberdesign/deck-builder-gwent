@@ -59,6 +59,8 @@ dependencies {
 
     // Unit Testing
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.7.22'
+    androidTestCompile 'org.mockito:mockito-android:2.7.22'
 
     // Support Library
     compile "com.android.support:appcompat-v7:$support_version"

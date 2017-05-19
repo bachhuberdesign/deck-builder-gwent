@@ -18,8 +18,8 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideDeckRepository(gson: Gson, database: BriteDatabase): DeckRepository {
-        return DeckRepository(gson, database)
+    fun provideDeckRepository(database: BriteDatabase): DeckRepository {
+        return DeckRepository(database)
     }
 
     @Provides

@@ -1,15 +1,10 @@
 package com.bachhuberdesign.deckbuildergwent.features.deckbuild
 
-import android.util.Log
-import com.bachhuberdesign.deckbuildergwent.features.cardviewer.CardRepository
 import com.bachhuberdesign.deckbuildergwent.features.shared.base.BasePresenter
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
 import com.bachhuberdesign.deckbuildergwent.inject.annotation.PersistedScope
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -19,8 +14,7 @@ import javax.inject.Inject
  */
 @PersistedScope
 class DeckbuildPresenter
-@Inject constructor(private val deckRepository: DeckRepository,
-                    private val cardRepository: CardRepository) : BasePresenter<DeckbuildMvpContract>() {
+@Inject constructor(private val deckRepository: DeckRepository) : BasePresenter<DeckbuildMvpContract>() {
 
     companion object {
         @JvmStatic val TAG: String = DeckbuildPresenter::class.java.name
