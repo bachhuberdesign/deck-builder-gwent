@@ -21,6 +21,8 @@ interface StatTrackMvpContract : MvpContract {
 
     fun showWinsTrendLineChart(entries: List<Entry>)
 
+    fun onNoWinTrendEntriesAvailable()
+
     fun showStatsPerFactionsStackedBarChart(entries: List<BarEntry>)
 
     fun onMatchAdded()
