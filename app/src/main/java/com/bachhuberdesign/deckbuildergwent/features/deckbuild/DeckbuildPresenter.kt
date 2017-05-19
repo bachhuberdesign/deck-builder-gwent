@@ -44,8 +44,9 @@ class DeckbuildPresenter
         val removedCards: MutableList<Card> = ArrayList()
 
         oldDeck.cards.forEach outer@ { card ->
-            removedCardIds.forEach { cardId ->
+            removedCardIds.forEachIndexed { j, cardId ->
                 if (card.cardId == cardId) {
+                    removedCardIds[j] = 0
                     removedCards.add(card)
                     return@outer
                 }
@@ -55,8 +56,9 @@ class DeckbuildPresenter
         val addedCards: MutableList<Card> = ArrayList()
 
         newDeck.cards.forEach outer@ { card ->
-            addedCardIds.forEach inner@ { id ->
+            addedCardIds.forEachIndexed { j, id ->
                 if (card.cardId == id) {
+                    addedCardIds[j] = 0
                     addedCards.add(card)
                     return@outer
                 }
@@ -71,11 +73,6 @@ class DeckbuildPresenter
         cardsToAnimate.addAll(addedCards)
 
         if (isViewAttached()) {
-            cardsToAnimate.forEach {
-                if (it.selectedLane == 0) {
-                    it.selectedLane = it.lane
-                }
-            }
             view!!.animateCards(cardsToAnimate, newDeck)
         }
     }
