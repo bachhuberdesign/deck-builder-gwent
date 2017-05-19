@@ -15,6 +15,7 @@ import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
 import com.bachhuberdesign.deckbuildergwent.features.deckbuild.Deck
 import com.bachhuberdesign.deckbuildergwent.features.deckselect.DeckSelectController
+import com.bachhuberdesign.deckbuildergwent.features.deckselect.LeaderItem
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Card
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.CardType
 import com.bachhuberdesign.deckbuildergwent.features.shared.model.Lane
@@ -93,7 +94,7 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
     private fun initRecyclerView(v: View) {
         fastItemAdapter = FastItemAdapter()
         fastItemAdapter!!.withOnClickListener { v, adapter, item, position ->
-            if (item is SlimCardItem && item.card?.cardType == CardType.LEADER) {
+            if (item is LeaderItem) {
                 presenter.getLeadersForFaction(deck!!.faction)
             }
             true
@@ -158,8 +159,10 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
         leaderHeader.leftText = "Leader"
         items.add(leaderHeader)
 
-        val leaderItem = SlimCardItem().withIsSwipeable(false)
-        leaderItem.card = deck?.leader
+        val leaderItem = LeaderItem()
+                .withLeaderName(deck?.leader?.name!!)
+                .withBackgroundUrl("file:///android_asset/slim/${deck.leader?.iconUrl}")
+
         items.add(leaderItem)
 
         val cardsHeader = HeaderItem()
