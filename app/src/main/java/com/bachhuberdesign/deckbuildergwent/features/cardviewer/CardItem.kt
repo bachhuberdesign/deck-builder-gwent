@@ -77,8 +77,15 @@ class CardItem(val card: Card, val isDeckbuildMode: Boolean) : AbstractItem<Card
             Lane.MELEE -> holder.laneIcon.setImageResource(R.drawable.lane_melee_icon)
             Lane.RANGED -> holder.laneIcon.setImageResource(R.drawable.lane_ranged_icon)
             Lane.SIEGE -> holder.laneIcon.setImageResource(R.drawable.lane_siege_icon)
-            Lane.EVENT -> holder.laneIcon.setImageResource(R.drawable.lane_event_icon)
             Lane.ALL -> holder.laneIcon.setImageResource(R.drawable.lane_melee_icon)
+        }
+
+        if (card.lane == Lane.EVENT) {
+            holder.laneIcon.gone()
+            holder.power.gone()
+        } else {
+            holder.laneIcon.visible()
+            holder.power.visible()
         }
 
         holder.faction.text = holder.itemView.context.getStringResourceByName(Faction.ID_TO_KEY.apply(card.faction))
