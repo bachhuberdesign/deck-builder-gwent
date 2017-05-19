@@ -19,4 +19,6 @@ interface DeckDetailMvpContract : MvpContract {
 
     fun showDeckNameChangeDialog()
 
+    fun cardRemovedFromLane(card: Card)
+
 }

@@ -173,7 +173,12 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
 
         val laneSubHeader = SubHeaderItem()
         laneSubHeader.leftText = laneText
-        laneSubHeader.rightText = "0"
+
+        if (lane != Lane.EVENT) {
+            val powerCount = deck.cards.filter { it.selectedLane == lane }.sumBy { it.power }
+            laneSubHeader.rightText = "$powerCount"
+        }
+
         laneSubHeader.withTag("lane_${lane}_header")
         items.add(laneSubHeader)
 
@@ -215,6 +220,22 @@ class DeckDetailController : Controller, DeckDetailMvpContract, SimpleSwipeCallb
 
     override fun showDeckNameChangeDialog() {
         // TODO:
+    }
+
+    override fun cardRemovedFromLane(card: Card) {
+        if (card.selectedLane == Lane.EVENT) {
+            // No power total shown for event so return
+            return
+        }
+
+        val item = fastItemAdapter?.adapterItems
+                ?.filter { it.getTag() == "lane_${card.selectedLane}_header" }
+                ?.first()
+
+        if (item != null && item is SubHeaderItem) {
+            item.rightText = "${item.rightText.toInt() - card.power}"
+            fastItemAdapter?.notifyItemChanged(fastItemAdapter?.getPosition(item)!!)
+        }
     }
 
     override fun showErrorMessage(message: String) {
