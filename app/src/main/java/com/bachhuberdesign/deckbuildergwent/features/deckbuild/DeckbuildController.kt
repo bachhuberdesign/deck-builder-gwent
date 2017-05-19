@@ -70,6 +70,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     private var deckId: Int = 0
     private var factionId: Int = 0
     private var reloadDeck: Boolean = true
+    private var deck: Deck? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val view = container.inflate(R.layout.controller_deckbuild)
@@ -97,18 +98,13 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-
         presenter.attach(this)
 
-        if (reloadDeck) {
-            // First attach or view was destroyed so deck should be re-loaded
-            reloadDeck = false
+        if (deck == null) {
             presenter.loadUserDeck(deckId)
         } else {
-            presenter.loadCardsToAnimate()
+            presenter.loadCardsToAnimate(deck!!)
         }
-
-        presenter.subscribeToCardUpdates(deckId)
     }
 
     override fun onDetach(view: View) {
@@ -123,10 +119,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun onDestroyView(view: View) {
-        reloadDeck = true
-        presenter.unsubscribeToCardUpdates()
         animationDisposable?.dispose()
-
         super.onDestroyView(view)
     }
 
@@ -186,6 +179,7 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
     }
 
     override fun onDeckLoaded(deck: Deck) {
+        this.deck = deck
         activity?.title = deck.name
 
         factionId = deck.faction
@@ -212,7 +206,9 @@ class DeckbuildController : Controller, DeckbuildMvpContract {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun animateCards(cardsToAnimate: List<Card>) {
+    override fun animateCards(cardsToAnimate: List<Card>, deck: Deck) {
+        this.deck = deck
+
         // Create Observable<List<Card>>, flatten to Observable<Card>, and zip with
         // Observable.interval for a delay between iterations
         animationDisposable = Observable.fromArray(cardsToAnimate)
