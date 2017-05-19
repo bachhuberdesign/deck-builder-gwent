@@ -44,6 +44,7 @@ class DeckDetailPresenter
         Log.d(TAG, "Removing card ${card?.cardId} from deck with selectedLane: ${card?.selectedLane}")
         if (card != null) {
             deckRepository.removeCardFromDeck(card, deckId)
+            getViewOrThrow().cardRemovedFromLane(card)
         }
     }
 

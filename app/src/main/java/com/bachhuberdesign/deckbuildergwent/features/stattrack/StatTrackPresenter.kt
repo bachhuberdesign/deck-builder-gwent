@@ -139,7 +139,11 @@ class StatTrackPresenter
             trendLineEntries.add(entry)
         }
 
-        view!!.showWinsTrendLineChart(trendLineEntries)
+        if (trendLineEntries.isNotEmpty()) {
+            view!!.showWinsTrendLineChart(trendLineEntries)
+        } else {
+            view!!.onNoWinTrendEntriesAvailable()
+        }
     }
 
     private fun calculateWinLossTiePercents(wins: Int, losses: Int, ties: Int): Triple<Float, Float, Float> {

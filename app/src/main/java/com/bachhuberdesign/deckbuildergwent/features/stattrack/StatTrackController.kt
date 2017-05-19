@@ -205,4 +205,8 @@ class StatTrackController : Controller(), StatTrackMvpContract {
         Toast.makeText(activity!!, "No decks available for stat tracking. Go make one!", Toast.LENGTH_LONG).show()
     }
 
+    override fun onNoWinTrendEntriesAvailable() {
+        // TODO:
+    }
+
 }
