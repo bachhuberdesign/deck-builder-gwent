@@ -52,16 +52,19 @@ public class GradientOutlineTextView extends android.support.v7.widget.AppCompat
 
     @Override
     protected void onDraw(Canvas canvas) {
+        // Draw shadow
 //        getPaint().setShadowLayer(3, 2.0f, 2.0f, Color.DKGRAY);
 //        getPaint().setShader(null);
 //        super.onDraw(canvas);
-//        getPaint().clearShadowLayer();
 
+        // Draw stroke
+        getPaint().clearShadowLayer();
         getPaint().setStyle(Paint.Style.STROKE);
-        getPaint().setStrokeWidth(6);
+        getPaint().setStrokeWidth(3);
         getPaint().setShader(outline);
         super.onDraw(canvas);
 
+        // Draw gradient
         getPaint().setStyle(Paint.Style.FILL);
 
         if (gradientColor == 0) {
@@ -69,6 +72,8 @@ public class GradientOutlineTextView extends android.support.v7.widget.AppCompat
         } else if (gradientColor == 1) {
             getPaint().setShader(goldShader);
         }
+
         super.onDraw(canvas);
     }
+
 }
