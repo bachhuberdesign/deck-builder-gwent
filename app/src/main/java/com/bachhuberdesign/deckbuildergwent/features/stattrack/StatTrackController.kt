@@ -1,9 +1,7 @@
 package com.bachhuberdesign.deckbuildergwent.features.stattrack
 
 import android.graphics.Color
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import com.bachhuberdesign.deckbuildergwent.MainActivity
 import com.bachhuberdesign.deckbuildergwent.R
@@ -47,7 +45,8 @@ class StatTrackController : Controller(), StatTrackMvpContract {
                 .activitySubcomponent(ActivityModule(activity!!))
                 .inject(this)
 
-        activity!!.title = "Deck Stats"
+        activity?.title = "Deck Stats"
+        setHasOptionsMenu(true)
 
         view.fab.setOnClickListener {
             router.pushController(RouterTransaction.with(AddMatchDialogController())
@@ -68,6 +67,22 @@ class StatTrackController : Controller(), StatTrackMvpContract {
     override fun onDetach(view: View) {
         super.onDetach(view)
         presenter.detach()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_stat_track, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_select_deck -> showDeckSelection()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDeckSelection() {
+        // TODO:
     }
 
     fun addMatch(match: Match) {
